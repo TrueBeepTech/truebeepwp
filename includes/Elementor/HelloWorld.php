@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-class Hello_World extends Widget_Base
+class HelloWorld extends Widget_Base
 {
     /**
      * Retrieve the widget name.

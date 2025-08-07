@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Init_Customizer
+class InitCustomizer
 {
     public function __construct()
     {

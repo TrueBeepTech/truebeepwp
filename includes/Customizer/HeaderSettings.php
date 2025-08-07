@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Header_Settings
+class HeaderSettings
 {
     /**
      * __construct

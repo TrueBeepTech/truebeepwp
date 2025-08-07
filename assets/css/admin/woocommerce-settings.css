@@ -1,0 +1,167 @@
+/* Tiers Container */
+#truebeep-tiers-container {
+    max-width: 100%;
+}
+
+#truebeep-tiers-table {
+    margin-bottom: 20px;
+}
+
+#truebeep-tiers-table th {
+    font-weight: 600;
+    padding: 10px;
+}
+
+#truebeep-tiers-table td {
+    padding: 10px;
+}
+
+#truebeep-tiers-table .edit-tier {
+    margin-right: 5px;
+}
+
+#truebeep-tiers-table .remove-tier {
+    color: #a00;
+}
+
+#truebeep-tiers-table .remove-tier:hover {
+    color: #dc3232;
+    border-color: #dc3232;
+}
+
+#add-tier-button {
+    margin-right: 10px;
+}
+
+.tier-row {
+    transition: background-color 0.3s ease;
+}
+
+.tier-row:hover {
+    background-color: #f9f9f9;
+}
+
+.description {
+    color: #666;
+    font-style: italic;
+}
+
+/* Modal Styles */
+.tier-modal {
+    position: fixed;
+    z-index: 100000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.tier-modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border: 1px solid #ddd;
+    width: 600px;
+    max-width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.tier-modal-header {
+    padding: 15px 20px;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tier-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.tier-modal-close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.tier-modal-close:hover,
+.tier-modal-close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+.tier-modal-body {
+    padding: 20px;
+}
+
+.tier-modal-body .form-table {
+    margin-top: 0;
+}
+
+.tier-modal-body .form-table th {
+    width: 200px;
+    padding: 10px 10px 10px 0;
+}
+
+.tier-modal-body .form-table td {
+    padding: 10px;
+}
+
+.tier-modal-footer {
+    padding: 15px 20px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+    text-align: right;
+}
+
+.tier-modal-footer button {
+    margin-left: 10px;
+}
+
+/* Radio button styling for Ways to Redeem */
+.forminp-radio {
+    padding-top: 10px;
+}
+
+.forminp-radio label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.forminp-radio input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+    .tier-modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .tier-modal-body .form-table th {
+        width: 100%;
+        padding-bottom: 5px;
+    }
+    
+    .tier-modal-body .form-table td {
+        padding-left: 0;
+    }
+    
+    #truebeep-tiers-table {
+        font-size: 12px;
+    }
+    
+    #truebeep-tiers-table th,
+    #truebeep-tiers-table td {
+        padding: 5px;
+    }
+}

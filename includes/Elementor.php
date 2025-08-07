@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 /**
  * Load elementor class
  */
-class Load_Elementor
+class LoadElementor
 {
     /**
      * Init elementor class
@@ -75,7 +75,7 @@ class Load_Elementor
     {
         $this->includeWidgetsFiles();
 
-        Plugin::instance()->widgets_manager->register(new Elementor\Hello_World());
+        Plugin::instance()->widgets_manager->register(new Elementor\HelloWorld());
     }
 
     /**
@@ -131,7 +131,7 @@ class Load_Elementor
     public static function getWidgetList()
     {
         return [
-            'Hello_World',
+            'HelloWorld',
         ];
     }
 

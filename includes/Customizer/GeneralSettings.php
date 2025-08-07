@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class General_Settings
+class GeneralSettings
 {
     /**
      * __construct
