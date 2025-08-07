@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
     var tiersData = [];
+    var couponsData = [];
     
     // Initialize tiers data from table
     function initializeTiersData() {
@@ -12,8 +13,39 @@ jQuery(document).ready(function($) {
             }
         });
     }
+
+    // Initialize coupons data from table
+    function initializeCouponsData() {
+        couponsData = [];
+        if ($('#truebeep-coupons-list').length > 0) {
+            $('#truebeep-coupons-list .coupon-row').each(function() {
+                var $row = $(this);
+                var couponData = $row.find('.edit-coupon').data('coupon');
+                if (couponData) {
+                    couponsData.push(couponData);
+                }
+            });
+        }
+    }
     
     initializeTiersData();
+    initializeCouponsData();
+
+    // Handle Ways to Redeem radio change
+    $('input[name="truebeep_redeem_method"]').on('change', function() {
+        var selectedMethod = $(this).val();
+        if (selectedMethod === 'coupon') {
+            $('#coupon-settings-section').show();
+        } else {
+            $('#coupon-settings-section').hide();
+        }
+    });
+
+    // Initialize coupon section visibility
+    var initialMethod = $('input[name="truebeep_redeem_method"]:checked').val();
+    if (initialMethod === 'coupon') {
+        $('#coupon-settings-section').show();
+    }
     
     // Add new tier
     $('#add-tier-button').on('click', function() {
@@ -107,6 +139,148 @@ jQuery(document).ready(function($) {
             initializeTiersData();
         }
     });
+
+    // COUPON MANAGEMENT
+    // Add new coupon
+    $('#add-coupon-button').on('click', function() {
+        var newCoupon = {
+            name: 'New Coupon',
+            value: 1
+        };
+        
+        var newIndex = couponsData.length;
+        couponsData.push(newCoupon);
+        
+        var newRow = '<tr class="coupon-row" data-index="' + newIndex + '">' +
+            '<td>' + newCoupon.name + '</td>' +
+            '<td>$' + newCoupon.value + '</td>' +
+            '<td>' +
+                '<button type="button" class="button edit-coupon" data-coupon=\'' + JSON.stringify(newCoupon) + '\' data-index="' + newIndex + '">Edit</button> ' +
+                '<button type="button" class="button remove-coupon" data-index="' + newIndex + '">Remove</button>' +
+            '</td>' +
+        '</tr>';
+        
+        $('#truebeep-coupons-list').append(newRow);
+        
+        // Trigger edit for the new coupon
+        $('#truebeep-coupons-list .coupon-row:last .edit-coupon').click();
+    });
+    
+    // Edit coupon - open modal
+    $(document).on('click', '.edit-coupon', function() {
+        var index = $(this).data('index');
+        var coupon = couponsData[index] || $(this).data('coupon');
+        
+        $('#edit-coupon-index').val(index);
+        $('#edit-coupon-name').val(coupon.name);
+        $('#edit-coupon-value').val(coupon.value);
+        
+        $('#coupon-edit-modal').fadeIn(200);
+    });
+    
+    // Save coupon from modal
+    $('#save-coupon-button').on('click', function() {
+        var index = $('#edit-coupon-index').val();
+        
+        var updatedCoupon = {
+            name: $('#edit-coupon-name').val(),
+            value: parseFloat($('#edit-coupon-value').val())
+        };
+        
+        couponsData[index] = updatedCoupon;
+        
+        // Update the table row
+        var $row = $('#truebeep-coupons-list .coupon-row[data-index="' + index + '"]');
+        $row.find('td:eq(0)').text(updatedCoupon.name);
+        $row.find('td:eq(1)').text('$' + updatedCoupon.value);
+        $row.find('.edit-coupon').attr('data-coupon', JSON.stringify(updatedCoupon));
+        
+        $('#coupon-edit-modal').fadeOut(200);
+    });
+    
+    // Cancel coupon edit
+    $('#cancel-coupon-button, .coupon-modal-close').on('click', function() {
+        $('#coupon-edit-modal').fadeOut(200);
+    });
+    
+    // Remove coupon
+    $(document).on('click', '.remove-coupon', function() {
+        var index = $(this).data('index');
+        
+        if (confirm('Are you sure you want to remove this coupon?')) {
+            $(this).closest('tr').remove();
+            
+            // Remove from data array
+            couponsData.splice(index, 1);
+            
+            // Re-index remaining rows
+            $('#truebeep-coupons-list .coupon-row').each(function(newIndex) {
+                $(this).attr('data-index', newIndex);
+                $(this).find('.edit-coupon, .remove-coupon').attr('data-index', newIndex);
+            });
+            
+            // Re-initialize coupons data to maintain consistency
+            initializeCouponsData();
+        }
+    });
+
+    // Save coupons only
+    $('#save-coupons-button').on('click', function() {
+        var button = $(this);
+        var originalText = button.text();
+        button.text('Saving...');
+        button.prop('disabled', true);
+
+        // Collect current coupons data
+        var currentCoupons = [];
+        if ($('#truebeep-coupons-list').length > 0) {
+            $('#truebeep-coupons-list .coupon-row').each(function() {
+                var $row = $(this);
+                var index = $row.data('index');
+                if (couponsData[index]) {
+                    currentCoupons.push(couponsData[index]);
+                }
+            });
+        }
+
+        // Debug logging
+        console.log('Saving coupons only:', currentCoupons);
+
+        $.ajax({
+            url: truebeep_admin.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'truebeep_save_coupons',
+                nonce: truebeep_admin.coupons_nonce,
+                coupons: currentCoupons
+            },
+            success: function(response) {
+                if (response.success) {
+                    var notice = $('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
+                    $('.wrap h1').after(notice);
+                    
+                    // Make notice dismissible
+                    notice.on('click', '.notice-dismiss', function() {
+                        notice.fadeOut();
+                    });
+                    
+                    setTimeout(function() {
+                        notice.fadeOut(function() {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                }
+            },
+            error: function() {
+                var notice = $('<div class="notice notice-error is-dismissible"><p>Error saving coupons.</p></div>');
+                $('.wrap h1').after(notice);
+            },
+            complete: function() {
+                button.text(truebeep_admin.strings.save_coupons);
+                button.prop('disabled', false);
+            }
+        });
+    });
     
     // Save all changes
     $('#save-all-button').on('click', function() {
@@ -130,7 +304,29 @@ jQuery(document).ready(function($) {
                 currentTiers.push(tiersData[index]);
             }
         });
+
+        // Collect current coupons data
+        var currentCoupons = [];
+        if ($('#truebeep-coupons-list').length > 0) {
+            $('#truebeep-coupons-list .coupon-row').each(function() {
+                var $row = $(this);
+                var index = $row.data('index');
+                if (couponsData[index]) {
+                    currentCoupons.push(couponsData[index]);
+                }
+            });
+        }
         
+        // Debug logging
+        console.log('Saving loyalty settings:', {
+            redeem_method: redeemMethod,
+            earning_value: earningValue,
+            redeeming_value: redeemingValue,
+            earn_on_redeemed: earnOnRedeemed,
+            tiers: currentTiers,
+            coupons: currentCoupons
+        });
+
         $.ajax({
             url: truebeep_admin.ajax_url,
             type: 'POST',
@@ -141,7 +337,8 @@ jQuery(document).ready(function($) {
                 earning_value: earningValue,
                 redeeming_value: redeemingValue,
                 earn_on_redeemed: earnOnRedeemed,
-                tiers: currentTiers
+                tiers: currentTiers,
+                coupons: currentCoupons
             },
             success: function(response) {
                 if (response.success) {
@@ -176,12 +373,16 @@ jQuery(document).ready(function($) {
         if ($(event.target).is('#tier-edit-modal')) {
             $('#tier-edit-modal').fadeOut(200);
         }
+        if ($(event.target).is('#coupon-edit-modal')) {
+            $('#coupon-edit-modal').fadeOut(200);
+        }
     });
     
     // Handle ESC key to close modal
     $(document).keyup(function(e) {
         if (e.key === "Escape") {
             $('#tier-edit-modal').fadeOut(200);
+            $('#coupon-edit-modal').fadeOut(200);
         }
     });
 });

@@ -29,8 +29,13 @@
     border-color: #dc3232;
 }
 
-#add-tier-button {
+#add-tier-button,
+#add-coupon-button {
     margin-right: 10px;
+}
+
+#save-coupons-button {
+    margin-left: 10px;
 }
 
 .tier-row {

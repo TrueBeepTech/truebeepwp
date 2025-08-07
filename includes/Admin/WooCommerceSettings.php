@@ -17,6 +17,8 @@ class WooCommerceSettings
         add_action('woocommerce_sections_truebeep', [$this, 'output_sections']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('wp_ajax_truebeep_save_loyalty', [$this, 'ajax_save_loyalty']);
+        add_action('wp_ajax_truebeep_save_coupons', [$this, 'ajax_save_coupons']);
+        add_action('woocommerce_admin_field_truebeep_coupons', [$this, 'output_loyalty_field']);
     }
 
     public function add_settings_tab($settings_tabs)
@@ -121,6 +123,10 @@ class WooCommerceSettings
                 'desc_tip' => true,
             ],
             [
+                'type' => 'truebeep_coupons',
+                'id' => 'truebeep_coupons_settings'
+            ],
+            [
                 'title' => __('Earning Value', 'truebeep'),
                 'desc' => __('Order Amount to Points Conversion rate (for customers with no tier)', 'truebeep'),
                 'id' => 'truebeep_earning_value',
@@ -198,12 +204,56 @@ class WooCommerceSettings
         }
     }
 
+    public function output_loyalty_field($value)
+    {
+        // This is a custom field type handler for loyalty fields
+        if ($value['type'] == 'truebeep_coupons') {
+            $coupons = get_option('truebeep_coupons', $this->get_default_coupons());
+            ?>
+            <tr valign="top" id="coupon-settings-section" style="display:none;">
+                <th scope="row" class="titledesc">
+                    <label><?php _e('Coupons', 'truebeep'); ?></label>
+                </th>
+                <td class="forminp">
+                    <div id="truebeep-coupons-container">
+                        <table class="wp-list-table widefat fixed striped" id="truebeep-coupons-table">
+                            <thead>
+                                <tr>
+                                    <th><?php _e('Coupon Name', 'truebeep'); ?></th>
+                                    <th><?php _e('Value', 'truebeep'); ?></th>
+                                    <th><?php _e('Actions', 'truebeep'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="truebeep-coupons-list">
+                                <?php foreach ($coupons as $index => $coupon) : ?>
+                                    <tr class="coupon-row" data-index="<?php echo $index; ?>">
+                                        <td><?php echo esc_html($coupon['name']); ?></td>
+                                        <td>$<?php echo esc_html($coupon['value']); ?></td>
+                                        <td>
+                                            <button type="button" class="button edit-coupon" data-coupon='<?php echo json_encode($coupon); ?>' data-index="<?php echo $index; ?>"><?php _e('Edit', 'truebeep'); ?></button>
+                                            <button type="button" class="button remove-coupon" data-index="<?php echo $index; ?>"><?php _e('Remove', 'truebeep'); ?></button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <p>
+                            <button type="button" class="button button-secondary" id="add-coupon-button"><?php _e('Add New Coupon', 'truebeep'); ?></button>
+                            <button type="button" class="button button-primary" id="save-coupons-button"><?php _e('Save Coupons', 'truebeep'); ?></button>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <?php
+        }
+    }
+
     private function render_loyalty_section()
     {
         $tiers = get_option('truebeep_tiers', $this->get_default_tiers());
         woocommerce_admin_fields($this->get_loyalty_settings());
         
-        // Include the loyalty settings view
+        // Include the tiers settings view
         include TRUEBEEP_PATH . '/includes/Admin/views/loyalty-settings.php';
     }
 
@@ -214,6 +264,15 @@ class WooCommerceSettings
             ['name' => 'Bronze', 'order_to_points' => 1.5, 'points_to_amount' => 1.5, 'threshold' => 100],
             ['name' => 'Silver', 'order_to_points' => 2.0, 'points_to_amount' => 2.0, 'threshold' => 500],
             ['name' => 'Gold', 'order_to_points' => 3.0, 'points_to_amount' => 3.0, 'threshold' => 1000],
+        ];
+    }
+
+    private function get_default_coupons()
+    {
+        return [
+            ['name' => '$1 Off Coupon', 'value' => 1],
+            ['name' => '$2 Off Coupon', 'value' => 2],
+            ['name' => '$3 Off Coupon', 'value' => 3],
         ];
     }
 
@@ -261,7 +320,44 @@ class WooCommerceSettings
 
         update_option('truebeep_tiers', $sanitized_tiers);
 
+        // Save coupons
+        $coupons = isset($_POST['coupons']) ? $_POST['coupons'] : [];
+        $sanitized_coupons = [];
+
+        foreach ($coupons as $coupon) {
+            $sanitized_coupons[] = [
+                'name' => sanitize_text_field($coupon['name']),
+                'value' => floatval($coupon['value'])
+            ];
+        }
+
+        update_option('truebeep_coupons', $sanitized_coupons);
+
         wp_send_json_success(['message' => __('Loyalty settings saved successfully!', 'truebeep')]);
+    }
+
+    public function ajax_save_coupons()
+    {
+        check_ajax_referer('truebeep_save_coupons', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_die(__('You do not have permission to perform this action.', 'truebeep'));
+        }
+
+        // Save coupons only
+        $coupons = isset($_POST['coupons']) ? $_POST['coupons'] : [];
+        $sanitized_coupons = [];
+
+        foreach ($coupons as $coupon) {
+            $sanitized_coupons[] = [
+                'name' => sanitize_text_field($coupon['name']),
+                'value' => floatval($coupon['value'])
+            ];
+        }
+
+        update_option('truebeep_coupons', $sanitized_coupons);
+
+        wp_send_json_success(['message' => __('Coupons saved successfully!', 'truebeep')]);
     }
 
     public function enqueue_admin_scripts($hook)
@@ -282,11 +378,13 @@ class WooCommerceSettings
             wp_localize_script('truebeep-woocommerce-settings', 'truebeep_admin', [
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('truebeep_save_loyalty'),
+                'coupons_nonce' => wp_create_nonce('truebeep_save_coupons'),
                 'strings' => [
                     'tier_name' => __('Tier Name', 'truebeep'),
                     'remove' => __('Remove', 'truebeep'),
                     'saving' => __('Saving...', 'truebeep'),
                     'save_tiers' => __('Save Changes', 'truebeep'),
+                    'save_coupons' => __('Save Coupons', 'truebeep'),
                 ]
             ]);
 

@@ -87,3 +87,30 @@ if (!defined('ABSPATH')) {
         </div>
     </div>
 </div>
+
+<!-- Coupon Edit Modal -->
+<div id="coupon-edit-modal" class="tier-modal" style="display:none;">
+    <div class="tier-modal-content">
+        <div class="tier-modal-header">
+            <h2><?php _e('Edit Coupon', 'truebeep'); ?></h2>
+            <span class="coupon-modal-close">&times;</span>
+        </div>
+        <div class="tier-modal-body">
+            <input type="hidden" id="edit-coupon-index" />
+            <table class="form-table">
+                <tr>
+                    <th><label for="edit-coupon-name"><?php _e('Coupon Name', 'truebeep'); ?></label></th>
+                    <td><input type="text" id="edit-coupon-name" class="regular-text" /></td>
+                </tr>
+                <tr>
+                    <th><label for="edit-coupon-value"><?php _e('Value ($)', 'truebeep'); ?></label></th>
+                    <td><input type="number" id="edit-coupon-value" class="regular-text" step="0.01" min="0" /></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tier-modal-footer">
+            <button type="button" class="button button-primary" id="save-coupon-button"><?php _e('Save Coupon', 'truebeep'); ?></button>
+            <button type="button" class="button" id="cancel-coupon-button"><?php _e('Cancel', 'truebeep'); ?></button>
+        </div>
+    </div>
+</div>
