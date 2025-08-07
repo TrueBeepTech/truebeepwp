@@ -1,0 +1,32 @@
+{
+  "name": "truebeep/truebeep",
+  "description": "Helper plugin for Truebeep",
+  "type": "wordpress-plugin",
+  "license": "GPLv2",
+  "authors": [
+    {
+      "name": "truebeep",
+      "email": "admin@truebeep.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "nesbot/carbon": "2.x-dev",
+    "cmb2/cmb2": "dev-master",
+    "johnbillion/extended-cpts": "dev-develop",
+    "deliciousbrains/wp-background-processing": "dev-master"
+  },
+  "autoload": {
+    "classmap": [
+      "includes"
+    ],
+    "psr-4": {
+      "Truebeep\\": "includes/"
+    },
+    "files": [
+      "vendor/cmb2/cmb2/init.php",
+      "includes/functions.php",
+      "includes/Library/CMB2_Tags/cmb2-field-type-tags.php"
+    ]
+  }
+}
