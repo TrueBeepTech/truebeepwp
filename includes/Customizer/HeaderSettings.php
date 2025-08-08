@@ -18,8 +18,8 @@ class HeaderSettings
      */
     public function __construct()
     {
-        $this->initHeaderSettings();
-        $this->HeaderSettings();
+        $this->init_header_settings();
+        $this->header_settings();
     }
 
     /**
@@ -27,7 +27,7 @@ class HeaderSettings
      *
      * @return void
      */
-    public function initHeaderSettings()
+    public function init_header_settings()
     {
         Kirki::add_section('truebeep_header_section', [
             'title'       => esc_html__('Header', 'truebeep'),
@@ -42,7 +42,7 @@ class HeaderSettings
      *
      * @return void
      */
-    public function HeaderSettings()
+    public function header_settings()
     { // section choosing key : chawkbazar_header_section
 
         Kirki::add_field('GON_config', [

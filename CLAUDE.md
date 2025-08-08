@@ -6,6 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a WordPress plugin called "Truebeep" that extends WooCommerce functionality with custom features including loyalty programs, wallet functionality, and API integrations.
 
+## Coding Standards
+
+### Naming Conventions
+- **Class Names**: Use CamelCase (e.g., `WooCommerceSettings`, `ApiHelper`)
+- **Method/Function Names**: Use snake_case (e.g., `get_api_url()`, `create_customer()`)
+- **File Names**: Class files should match the class name (e.g., `WooCommerceSettings.php`)
+- **Variables**: Use snake_case for variables
+- **Constants**: Use UPPERCASE with underscores (e.g., `TRUEBEEP_VERSION`)
+
 ## Development Commands
 
 ### Dependency Management

@@ -73,7 +73,7 @@ class LoadElementor
      */
     public function register_widgets()
     {
-        $this->includeWidgetsFiles();
+        $this->include_widgets_files();
 
         Plugin::instance()->widgets_manager->register(new Elementor\HelloWorld());
     }
@@ -84,7 +84,7 @@ class LoadElementor
      * @since 1.0.0
      * @return array
      */
-    public static function getWidgetScript()
+    public static function get_widget_script()
     {
         return [];
     }
@@ -111,7 +111,7 @@ class LoadElementor
      * @since 1.0.0
      * @return array
      */
-    public function getStyles()
+    public function get_styles()
     {
         return [
 
@@ -128,7 +128,7 @@ class LoadElementor
      * @since 1.0.0
      * @return array
      */
-    public static function getWidgetList()
+    public static function get_widget_list()
     {
         return [
             'HelloWorld',
@@ -141,11 +141,11 @@ class LoadElementor
      * @since 1.0.0
      * @return void
      */
-    public function includeWidgetsFiles()
+    public function include_widgets_files()
     {
         $scripts     = $this->get_scripts();
-        $styles      = $this->getStyles();
-        $widget_list = $this->getWidgetList();
+        $styles      = $this->get_styles();
+        $widget_list = $this->get_widget_list();
 
         if (!count($widget_list)) {
             return;
