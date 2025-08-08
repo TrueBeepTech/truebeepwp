@@ -1,6 +1,6 @@
 <?php
 
-namespace Truebeep;
+namespace Truebeep\Api;
 
 use Truebeep\Traits\ApiHelper;
 
@@ -24,7 +24,6 @@ class LoyaltyHandler
      */
     private function init_hooks()
     {
-
         // Order completion hooks - when points should be earned
         add_action('woocommerce_order_status_completed', [$this, 'award_loyalty_points'], 10, 1);
         // add_action('woocommerce_order_status_processing', [$this, 'award_loyalty_points'], 10, 1);
