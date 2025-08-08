@@ -12,7 +12,7 @@ class InitCustomizer
 {
     public function __construct()
     {
-        $this->initPanel();
+        $this->init_panel();
     }
 
     /**
@@ -20,7 +20,7 @@ class InitCustomizer
      *
      * @return void
      */
-    public function initPanel()
+    public function init_panel()
     {
         Kirki::add_config('truebeep_config', [
             'capability'  => 'edit_theme_options',

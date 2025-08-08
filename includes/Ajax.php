@@ -21,7 +21,7 @@ class Ajax
      *
      * @return array
      */
-    public function shazabo_manager_enquiry()
+    public function truebeep_enquiry()
     {
         if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'truebeep-enquiry-form')) {
             wp_send_json_error([

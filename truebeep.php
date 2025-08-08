@@ -113,7 +113,7 @@ final class Truebeep
     {
         new Truebeep\Assets();
         new Truebeep\Ajax();
-        // new Truebeep\API();
+        new Truebeep\API();
         new Truebeep\LoadElementor();
         new Truebeep\Generator();
         new Truebeep\Customizer();
