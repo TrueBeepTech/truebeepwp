@@ -97,7 +97,7 @@ trait ApiHelper
     public function create_truebeep_customer($customer_data)
     {
         $required_fields = ['firstName'];
-        
+
         foreach ($required_fields as $field) {
             if (empty($customer_data[$field])) {
                 return new \WP_Error('missing_field', sprintf(__('Required field %s is missing', 'truebeep'), $field));
@@ -208,6 +208,175 @@ trait ApiHelper
     }
 
     /**
+     * Update customer loyalty points
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @param float $points Points to add/subtract
+     * @param string $type 'increment' or 'decrement'
+     * @param string $channel Channel source (default: 'woocommerce')
+     * @return array|WP_Error
+     */
+    public function update_loyalty_points($customer_id, $points, $type = 'increment', $channel = 'woocommerce')
+    {
+        if (empty($customer_id)) {
+            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep'));
+        }
+
+        if (!in_array($type, ['increment', 'decrement'])) {
+            return new \WP_Error('invalid_type', __('Type must be either increment or decrement', 'truebeep'));
+        }
+
+        $payload = [
+            'points' => floatval($points),
+            'type' => $type,
+            'channel' => $channel
+        ];
+
+        return $this->make_api_request('customer/' . $customer_id . '/loyalty', 'POST', $payload);
+    }
+
+    /**
+     * Get customer tier information based on total earned points
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @return array Contains tier_tag, tier_name, and full_tier
+     */
+    public function get_customer_tier($customer_id)
+    {
+        if (empty($customer_id)) {
+            return [
+                'tier_tag' => false,
+                'tier_name' => '',
+                'full_tier' => null
+            ];
+        }
+
+        $response = $this->make_api_request('customer/' . $customer_id, 'GET');
+        if (is_wp_error($response) || !$response['success']) {
+            return [
+                'tier_tag' => false,
+                'tier_name' => '',
+                'full_tier' => null
+            ];
+        }
+
+        $customer = isset($response['data']['data']) ? $response['data']['data'] : $response['data'];
+
+        $total_earned_points = isset($customer['totalEarnedPoints']) ? floatval($customer['totalEarnedPoints']) : 0;
+        $tiers = get_option('truebeep_tiers', []);
+
+        if (empty($tiers)) {
+            return [
+                'tier_tag' => false,
+                'tier_name' => '',
+                'full_tier' => null
+            ];
+        }
+
+        usort($tiers, function ($a, $b) {
+            return floatval($b['threshold']) - floatval($a['threshold']);
+        });
+
+        $tier_name = '';
+        $full_tier = null;
+
+        foreach ($tiers as $tier) {
+            if ($total_earned_points >= floatval($tier['threshold'])) {
+                $tier_name = strtolower($tier['name']);
+                $full_tier = $tier;
+                break;
+            }
+        }
+
+        return [
+            'tier_tag' => !empty($tier_name),
+            'tier_name' => $tier_name,
+            'full_tier' => $full_tier
+        ];
+    }
+
+    /**
+     * Calculate loyalty points based on order and settings
+     *
+     * @param float $order_total Order total amount
+     * @param int $user_id WordPress user ID (optional)
+     * @return float Calculated points
+     */
+    public function calculate_loyalty_points($order_total, $user_id = null)
+    {
+        $default_earning_value = floatval(get_option('truebeep_earning_value', 1));
+        if (!$user_id) {
+            return $order_total * $default_earning_value;
+        }
+
+        $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
+        if (empty($truebeep_customer_id)) {
+            return $order_total * $default_earning_value;
+        }
+
+        $tier_info = $this->get_customer_tier($truebeep_customer_id);
+        if ($tier_info['tier_tag'] && $tier_info['full_tier']) {
+            $tier_earning_value = floatval($tier_info['full_tier']['order_to_points']);
+            return $order_total * $tier_earning_value;
+        }
+
+        return $order_total * $default_earning_value;
+    }
+
+    /**
+     * Get customer's total earned points
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @return float Total earned points
+     */
+    public function get_customer_total_earned_points($customer_id)
+    {
+        if (empty($customer_id)) {
+            return 0;
+        }
+
+        $response = $this->make_api_request('customer/' . $customer_id, 'GET');
+
+        if (is_wp_error($response) || !$response['success']) {
+            return 0;
+        }
+
+        $customer = isset($response['data']['data']) ? $response['data']['data'] : $response['data'];
+        return isset($customer['totalEarnedPoints']) ? floatval($customer['totalEarnedPoints']) : 0;
+    }
+
+    /**
+     * Get customer's current balance points
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @return float Current balance points
+     */
+    public function get_customer_points($customer_id)
+    {
+        if (empty($customer_id)) {
+            return [];
+        }
+
+        $response = $this->make_api_request('customer/' . $customer_id, 'GET');
+        if (is_wp_error($response) || !$response['success']) {
+            return [];
+        }
+
+        $customer = isset($response['data']['data']) ? $response['data']['data'] : $response['data'];
+        return $customer;
+    }
+
+    /**
+     * Check if points should be earned on redeemed orders
+     *
+     * @return bool
+     */
+    public function should_earn_on_redeemed_orders()
+    {
+        return get_option('truebeep_earn_on_redeemed', 'no') === 'yes';
+    }
+
+    /**
      * Test API connection
      *
      * @return array|WP_Error
@@ -215,7 +384,7 @@ trait ApiHelper
     public function test_api_connection()
     {
         $response = $this->make_api_request('health', 'GET');
-        
+
         if (is_wp_error($response)) {
             return $response;
         }
