@@ -1,0 +1,255 @@
+.truebeep-checkout-section {
+    background: #f7f7f7;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.truebeep-checkout-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.points-balance {
+    background: #fff;
+    border-left: 3px solid #2271b1;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 2px;
+}
+
+.points-balance p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.points-balance strong {
+    color: #2271b1;
+    font-size: 1.1em;
+}
+
+/* Dynamic Coupon Styles */
+.dynamic-coupon-redemption label,
+.coupon-redemption label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.points-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#points-to-redeem {
+    flex: 0 0 150px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#points-to-redeem:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+#points-to-redeem[readonly] {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.points-value-preview {
+    color: #2271b1;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.points-controls {
+    margin-bottom: 15px;
+}
+
+.points-controls .button,
+.points-controls button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    background: #2271b1;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.points-controls .button:hover,
+.points-controls button:hover {
+    background: #135e96;
+}
+
+.points-controls .button:disabled,
+.points-controls button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.remove-points-btn,
+.remove-coupon-btn {
+    background: #dc3232 !important;
+}
+
+.remove-points-btn:hover,
+.remove-coupon-btn:hover {
+    background: #a02222 !important;
+}
+
+/* Coupon Select Styles */
+#coupon-select {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+#coupon-select:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+#coupon-select:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+#coupon-select option:disabled {
+    color: #999;
+}
+
+/* Messages */
+.points-message,
+.coupon-message {
+    margin-top: 10px;
+}
+
+.points-message .woocommerce-message,
+.coupon-message .woocommerce-message {
+    background: #d4edda;
+    border-left: 3px solid #28a745;
+    padding: 10px 15px;
+    margin: 0;
+    border-radius: 2px;
+    color: #155724;
+}
+
+.points-message .woocommerce-error,
+.coupon-message .woocommerce-error {
+    background: #f8d7da;
+    border-left: 3px solid #dc3545;
+    padding: 10px 15px;
+    margin: 0;
+    border-radius: 2px;
+    color: #721c24;
+}
+
+.coupon-message .info {
+    background: #d1ecf1;
+    border-left: 3px solid #17a2b8;
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 2px;
+    color: #0c5460;
+}
+
+.max-discount-info {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .truebeep-checkout-section {
+        padding: 15px;
+    }
+    
+    .points-input-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    #points-to-redeem {
+        flex: 1;
+        width: 100%;
+        max-width: none;
+    }
+    
+    .points-value-preview {
+        align-self: flex-start;
+    }
+    
+    #coupon-select {
+        max-width: none;
+    }
+    
+    .points-controls .button,
+    .points-controls button {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+}
+
+/* Loading state */
+.truebeep-checkout-section.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.truebeep-checkout-section.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #2271b1;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Integration with WooCommerce checkout */
+.woocommerce-checkout #truebeep-points-redemption {
+    order: 10;
+}
+
+/* Fee display in order review */
+.woocommerce-checkout-review-order .fee th {
+    font-weight: normal;
+}
+
+.woocommerce-checkout-review-order .fee td {
+    color: #28a745;
+    font-weight: 600;
+}

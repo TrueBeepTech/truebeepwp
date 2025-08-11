@@ -35,9 +35,6 @@ trait ApiHelper
      */
     protected function make_api_request($endpoint, $method = 'GET', $data = [], $additional_headers = [])
     {
-        _log('make_api_request');
-        _log($data);
-
         $api_url = $this->get_api_url();
         $api_key = $this->get_api_key();
 
@@ -251,16 +248,14 @@ trait ApiHelper
             ];
         }
 
-        $response = $this->make_api_request('customer/' . $customer_id, 'GET');
-        if (is_wp_error($response) || !$response['success']) {
+        $customer = $this->get_customer_points($customer_id);
+        if (empty($customer)) {
             return [
                 'tier_tag' => false,
                 'tier_name' => '',
                 'full_tier' => null
             ];
         }
-
-        $customer = isset($response['data']['data']) ? $response['data']['data'] : $response['data'];
 
         $total_earned_points = isset($customer['totalEarnedPoints']) ? floatval($customer['totalEarnedPoints']) : 0;
         $tiers = get_option('truebeep_tiers', []);
@@ -335,21 +330,19 @@ trait ApiHelper
             return 0;
         }
 
-        $response = $this->make_api_request('customer/' . $customer_id, 'GET');
-
-        if (is_wp_error($response) || !$response['success']) {
+        $customer = $this->get_customer_points($customer_id);
+        if (empty($customer)) {
             return 0;
         }
 
-        $customer = isset($response['data']['data']) ? $response['data']['data'] : $response['data'];
         return isset($customer['totalEarnedPoints']) ? floatval($customer['totalEarnedPoints']) : 0;
     }
 
     /**
-     * Get customer's current balance points
+     * Get customer's complete data including points and tier from API
      *
      * @param string $customer_id Truebeep customer ID
-     * @return float Current balance points
+     * @return array Customer data including points, totalEarnedPoints, totalSpentPoints
      */
     public function get_customer_points($customer_id)
     {
@@ -364,6 +357,18 @@ trait ApiHelper
 
         $customer = isset($response['data']['data']) ? $response['data']['data'] : $response['data'];
         return $customer;
+    }
+
+    /**
+     * Get customer's current balance only
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @return float Current balance points
+     */
+    public function get_customer_balance($customer_id)
+    {
+        $customer = $this->get_customer_points($customer_id);
+        return !empty($customer['points']) ? floatval($customer['points']) : 0;
     }
 
     /**

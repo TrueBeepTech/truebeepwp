@@ -27,27 +27,14 @@ class CustomerHandler
      */
     private function init_hooks()
     {
-        // WordPress user registration hooks
         add_action('user_register', [$this, 'handle_user_registration'], 10, 1);
-
-        // WooCommerce customer registration hooks
         add_action('woocommerce_created_customer', [$this, 'handle_woocommerce_customer_registration'], 10, 3);
         add_action('woocommerce_new_customer', [$this, 'handle_woocommerce_new_customer'], 10, 2);
-
-        // User profile update hooks
         add_action('profile_update', [$this, 'handle_user_profile_update'], 10, 2);
         add_action('edit_user_profile_update', [$this, 'handle_admin_user_update'], 10, 1);
-
-        // User deletion hook
         add_action('delete_user', [$this, 'handle_user_deletion'], 10, 1);
-
-        // WooCommerce checkout hooks for guest customers
         add_action('woocommerce_checkout_order_processed', [$this, 'handle_guest_checkout'], 10, 3);
-
-        // Admin notices
         add_action('admin_notices', [$this, 'show_api_notices']);
-
-        // AJAX handlers for manual sync
         add_action('wp_ajax_truebeep_sync_user', [$this, 'ajax_sync_user']);
         add_action('wp_ajax_truebeep_remove_sync', [$this, 'ajax_remove_sync']);
     }
@@ -59,7 +46,6 @@ class CustomerHandler
      */
     public function handle_user_registration($user_id)
     {
-        _log('handle_user_registration');
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
@@ -72,7 +58,6 @@ class CustomerHandler
      */
     public function handle_woocommerce_customer_registration($customer_id, $new_customer_data, $password_generated)
     {
-        _log('handle_woocommerce_customer_registration');
         $this->create_or_update_truebeep_customer($customer_id, 'WordPress');
     }
 
@@ -84,8 +69,6 @@ class CustomerHandler
      */
     public function handle_woocommerce_new_customer($customer_id, $customer_data = [])
     {
-        _log('handle_woocommerce_new_customer');
-        // Check if customer already has Truebeep ID to avoid duplicate creation
         $truebeep_id = get_user_meta($customer_id, '_truebeep_customer_id', true);
         if (empty($truebeep_id)) {
             $this->create_or_update_truebeep_customer($customer_id, 'WordPress');
@@ -100,7 +83,6 @@ class CustomerHandler
      */
     public function handle_user_profile_update($user_id, $old_user_data)
     {
-        _log('handle_user_profile_update');
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
@@ -111,7 +93,6 @@ class CustomerHandler
      */
     public function handle_admin_user_update($user_id)
     {
-        _log('handle_admin_user_update');
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
@@ -124,7 +105,6 @@ class CustomerHandler
      */
     public function handle_guest_checkout($order_id, $posted_data, $order)
     {
-        _log('handle_guest_checkout');
         // Check if this is a guest order
         if (!$order->get_user_id()) {
             $customer_data = [
@@ -160,9 +140,6 @@ class CustomerHandler
      */
     private function create_or_update_truebeep_customer($user_id, $source = 'WordPress')
     {
-
-        _log('create_or_update_truebeep_customer');
-
         $user = get_userdata($user_id);
         if (!$user) {
             return;
@@ -181,18 +158,13 @@ class CustomerHandler
             $customer_data['phone'] = $billing_phone;
         }
 
-        _log($customer_data);
-
         $response = !empty($truebeep_customer_id)
             ? $this->update_truebeep_customer($truebeep_customer_id, $customer_data)
             : $this->create_truebeep_customer($customer_data);
 
-        _log($response);
-
         if (!is_wp_error($response) && $response['success']) {
             $response_data = !empty($response['data']['data']) ? $response['data']['data'] : $response['data'];
             if (empty($truebeep_customer_id) && isset($response_data['id'])) {
-                _log('User created in Truebeep');
                 update_user_meta($user_id, '_truebeep_customer_id', $response_data['id']);
                 update_user_meta($user_id, '_truebeep_sync_status', 'synced');
                 update_user_meta($user_id, '_truebeep_last_sync', current_time('mysql'));
@@ -213,7 +185,6 @@ class CustomerHandler
      */
     public function handle_user_deletion($user_id)
     {
-        _log('handle_user_deletion');
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
 
         if (!empty($truebeep_customer_id)) {

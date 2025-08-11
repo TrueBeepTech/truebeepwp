@@ -24,25 +24,13 @@ class LoyaltyHandler
      */
     private function init_hooks()
     {
-        // Order completion hooks - when points should be earned
         add_action('woocommerce_order_status_completed', [$this, 'award_loyalty_points'], 10, 1);
-        // add_action('woocommerce_order_status_processing', [$this, 'award_loyalty_points'], 10, 1);
-
-        // Order cancellation/refund hooks - when points should be removed
         add_action('woocommerce_order_status_cancelled', [$this, 'revoke_loyalty_points'], 10, 1);
         add_action('woocommerce_order_status_refunded', [$this, 'revoke_loyalty_points'], 10, 1);
         add_action('woocommerce_order_status_failed', [$this, 'revoke_loyalty_points'], 10, 1);
-
-        // Partial refund hook
         add_action('woocommerce_order_partially_refunded', [$this, 'handle_partial_refund'], 10, 2);
-
-        // Add points display on user order details page
         add_action('woocommerce_order_details_after_order_table', [$this, 'display_earned_points'], 10, 1);
-
-        // Add points info to order admin
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'display_admin_points_info']);
-
-        // Handle points redemption during checkout
         add_action('woocommerce_checkout_order_processed', [$this, 'handle_points_redemption'], 20, 3);
     }
 
@@ -205,28 +193,26 @@ class LoyaltyHandler
      */
     public function handle_points_redemption($order_id, $posted_data, $order)
     {
-        $coupons = $order->get_coupon_codes();
-        foreach ($coupons as $coupon_code) {
-            if (strpos($coupon_code, 'loyalty_points_') === 0) {
-                // Mark order as having redeemed points
-                $order->update_meta_data('_truebeep_points_redeemed', 'yes');
-
-                // You might want to track how many points were redeemed
-                $coupon = new \WC_Coupon($coupon_code);
-                $discount_amount = $coupon->get_amount();
-                $redeeming_value = floatval(get_option('truebeep_redeeming_value', 1));
-                $points_redeemed = $discount_amount / $redeeming_value;
-
-                $order->update_meta_data('_truebeep_points_redeemed_amount', $points_redeemed);
-                $order->save();
-
-                // Deduct points from customer
-                $customer_id = $this->get_customer_truebeep_id($order);
-                if ($customer_id) {
-                    $this->update_loyalty_points($customer_id, $points_redeemed, 'decrement', 'woocommerce');
+        $points_redeemed = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
+        
+        if ($points_redeemed > 0) {
+            $order->update_meta_data('_truebeep_points_redeemed', 'yes');
+            
+            $customer_id = $this->get_customer_truebeep_id($order);
+            if ($customer_id) {
+                $response = $this->update_loyalty_points($customer_id, $points_redeemed, 'decrement', 'woocommerce');
+                
+                if (!is_wp_error($response) && $response['success']) {
+                    $user_id = $order->get_user_id();
+                    if ($user_id) {
+                        $this->sync_customer_points_from_api($customer_id, $user_id);
+                    }
+                    
+                    $order->add_order_note(sprintf(__('Deducted %s loyalty points via Truebeep API', 'truebeep'), $points_redeemed));
+                } else {
+                    $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
+                    $order->add_order_note(sprintf(__('Failed to deduct loyalty points: %s', 'truebeep'), $error_message));
                 }
-
-                break;
             }
         }
     }
