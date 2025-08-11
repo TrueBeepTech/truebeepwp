@@ -14,5 +14,6 @@ class Frontend
     {
         new Frontend\Shortcode();
         new Frontend\LoyaltyPanel();
+        new Frontend\MyAccountLoyalty();
     }
 }
