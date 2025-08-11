@@ -119,6 +119,11 @@ final class Truebeep
         new Truebeep\Generator();
         new Truebeep\Customizer();
         new Truebeep\Admin\WooCommerceSettings();
+        
+        // Initialize Loyalty components
+        Truebeep\Loyalty\PointsManager::get_instance();
+        new Truebeep\Checkout\PointsRedemption();
+        
         if (is_admin()) {
             new Truebeep\Admin();
         } else {

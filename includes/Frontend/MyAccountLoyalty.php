@@ -3,85 +3,97 @@
 namespace Truebeep\Frontend;
 
 use Truebeep\Traits\ApiHelper;
+use Truebeep\Loyalty\PointsManager;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
- * Shortcode class
+ * My Account Dashboard Loyalty section handler
  */
-class Shortcode
+class MyAccountLoyalty
 {
     use ApiHelper;
 
-    /**
-     * Initialize class
-     */
+    private $points_manager;
+
     public function __construct()
     {
-        add_shortcode('truebeep_loyalty', [$this, 'truebeep_loyalty']);
+        $this->points_manager = PointsManager::get_instance();
+        $this->init_hooks();
     }
 
     /**
-     * Loyalty Points and Wallet Shortcode
-     *
-     * @param array $atts Shortcode attributes
-     * @param string $content Shortcode content
-     * @return string
+     * Initialize hooks
      */
-    public function truebeep_loyalty($atts, $content = null)
+    private function init_hooks()
     {
-        // Parse shortcode attributes
-        $attributes = shortcode_atts([
-            'show_points' => 'true',
-            'show_tier' => 'true',
-            'show_wallet' => 'true',
-            'layout' => 'horizontal', // horizontal, vertical, compact
-            'style' => 'default' // default, card, minimal
-        ], $atts);
+        // Add loyalty section to My Account Dashboard
+        add_action('woocommerce_account_dashboard', [$this, 'dashboard_loyalty_section'], 5);
+        
+        // Enqueue styles for My Account page
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_myaccount_assets']);
+    }
 
-        // Check if user is logged in
-        if (!is_user_logged_in()) {
-            return '<div class="truebeep-loyalty-shortcode error">' . __('Please log in to view your loyalty information.', 'truebeep') . '</div>';
+    /**
+     * Display loyalty section on dashboard
+     */
+    public function dashboard_loyalty_section()
+    {
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            return;
         }
 
-        $user_id = get_current_user_id();
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
-
+        
         if (!$truebeep_customer_id) {
-            return '<div class="truebeep-loyalty-shortcode error">' . __('Loyalty account not found.', 'truebeep') . '</div>';
+            return;
         }
 
         // Get customer data from API
         $customer_data = $this->get_customer_points($truebeep_customer_id);
         $tier_info = $this->get_customer_tier($truebeep_customer_id);
-
+        
         // Prepare data for the view
         $user = wp_get_current_user();
         $user_name = $user->display_name ?: $user->user_login;
         $points = isset($customer_data['points']) ? intval($customer_data['points']) : 0;
         $tier_name = $tier_info['tier_name'] ?: 'bronze';
-
+        
         // Get wallet URLs
         $wallet_base_url = $this->get_wallet_base_url();
         $wallet_id = $this->get_wallet_id();
-
+        
         // Build wallet URLs
         $apple_wallet_url = '';
         $google_wallet_url = '';
-
+        
         if ($wallet_base_url && $wallet_id && $truebeep_customer_id) {
             $apple_wallet_url = $wallet_base_url . '/api/apple/v1/generate-pass?templateId=' . urlencode($wallet_id) . '&customerId=' . urlencode($truebeep_customer_id);
             $google_wallet_url = $wallet_base_url . '/api/google/v1/generate-pass?templateId=' . urlencode($wallet_id) . '&customerId=' . urlencode($truebeep_customer_id);
         }
+        
+        // Load the dashboard view
+        include __DIR__ . '/views/dashboard-loyalty.php';
+    }
 
-        // Enqueue shortcode styles
+    /**
+     * Enqueue assets for My Account page
+     */
+    public function enqueue_myaccount_assets()
+    {
+        if (!is_account_page()) {
+            return;
+        }
+        
+        // Enqueue the loyalty panel CSS for consistent styling
         wp_enqueue_style(
-            'truebeep-loyalty-shortcode',
-            TRUEBEEP_URL . '/assets/css/frontend/loyalty-shortcode.css',
+            'truebeep-myaccount-loyalty',
+            TRUEBEEP_URL . '/assets/css/frontend/myaccount-loyalty.css',
             [],
             TRUEBEEP_VERSION
         );
-
-        ob_start();
-        include __DIR__ . '/views/loyalty-shortcode.php';
-        return ob_get_clean();
     }
 }
