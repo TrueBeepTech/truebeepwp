@@ -73,10 +73,11 @@
     position: absolute;
     bottom: 80px;
     right: 0;
-    width: 360px;
+    width: 280px;
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
@@ -103,24 +104,16 @@
 
 /* Panel header */
 .panel-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
+    padding: 12px 16px 0;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.panel-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+    justify-content: flex-end;
+    position: relative;
 }
 
 .panel-close {
     background: none;
     border: none;
-    color: white;
+    color: #999;
     cursor: pointer;
     padding: 4px;
     display: flex;
@@ -130,111 +123,135 @@
 }
 
 .panel-close:hover {
-    opacity: 0.8;
+    opacity: 0.6;
 }
 
 /* Panel body */
 .panel-body {
-    padding: 20px;
+    padding: 8px 20px 20px;
 }
 
-.loyalty-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
+/* Welcome Message */
+.welcome-message {
+    font-size: 16px;
+    color: #333333;
+    margin-bottom: 16px;
+    line-height: 1.4;
 }
 
-.points-section,
-.tier-section {
-    text-align: center;
-    padding: 16px;
-    background: #f8f9fa;
-    border-radius: 12px;
+.user-name {
+    font-weight: 600;
 }
 
-.points-label,
-.tier-label {
-    font-size: 12px;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+/* Points Display */
+.points-display {
+    margin-bottom: 12px;
 }
 
-.points-value {
+.points-number {
     font-size: 32px;
     font-weight: bold;
-    color: #667eea;
+    color: #4A90E2;
+    line-height: 1;
+    margin-right: 8px;
 }
 
-.tier-value {
-    font-size: 20px;
+.points-label {
+    font-size: 16px;
+    color: #666666;
+    font-weight: 500;
+}
+
+/* Tier Badge */
+.tier-badge {
+    margin-bottom: 20px;
+}
+
+.tier-label {
+    background: #333333;
+    color: white;
+    font-size: 12px;
     font-weight: 600;
-    color: #764ba2;
-    text-transform: capitalize;
+    padding: 4px 12px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    display: inline-block;
 }
 
-/* Wallet section */
-.wallet-section {
-    border-top: 1px solid #e9ecef;
-    padding-top: 20px;
-    margin-top: 20px;
-}
-
-.wallet-section h4 {
+/* Wallet Description */
+.wallet-description {
+    color: #666666;
     font-size: 14px;
-    font-weight: 600;
-    color: #495057;
-    margin: 0 0 12px 0;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    margin-top: 0;
 }
 
+/* Wallet Buttons */
 .wallet-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .wallet-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-radius: 8px;
+    background: #000000;
+    color: white;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
+    border-radius: 8px;
+    padding: 8px 12px;
     transition: all 0.2s;
-    border: 1px solid #dee2e6;
+    min-height: 40px;
 }
 
-.wallet-btn svg {
-    width: 20px;
-    height: 20px;
-}
-
-.apple-wallet {
-    background: #000;
+.wallet-btn:hover {
+    background: #333333;
     color: white;
-    border-color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.apple-wallet:hover {
-    background: #333;
-    border-color: #333;
+.wallet-btn.google-wallet {
+    background: #4285F4;
+}
+
+.wallet-btn.google-wallet:hover {
+    background: #3367d6;
     color: white;
 }
 
-.google-wallet {
-    background: white;
-    color: #4285f4;
-    border-color: #4285f4;
+.wallet-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-.google-wallet:hover {
-    background: #4285f4;
-    color: white;
+.wallet-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.wallet-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.add-to-text {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-bottom: 1px;
+}
+
+.wallet-name {
+    font-size: 13px;
+    font-weight: 600;
 }
 
 /* Panel footer */

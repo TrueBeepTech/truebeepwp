@@ -119,13 +119,20 @@
         },
         
         updatePanelData: function(data) {
+            // Update user name
+            this.panel.find('.user-name').text(data.user_name || '');
+            
             // Update points
             this.panel.find('.points-number').text(this.formatNumber(data.points));
             this.panel.find('.points-badge').text(this.formatCompactNumber(data.points));
             
+            // Update points label (singular/plural)
+            var pointsLabel = data.points === 1 ? 'Point' : 'Points';
+            this.panel.find('.points-label').text(pointsLabel);
+            
             // Update tier
             var tierName = data.tier || truebeep_panel.strings.no_tier;
-            this.panel.find('.tier-value').text(tierName);
+            this.panel.find('.tier-label').text(tierName.toUpperCase());
             
             // Store data for wallet URLs
             this.loyaltyData = data;
@@ -184,8 +191,9 @@
         showError: function(message) {
             console.error('Truebeep Loyalty Panel Error:', message);
             // Optionally show error in UI
+            this.panel.find('.user-name').text('--');
             this.panel.find('.points-number').text('--');
-            this.panel.find('.tier-value').text('--');
+            this.panel.find('.tier-label').text('--');
         }
     };
 
