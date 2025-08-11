@@ -177,6 +177,57 @@ class WooCommerceSettings
                 'id' => 'truebeep_wallet_section'
             ],
             [
+                'title' => __('Show Loyalty Panel', 'truebeep'),
+                'desc' => __('Display floating loyalty panel on frontend', 'truebeep'),
+                'id' => 'truebeep_show_loyalty_panel',
+                'type' => 'checkbox',
+                'default' => 'yes',
+                'desc_tip' => false,
+            ],
+
+            [
+                'title' => __('Wallet Base URL', 'truebeep'),
+                'desc' => __('Enter the base URL for your wallet API', 'truebeep'),
+                'id' => 'truebeep_wallet_base_url',
+                'type' => 'text',
+                'css' => 'min-width:400px;',
+                'placeholder' => 'e.g. https://processor.truebeep.com',
+                'desc_tip' => true,
+            ],
+
+            [
+                'title' => __('Panel Position', 'truebeep'),
+                'desc' => __('Choose where to display the loyalty panel', 'truebeep'),
+                'id' => 'truebeep_panel_position',
+                'type' => 'select',
+                'options' => [
+                    'bottom-right' => __('Bottom Right', 'truebeep'),
+                    'bottom-left' => __('Bottom Left', 'truebeep'),
+                    // 'top-right' => __('Top Right', 'truebeep'),
+                    // 'top-left' => __('Top Left', 'truebeep'),
+                ],
+                'default' => 'bottom-right',
+                'desc_tip' => true,
+            ],
+            // [
+            //     'title' => __('Apple Wallet Template ID', 'truebeep'),
+            //     'desc' => __('Enter your Apple Wallet pass template ID', 'truebeep'),
+            //     'id' => 'truebeep_apple_wallet_template_id',
+            //     'type' => 'text',
+            //     'css' => 'min-width:400px;',
+            //     'placeholder' => 'e.g. kdgydz9zs90mdgr6hcdce4d8',
+            //     'desc_tip' => true,
+            // ],
+            // [
+            //     'title' => __('Google Wallet Template ID', 'truebeep'),
+            //     'desc' => __('Enter your Google Wallet pass template ID', 'truebeep'),
+            //     'id' => 'truebeep_google_wallet_template_id',
+            //     'type' => 'text',
+            //     'css' => 'min-width:400px;',
+            //     'placeholder' => 'e.g. kdgydz9zs90mdgr6hcdce4d8',
+            //     'desc_tip' => true,
+            // ],
+            [
                 'title' => __('Wallet ID', 'truebeep'),
                 'desc' => __('Enter your wallet ID', 'truebeep'),
                 'id' => 'truebeep_wallet_id',

@@ -12,26 +12,15 @@ class Ajax
      */
     public function __construct()
     {
-        add_action('wp_ajax_truebeep_enquiry', [$this, 'truebeep_enquiry']);
-        add_action('wp_ajax_nopriv_truebeep_enquiry', [$this, 'truebeep_enquiry']);
+        add_action('wp_ajax_get_loyalty_data', [$this, 'handle_get_loyalty_data']);
     }
 
     /**
-     * Perform enquiry operation
-     *
-     * @return array
+     * Handle get loyalty data AJAX request
      */
-    public function truebeep_enquiry()
+    public function handle_get_loyalty_data()
     {
-        if (!wp_verify_nonce($_REQUEST['_wpnonce'], 'truebeep-enquiry-form')) {
-            wp_send_json_error([
-                'message' => __('Nonce verification failed!', 'truebeep')
-            ]);
-        }
-
-        wp_send_json_success([
-            'message' => __('Perform your operation', 'truebeep'),
-            'data'    => $_REQUEST,
-        ]);
+        $loyalty_panel = new Frontend\LoyaltyPanel();
+        $loyalty_panel->ajax_get_loyalty_data();
     }
 }

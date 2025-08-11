@@ -373,7 +373,13 @@ class PointsRedemption
 
     private function calculate_points_from_discount($discount)
     {
+        _log('calculate_points_from_discount');
+
         $rate = $this->get_redemption_rate();
+
+        _log($rate);
+        _log($discount);
+
         if ($rate > 0) {
             return ceil($discount / $rate);
         }

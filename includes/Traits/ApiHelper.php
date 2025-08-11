@@ -25,6 +25,26 @@ trait ApiHelper
     }
 
     /**
+     * Get Wallet Base URL from WooCommerce settings
+     *
+     * @return string
+     */
+    protected function get_wallet_base_url()
+    {
+        return get_option('truebeep_wallet_base_url', '');
+    }
+
+    /**
+     * Get Wallet ID from WooCommerce settings
+     *
+     * @return string
+     */
+    protected function get_wallet_id()
+    {
+        return get_option('truebeep_wallet_id', '');
+    }
+
+    /**
      * Make API request
      *
      * @param string $endpoint
