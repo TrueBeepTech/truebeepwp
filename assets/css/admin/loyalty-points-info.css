@@ -1,0 +1,143 @@
+/* Truebeep Admin - Loyalty Points Info Styles */
+
+.truebeep-loyalty-points-info.postbox {
+    margin: 20px 0;
+    max-width: 100%;
+}
+
+.truebeep-loyalty-points-info .postbox-header {
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.truebeep-loyalty-points-info .hndle {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 16px;
+    margin: 0;
+    color: #1d2327;
+}
+
+/* Loyalty Points Table */
+.loyalty-points-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.loyalty-points-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f1;
+    vertical-align: middle;
+}
+
+.loyalty-points-table tr:last-child td {
+    border-bottom: none;
+}
+
+.points-label {
+    width: 150px;
+    font-size: 14px;
+    color: #50575e;
+}
+
+.points-value {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.points-number {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.points-number.earned {
+    color: #4A90E2;
+}
+
+.points-number.redeemed {
+    color: #dc3545;
+}
+
+/* Status Badges */
+.status-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+}
+
+.status-badge.awarded {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+.status-badge.revoked {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 782px) {
+    .loyalty-points-table td {
+        padding: 8px 12px;
+    }
+    
+    .points-label {
+        width: auto;
+        display: block;
+        margin-bottom: 4px;
+    }
+    
+    .loyalty-points-table {
+        font-size: 13px;
+    }
+    
+    .points-number {
+        font-size: 15px;
+    }
+    
+    .status-badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}
+
+/* WooCommerce Integration */
+.woocommerce_page_wc-orders .truebeep-loyalty-points-info.postbox,
+.post-type-shop_order .truebeep-loyalty-points-info.postbox {
+    margin-top: 20px;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+    .points-number.earned {
+        color: #0073aa;
+    }
+    
+    .points-number.redeemed {
+        color: #b32d2e;
+    }
+    
+    .status-badge.awarded {
+        background: #0073aa;
+        color: white;
+        border-color: #005a87;
+    }
+    
+    .status-badge.revoked {
+        background: #b32d2e;
+        color: white;
+        border-color: #8a2424;
+    }
+}
