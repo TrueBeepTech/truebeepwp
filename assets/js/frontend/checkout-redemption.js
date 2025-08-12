@@ -61,7 +61,11 @@
 
         updateDiscountPreview: function(points) {
             points = parseInt(points) || 0;
-            var discount = (points * truebeep_checkout.redemption_rate).toFixed(2);
+            // Rate represents points per dollar (e.g., 100 points = $1)
+            // So discount = points / rate
+            var discount = truebeep_checkout.redemption_rate > 0 ? 
+                (points / truebeep_checkout.redemption_rate).toFixed(2) : 
+                '0.00';
             $('#discount-preview').text(discount);
         },
 

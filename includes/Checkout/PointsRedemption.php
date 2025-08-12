@@ -359,6 +359,8 @@ class PointsRedemption
 
     private function get_redemption_rate()
     {
+        // Get the points_to_amount value from tier or default setting
+        // This value represents how many points equal $1 (e.g., 100 points = $1)
         if ($this->user_tier && isset($this->user_tier['points_to_amount'])) {
             return floatval($this->user_tier['points_to_amount']);
         }
@@ -368,7 +370,12 @@ class PointsRedemption
     private function calculate_discount_from_points($points)
     {
         $rate = $this->get_redemption_rate();
-        return $points * $rate;
+        // If rate represents points per dollar (e.g., 100 points = $1)
+        // Then discount = points / rate
+        if ($rate > 0) {
+            return $points / $rate;
+        }
+        return 0;
     }
 
     private function calculate_points_from_discount($discount)
@@ -380,14 +387,18 @@ class PointsRedemption
         _log($rate);
         _log($discount);
 
+        // If rate represents points per dollar (e.g., 100 points = $1)
+        // Then points = discount * rate
         if ($rate > 0) {
-            return ceil($discount / $rate);
+            return ceil($discount * $rate);
         }
         return 0;
     }
 
     private function calculate_points_for_coupon($coupon_value)
     {
+        // For predefined coupons, use the same calculation as calculate_points_from_discount
+        // This ensures consistency between dynamic and predefined coupon modes
         return $this->calculate_points_from_discount($coupon_value);
     }
 
