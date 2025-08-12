@@ -247,7 +247,7 @@ We welcome contributions from the community!
 - Include unit tests for new features
 - Update documentation as needed
 
-## 🎁 Premium Features (Coming Soon)
+## Features (Coming Soon)
 
 - **Advanced Analytics**: Deep insights into program performance
 - **Email Automation**: Triggered campaigns based on point events
