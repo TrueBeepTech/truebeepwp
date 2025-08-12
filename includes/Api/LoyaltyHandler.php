@@ -194,20 +194,20 @@ class LoyaltyHandler
     public function handle_points_redemption($order_id, $posted_data, $order)
     {
         $points_redeemed = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
-        
+
         if ($points_redeemed > 0) {
             $order->update_meta_data('_truebeep_points_redeemed', 'yes');
-            
+
             $customer_id = $this->get_customer_truebeep_id($order);
             if ($customer_id) {
                 $response = $this->update_loyalty_points($customer_id, $points_redeemed, 'decrement', 'woocommerce');
-                
+
                 if (!is_wp_error($response) && $response['success']) {
                     $user_id = $order->get_user_id();
                     if ($user_id) {
                         $this->sync_customer_points_from_api($customer_id, $user_id);
                     }
-                    
+
                     $order->add_order_note(sprintf(__('Deducted %s loyalty points via Truebeep API', 'truebeep'), $points_redeemed));
                 } else {
                     $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
@@ -328,23 +328,25 @@ class LoyaltyHandler
 
         if ($points_earned || $points_redeemed) {
 ?>
-            <h3><?php _e('Truebeep Loyalty Points', 'truebeep'); ?></h3>
-            <p>
-                <?php if ($points_earned): ?>
-                    <strong><?php _e('Points Earned:', 'truebeep'); ?></strong> <?php echo $points_earned; ?>
-                    <?php if ($points_awarded === 'yes'): ?>
-                        <span style="color: green;">(<?php _e('Awarded', 'truebeep'); ?>)</span>
+            <div class="truebeep-loyalty-points-info" style="margin-top: 20px;">
+                <h3><?php _e('Truebeep Loyalty Points', 'truebeep'); ?></h3>
+                <p>
+                    <?php if ($points_earned): ?>
+                        <strong><?php _e('Points Earned:', 'truebeep'); ?></strong> <?php echo $points_earned; ?>
+                        <?php if ($points_awarded === 'yes'): ?>
+                            <span style="color: green;">(<?php _e('Awarded', 'truebeep'); ?>)</span>
+                        <?php endif; ?>
+                        <?php if ($points_revoked === 'yes'): ?>
+                            <span style="color: red;">(<?php _e('Revoked', 'truebeep'); ?>)</span>
+                        <?php endif; ?>
+                        <br>
                     <?php endif; ?>
-                    <?php if ($points_revoked === 'yes'): ?>
-                        <span style="color: red;">(<?php _e('Revoked', 'truebeep'); ?>)</span>
-                    <?php endif; ?>
-                    <br>
-                <?php endif; ?>
 
-                <?php if ($points_redeemed): ?>
-                    <strong><?php _e('Points Redeemed:', 'truebeep'); ?></strong> <?php echo $points_redeemed; ?>
-                <?php endif; ?>
-            </p>
+                    <?php if ($points_redeemed): ?>
+                        <strong><?php _e('Points Redeemed:', 'truebeep'); ?></strong> <?php echo $points_redeemed; ?>
+                    <?php endif; ?>
+                </p>
+            </div>
 <?php
         }
     }
