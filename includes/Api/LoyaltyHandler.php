@@ -24,7 +24,18 @@ class LoyaltyHandler
      */
     private function init_hooks()
     {
-        add_action('woocommerce_order_status_completed', [$this, 'award_loyalty_points'], 10, 1);
+        // Get the configured order status for awarding points
+        $award_status = get_option('truebeep_award_points_status', 'completed');
+        
+        // Add hooks based on the selected status
+        // Note: If 'both' is selected, points are only awarded once due to the check in award_loyalty_points()
+        if ($award_status === 'processing' || $award_status === 'both') {
+            add_action('woocommerce_order_status_processing', [$this, 'award_loyalty_points'], 10, 1);
+        }
+        if ($award_status === 'completed' || $award_status === 'both') {
+            add_action('woocommerce_order_status_completed', [$this, 'award_loyalty_points'], 10, 1);
+        }
+        
         add_action('woocommerce_order_status_cancelled', [$this, 'revoke_loyalty_points'], 10, 1);
         add_action('woocommerce_order_status_refunded', [$this, 'revoke_loyalty_points'], 10, 1);
         add_action('woocommerce_order_status_failed', [$this, 'revoke_loyalty_points'], 10, 1);
@@ -32,6 +43,16 @@ class LoyaltyHandler
         add_action('woocommerce_order_details_after_order_table', [$this, 'display_earned_points'], 10, 1);
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'display_admin_points_info']);
         add_action('woocommerce_checkout_order_processed', [$this, 'handle_points_redemption'], 20, 3);
+    }
+
+    /**
+     * Check if points should be earned on orders with redeemed points
+     *
+     * @return bool
+     */
+    private function should_earn_on_redeemed_orders()
+    {
+        return get_option('truebeep_earn_on_redeemed', 'no') === 'yes';
     }
 
     /**
@@ -46,13 +67,18 @@ class LoyaltyHandler
             return;
         }
 
+        // Prevent awarding points multiple times
         $points_awarded = $order->get_meta('_truebeep_points_awarded');
         if ($points_awarded === 'yes') {
             return;
         }
 
+        // Check if this order has redeemed points and if earning is allowed
         $has_redeemed_points = $order->get_meta('_truebeep_points_redeemed');
-        if ($has_redeemed_points && !$this->should_earn_on_redeemed_orders()) {
+        $points_redeemed_amount = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
+        
+        if (($has_redeemed_points === 'yes' || $points_redeemed_amount > 0) && !$this->should_earn_on_redeemed_orders()) {
+            $order->add_order_note(__('Loyalty points not awarded: Points were redeemed on this order and earning on redeemed orders is disabled.', 'truebeep'));
             return;
         }
 

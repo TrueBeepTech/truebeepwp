@@ -155,6 +155,19 @@ class WooCommerceSettings
                 'desc_tip' => false,
             ],
             [
+                'title' => __('Award Points on Order Status', 'truebeep'),
+                'desc' => __('Select when customers earn loyalty points. Processing = immediately after payment, Completed = after order fulfillment', 'truebeep'),
+                'id' => 'truebeep_award_points_status',
+                'type' => 'select',
+                'default' => 'completed',
+                'options' => [
+                    'processing' => __('Processing (Immediate)', 'truebeep'),
+                    'completed' => __('Completed (After Fulfillment)', 'truebeep'),
+                    'both' => __('Both Processing and Completed', 'truebeep'),
+                ],
+                'desc_tip' => true,
+            ],
+            [
                 'type' => 'truebeep_tiers',
                 'id' => 'truebeep_tiers_settings'
             ],
