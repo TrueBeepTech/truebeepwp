@@ -99,6 +99,20 @@ class LoyaltyHandler
             return;
         }
 
+        // First, handle revoking earned points
+        $this->revoke_earned_points($order);
+        
+        // Then, handle returning redeemed points
+        $this->return_redeemed_points($order);
+    }
+
+    /**
+     * Revoke earned points from cancelled order
+     *
+     * @param WC_Order $order
+     */
+    private function revoke_earned_points($order)
+    {
         $points_awarded = $order->get_meta('_truebeep_points_awarded');
         if ($points_awarded !== 'yes') {
             return;
@@ -138,6 +152,58 @@ class LoyaltyHandler
     }
 
     /**
+     * Return redeemed points from cancelled order
+     *
+     * @param WC_Order $order
+     */
+    private function return_redeemed_points($order)
+    {
+        // Check if points were redeemed for this order
+        $points_redeemed = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
+        if ($points_redeemed <= 0) {
+            return;
+        }
+
+        // Check if points have already been returned
+        $points_returned = $order->get_meta('_truebeep_points_returned');
+        if ($points_returned === 'yes') {
+            return;
+        }
+
+        $customer_id = $this->get_customer_truebeep_id($order);
+        if (!$customer_id) {
+            return;
+        }
+
+        // Return the redeemed points back to customer
+        $response = $this->update_loyalty_points($customer_id, $points_redeemed, 'increment', 'woocommerce_refund');
+        
+        if (!is_wp_error($response) && $response['success']) {
+            // Mark points as returned
+            $order->update_meta_data('_truebeep_points_returned', 'yes');
+            $order->update_meta_data('_truebeep_points_return_date', current_time('mysql'));
+            $order->save();
+
+            // Sync customer points from API to update user meta
+            $user_id = $order->get_user_id();
+            if ($user_id) {
+                $this->sync_customer_points_from_api($customer_id, $user_id);
+            }
+
+            $order->add_order_note(sprintf(
+                __('Returned %s redeemed loyalty points to customer via Truebeep', 'truebeep'), 
+                $points_redeemed
+            ));
+        } else {
+            $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
+            $order->add_order_note(sprintf(
+                __('Failed to return redeemed loyalty points: %s', 'truebeep'), 
+                $error_message
+            ));
+        }
+    }
+
+    /**
      * Handle partial refund - adjust points accordingly
      *
      * @param int $order_id Order ID
@@ -152,35 +218,65 @@ class LoyaltyHandler
             return;
         }
 
-        $points_awarded = $order->get_meta('_truebeep_points_awarded');
-        if ($points_awarded !== 'yes') {
-            return;
-        }
-
         $customer_id = $this->get_customer_truebeep_id($order);
         if (!$customer_id) {
             return;
         }
 
         $refund_amount = abs($refund->get_total());
+        $order_total = $order->get_total();
         $user_id = $order->get_user_id();
-        $points_to_deduct = $this->calculate_loyalty_points($refund_amount, $user_id);
 
-        if ($points_to_deduct <= 0) {
-            return;
+        // Handle deducting earned points for partial refund
+        $points_awarded = $order->get_meta('_truebeep_points_awarded');
+        if ($points_awarded === 'yes') {
+            $points_to_deduct = $this->calculate_loyalty_points($refund_amount, $user_id);
+
+            if ($points_to_deduct > 0) {
+                $response = $this->update_loyalty_points($customer_id, $points_to_deduct, 'decrement', 'woocommerce');
+                if (!is_wp_error($response) && $response['success']) {
+                    $total_refunded_points = floatval($order->get_meta('_truebeep_points_refunded')) + $points_to_deduct;
+                    $order->update_meta_data('_truebeep_points_refunded', $total_refunded_points);
+                    $order->save();
+
+                    $order->add_order_note(sprintf(__('Deducted %s loyalty points due to partial refund', 'truebeep'), $points_to_deduct));
+                }
+            }
         }
 
-        $response = $this->update_loyalty_points($customer_id, $points_to_deduct, 'decrement', 'woocommerce');
-        if (!is_wp_error($response) && $response['success']) {
-            $total_refunded_points = floatval($order->get_meta('_truebeep_points_refunded')) + $points_to_deduct;
-            $order->update_meta_data('_truebeep_points_refunded', $total_refunded_points);
-            $order->save();
+        // Handle returning redeemed points for partial refund
+        $points_redeemed = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
+        if ($points_redeemed > 0 && $order_total > 0) {
+            // Calculate proportional points to return based on refund percentage
+            $refund_percentage = $refund_amount / $order_total;
+            $points_to_return = round($points_redeemed * $refund_percentage);
+            
+            // Check if we've already returned some points
+            $points_already_returned = floatval($order->get_meta('_truebeep_points_partial_returned'));
+            
+            // Only return if we haven't exceeded the original redeemed amount
+            if (($points_already_returned + $points_to_return) <= $points_redeemed && $points_to_return > 0) {
+                $response = $this->update_loyalty_points($customer_id, $points_to_return, 'increment', 'woocommerce_partial_refund');
+                
+                if (!is_wp_error($response) && $response['success']) {
+                    $order->update_meta_data('_truebeep_points_partial_returned', $points_already_returned + $points_to_return);
+                    $order->save();
 
-            if ($user_id) {
-                $this->sync_customer_points_from_api($customer_id, $user_id);
+                    $order->add_order_note(sprintf(
+                        __('Returned %s redeemed loyalty points due to partial refund (%.1f%% of order)', 'truebeep'), 
+                        $points_to_return,
+                        $refund_percentage * 100
+                    ));
+                } else {
+                    $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
+                    $order->add_order_note(sprintf(__('Failed to return redeemed points for partial refund: %s', 'truebeep'), $error_message));
+                }
             }
+        }
 
-            $order->add_order_note(sprintf(__('Deducted %s loyalty points due to partial refund', 'truebeep'), $points_to_deduct));
+        // Sync customer points from API
+        if ($user_id) {
+            $this->sync_customer_points_from_api($customer_id, $user_id);
         }
     }
 
@@ -325,27 +421,51 @@ class LoyaltyHandler
         $points_awarded = $order->get_meta('_truebeep_points_awarded');
         $points_revoked = $order->get_meta('_truebeep_points_revoked');
         $points_redeemed = $order->get_meta('_truebeep_points_redeemed_amount');
+        $points_returned = $order->get_meta('_truebeep_points_returned');
+        $points_partial_returned = $order->get_meta('_truebeep_points_partial_returned');
+        $points_refunded = $order->get_meta('_truebeep_points_refunded');
 
         if ($points_earned || $points_redeemed) {
 ?>
             <div class="truebeep-loyalty-points-info" style="margin-top: 20px;">
                 <h3><?php _e('Truebeep Loyalty Points', 'truebeep'); ?></h3>
-                <p>
+                <table style="width: 100%; border-collapse: collapse;">
                     <?php if ($points_earned): ?>
-                        <strong><?php _e('Points Earned:', 'truebeep'); ?></strong> <?php echo $points_earned; ?>
-                        <?php if ($points_awarded === 'yes'): ?>
-                            <span style="color: green;">(<?php _e('Awarded', 'truebeep'); ?>)</span>
-                        <?php endif; ?>
-                        <?php if ($points_revoked === 'yes'): ?>
-                            <span style="color: red;">(<?php _e('Revoked', 'truebeep'); ?>)</span>
-                        <?php endif; ?>
-                        <br>
+                    <tr>
+                        <td style="padding: 5px 0;"><strong><?php _e('Points Earned:', 'truebeep'); ?></strong></td>
+                        <td style="padding: 5px 0;">
+                            <?php echo number_format($points_earned); ?>
+                            <?php if ($points_awarded === 'yes'): ?>
+                                <span style="color: green; font-size: 12px;">(<?php _e('Awarded', 'truebeep'); ?>)</span>
+                            <?php endif; ?>
+                            <?php if ($points_revoked === 'yes'): ?>
+                                <span style="color: red; font-size: 12px;">(<?php _e('Revoked', 'truebeep'); ?>)</span>
+                            <?php endif; ?>
+                            <?php if ($points_refunded > 0): ?>
+                                <span style="color: orange; font-size: 12px;">
+                                    (<?php printf(__('%s points deducted for refunds', 'truebeep'), number_format($points_refunded)); ?>)
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
                     <?php endif; ?>
 
                     <?php if ($points_redeemed): ?>
-                        <strong><?php _e('Points Redeemed:', 'truebeep'); ?></strong> <?php echo $points_redeemed; ?>
+                    <tr>
+                        <td style="padding: 5px 0;"><strong><?php _e('Points Redeemed:', 'truebeep'); ?></strong></td>
+                        <td style="padding: 5px 0;">
+                            <?php echo number_format($points_redeemed); ?>
+                            <?php if ($points_returned === 'yes'): ?>
+                                <span style="color: green; font-size: 12px;">(<?php _e('Fully Returned', 'truebeep'); ?>)</span>
+                            <?php elseif ($points_partial_returned > 0): ?>
+                                <span style="color: orange; font-size: 12px;">
+                                    (<?php printf(__('%s points returned', 'truebeep'), number_format($points_partial_returned)); ?>)
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
                     <?php endif; ?>
-                </p>
+                </table>
             </div>
 <?php
         }
