@@ -138,11 +138,11 @@ class WooCommerceSettings
             ],
             [
                 'title' => __('Redeeming Value', 'truebeep'),
-                'desc' => __('Points to Amount Conversion (for customers with no tier)', 'truebeep'),
+                'desc' => __('How many points equal $1 (for customers with no tier)', 'truebeep'),
                 'id' => 'truebeep_redeeming_value',
                 'type' => 'number',
                 'custom_attributes' => ['step' => '0.01', 'min' => '0'],
-                'default' => '1',
+                'default' => '100',
                 'css' => 'width: 100px;',
                 'desc_tip' => true,
             ],
@@ -311,10 +311,11 @@ class WooCommerceSettings
     private function get_default_tiers()
     {
         return [
-            ['name' => 'Free', 'order_to_points' => 1.0, 'points_to_amount' => 1.0, 'threshold' => 0],
-            ['name' => 'Bronze', 'order_to_points' => 1.5, 'points_to_amount' => 1.5, 'threshold' => 100],
-            ['name' => 'Silver', 'order_to_points' => 2.0, 'points_to_amount' => 2.0, 'threshold' => 500],
-            ['name' => 'Gold', 'order_to_points' => 3.0, 'points_to_amount' => 3.0, 'threshold' => 1000],
+            // points_to_amount: how many points equal $1 (e.g., 100 = 100 points per $1)
+            ['name' => 'Free', 'order_to_points' => 1.0, 'points_to_amount' => 100, 'threshold' => 0],
+            ['name' => 'Bronze', 'order_to_points' => 1.5, 'points_to_amount' => 90, 'threshold' => 100],
+            ['name' => 'Silver', 'order_to_points' => 2.0, 'points_to_amount' => 80, 'threshold' => 500],
+            ['name' => 'Gold', 'order_to_points' => 3.0, 'points_to_amount' => 50, 'threshold' => 1000],
         ];
     }
 
