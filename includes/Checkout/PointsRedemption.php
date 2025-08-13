@@ -4,6 +4,7 @@ namespace Truebeep\Checkout;
 
 use Truebeep\Loyalty\PointsManager;
 use Truebeep\Traits\ApiHelper;
+use Truebeep\Security\RateLimiter;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,13 +28,10 @@ class PointsRedemption
         add_action('woocommerce_review_order_before_payment', [$this, 'display_points_redemption_field']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_checkout_scripts']);
 
-        // AJAX handlers
+        // AJAX handlers - only for logged in users
         add_action('wp_ajax_apply_points_discount', [$this, 'ajax_apply_points_discount']);
-        add_action('wp_ajax_nopriv_apply_points_discount', [$this, 'ajax_apply_points_discount']);
         add_action('wp_ajax_remove_points_discount', [$this, 'ajax_remove_points_discount']);
-        add_action('wp_ajax_nopriv_remove_points_discount', [$this, 'ajax_remove_points_discount']);
         add_action('wp_ajax_validate_points', [$this, 'ajax_validate_points']);
-        add_action('wp_ajax_nopriv_validate_points', [$this, 'ajax_validate_points']);
 
         // Apply discount to cart
         add_action('woocommerce_cart_calculate_fees', [$this, 'apply_points_discount_to_cart']);
@@ -194,6 +192,11 @@ class PointsRedemption
 
         if (!is_user_logged_in()) {
             wp_send_json_error(['message' => __('Please log in to redeem points.', 'truebeep')]);
+        }
+        
+        // Rate limiting - max 5 attempts per minute
+        if (RateLimiter::is_rate_limited('apply_points', RateLimiter::get_identifier(), 5, 60)) {
+            wp_send_json_error(['message' => __('Too many attempts. Please try again later.', 'truebeep')]);
         }
 
         $user_id = get_current_user_id();
@@ -380,12 +383,7 @@ class PointsRedemption
 
     private function calculate_points_from_discount($discount)
     {
-        _log('calculate_points_from_discount');
-
         $rate = $this->get_redemption_rate();
-
-        _log($rate);
-        _log($discount);
 
         // If rate represents points per dollar (e.g., 100 points = $1)
         // Then points = discount * rate
