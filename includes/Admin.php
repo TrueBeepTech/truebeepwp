@@ -12,7 +12,6 @@ class Admin
         new Admin\Menu();
         new Admin\Handler();
         new Admin\CMB2();
-        new Admin\TestBgJob();
         new Admin\UserHandler();
     }
 }

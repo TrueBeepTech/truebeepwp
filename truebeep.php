@@ -114,9 +114,7 @@ final class Truebeep
         new Truebeep\Assets();
         new Truebeep\Ajax();
         new Truebeep\API();
-        // new Truebeep\LoyaltyHandler();
         new Truebeep\LoadElementor();
-        new Truebeep\Generator();
         new Truebeep\Customizer();
         new Truebeep\Admin\WooCommerceSettings();
         

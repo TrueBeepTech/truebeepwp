@@ -4,6 +4,7 @@ namespace Truebeep\Frontend;
 
 use Truebeep\Traits\ApiHelper;
 use Truebeep\Loyalty\PointsManager;
+use Truebeep\Security\RateLimiter;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -98,6 +99,11 @@ class LoyaltyPanel
 
         if (!is_user_logged_in()) {
             wp_send_json_error(['message' => __('Not logged in', 'truebeep')]);
+        }
+        
+        // Rate limiting - max 10 requests per minute
+        if (RateLimiter::is_rate_limited('loyalty_data', RateLimiter::get_identifier(), 10, 60)) {
+            wp_send_json_error(['message' => __('Too many requests. Please try again later.', 'truebeep')]);
         }
 
         $user_id = get_current_user_id();
