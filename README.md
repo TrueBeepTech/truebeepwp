@@ -78,21 +78,9 @@ Truebeep offers a comprehensive loyalty and marketing platform designed to enhan
 
 ### Basic Configuration
 
-```
-WooCommerce → Settings → Truebeep → Credentials
-├── API URL: Your Truebeep API endpoint
-├── Username: Your API username
-└── Password: Your API password
-
-WooCommerce → Settings → Truebeep → Loyalty
-├── Earning Rate: 1 point per $1
-├── Redemption Rate: 100 points = $1
-└── Order Status: When to award points
-```
-
 ### Connect TrueBeep to Shopify
 
-To connect TrueBeep to your Shopify store, add the API URL and API Key in the TrueBeep settings:
+To connect TrueBeep to your wp store, add the API URL and API Key in the TrueBeep settings:
 
 1. Use `https://api.truebeep.com/v1` as the API URL
 2. Enter your API Key generated from the TrueBeep dashboard
@@ -204,13 +192,10 @@ $this->update_loyalty_points($customer_id, $points, 'increment', 'reason');
 ## 🤝 Support
 
 ### Getting Help
-- 📧 Email: support@truebeep.com
+- 📧 Contact Us: [Contact Us](https://app.truebeep.com/contact-us)
 - 💬 Forum: [Community Support](https://community.truebeep.com)
-- 🐛 Issues: [GitHub Issues](https://github.com/truebeep/woocommerce-plugin/issues)
 - 📖 Docs: [Full Documentation](DOCUMENTATION.md)
 
-### Premium Support
-Priority support available for enterprise customers. [Contact Sales](mailto:sales@truebeep.com)
 
 ## 🔄 Changelog
 
@@ -253,23 +238,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 ```
 
-## 🌟 Contributing
-
-We welcome contributions from the community!
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ### Coding Standards
 - Follow WordPress Coding Standards
 - Write clean, documented code
-- Include unit tests for new features
 - Update documentation as needed
 
-## 🎁 Premium Features (Coming Soon)
+## 🎁 Features (Coming Soon)
 
 - **Advanced Analytics**: Deep insights into program performance
 - **Email Automation**: Triggered campaigns based on point events
@@ -280,7 +254,7 @@ We welcome contributions from the community!
 - **White Label**: Full branding customization
 - **Priority Support**: 24/7 dedicated support team
 
----
+---****
 
 <p align="center">
   <strong>Build Customer Loyalty. Drive Repeat Sales. Grow Your Business.</strong>
@@ -292,4 +266,4 @@ We welcome contributions from the community!
 
 ---
 
-**[⬆ back to top](#truebeep---woocommerce-loyalty-points--rewards)**
+**[⬆ back to top](#truebeep: Smart Wallet Loyalty)**
