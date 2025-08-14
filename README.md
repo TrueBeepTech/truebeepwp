@@ -254,7 +254,6 @@ GNU General Public License for more details.
 - **White Label**: Full branding customization
 - **Priority Support**: 24/7 dedicated support team
 
----****
 
 <p align="center">
   <strong>Build Customer Loyalty. Drive Repeat Sales. Grow Your Business.</strong>
