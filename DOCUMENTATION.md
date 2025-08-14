@@ -1,4 +1,4 @@
-# Truebeep - WooCommerce Loyalty Points & Rewards Plugin
+# Truebeep: Smart Wallet Loyalty
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -17,10 +17,15 @@
 11. [Developer Guide](#developer-guide)
 
 ---
+Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
 
 ## Overview
 
-Truebeep is a comprehensive loyalty points and rewards plugin for WooCommerce that enables merchants to create and manage customer loyalty programs. The plugin integrates with the Truebeep API to provide seamless point tracking, tier-based rewards, and digital wallet functionality.
+Truebeep offers a comprehensive loyalty and marketing platform designed to enhance customer retention and drive repeat purchases. Implement versatile loyalty programs that allow customers to earn points on their purchases and redeem them seamlessly at checkout. With integration for Apple Wallet and Google Wallet, customers can conveniently manage and utilize their rewards directly from their mobile devices. Customizable wallet passes and push notifications ensure an engaging and streamlined user experience.
+
+- **Earn & Redeem Points**: Accumulate points with every purchase and apply them for discounts.
+- **Digital Wallet Integration**: Effortlessly sync rewards with Google & Apple Wallets for easy access.
+- **Marketing Automation**: Streamline campaigns, tailor offers, and monitor performance insights.
 
 ### Key Features
 - **Points-based loyalty program** with customizable earning and redemption rates
@@ -59,11 +64,6 @@ Truebeep is a comprehensive loyalty points and rewards plugin for WooCommerce th
 3. Navigate to **WordPress Admin → Plugins**
 4. Find "Truebeep" in the plugin list
 5. Click **Activate**
-
-### Method 3: Composer Installation
-```bash
-composer require truebeep/woocommerce-loyalty
-```
 
 ---
 
