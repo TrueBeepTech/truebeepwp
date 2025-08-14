@@ -99,9 +99,9 @@ API Username: merchant_12345
 API Password: ••••••••••••
 ```
 
-### Connect TrueBeep to Shopify
+### Connect TrueBeep to WordPress
 
-To connect TrueBeep to your Shopify store, add the API URL and API Key in the TrueBeep settings:
+To connect TrueBeep to your WP store, add the API URL and API Key in the TrueBeep settings:
 
 1. **API URL**: Use `https://api.truebeep.com/v1` as the API URL
 2. **API Key**: Enter your API Key generated from the TrueBeep dashboard
@@ -555,9 +555,8 @@ $tier = $this->get_customer_tier($customer_id);
 ### Getting Help
 
 1. **Documentation**: This guide
-2. **Support Email**: support@truebeep.com
-3. **GitHub Issues**: [Report bugs](https://github.com/truebeep/woocommerce-plugin/issues)
-4. **Community Forum**: [Join discussions](https://community.truebeep.com)
+2. **Contact Us**: [Contact Us](https://app.truebeep.com/contact-us)
+3. **Community Forum**: [Join discussions](https://community.truebeep.com)
 
 ### Updates
 
