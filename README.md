@@ -1,15 +1,21 @@
-# Truebeep - WooCommerce Loyalty Points & Rewards
+# Truebeep: Smart Wallet Loyalty
+
 
 [![WordPress Plugin](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
 [![WooCommerce](https://img.shields.io/badge/WooCommerce-4.0%2B-purple.svg)](https://woocommerce.com/)
 [![PHP Version](https://img.shields.io/badge/PHP-7.2%2B-8892BF.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-Transform your WooCommerce store into a customer retention powerhouse with Truebeep - the comprehensive loyalty points and rewards solution that drives repeat purchases and increases customer lifetime value.
+Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
 
 ## 🎯 Overview
 
-Truebeep is a feature-rich loyalty points plugin for WooCommerce that seamlessly integrates with the Truebeep API platform to provide enterprise-grade loyalty program management. Whether you're running a small boutique or a large-scale e-commerce operation, Truebeep scales with your business to deliver personalized rewards that keep customers coming back.
+Truebeep offers a comprehensive loyalty and marketing platform designed to enhance customer retention and drive repeat purchases. Implement versatile loyalty programs that allow customers to earn points on their purchases and redeem them seamlessly at checkout. With integration for Apple Wallet and Google Wallet, customers can conveniently manage and utilize their rewards directly from their mobile devices. Customizable wallet passes and push notifications ensure an engaging and streamlined user experience.
+
+- **Earn & Redeem Points**: Accumulate points with every purchase and apply them for discounts.
+- **Digital Wallet Integration**: Effortlessly sync rewards with Google & Apple Wallets for easy access.
+- **Marketing Automation**: Streamline campaigns, tailor offers, and monitor performance insights.
+
 
 ### Why Choose Truebeep?
 
@@ -83,6 +89,22 @@ WooCommerce → Settings → Truebeep → Loyalty
 ├── Redemption Rate: 100 points = $1
 └── Order Status: When to award points
 ```
+
+### Connect TrueBeep to Shopify
+
+To connect TrueBeep to your Shopify store, add the API URL and API Key in the TrueBeep settings:
+
+1. Use `https://api.truebeep.com/v1` as the API URL
+2. Enter your API Key generated from the TrueBeep dashboard
+
+### Add Wallet Pass
+
+To add a wallet pass for your customers, navigate to the TrueBeep dashboard and follow these steps:
+
+1. Navigate to the Wallet Pass section
+2. Copy wallet pass ID
+3. Paste the wallet pass ID into the Wallet Template ID field in the TrueBeep settings
+4. [Learn more about Wallet Passes](https://docs.truebeep.com/wallet-passes)
 
 ## 📖 Documentation
 

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name:       Truebeep
+ * Plugin Name:       Truebeep: Smart Wallet Loyalty
  * Plugin URI:        https://truebeep.com
- * Description:       Helper plugin for Truebeep
+ * Description:       Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
  * Version:           1.0.0
  * Author:            Truebeep
  * Author URI:        https://truebeep.com
@@ -53,6 +53,7 @@ final class Truebeep
 
         register_activation_hook(__FILE__, [$this, 'activate']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
+        add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_plugin_action_links']);
     }
 
     /**
@@ -127,6 +128,22 @@ final class Truebeep
         } else {
             new Truebeep\Frontend();
         }
+    }
+
+    /**
+     * Add plugin action links
+     *
+     * @param array $links Existing links
+     * @return array Modified links
+     */
+    public function add_plugin_action_links($links)
+    {
+        $settings_link = '<a href="' . admin_url('admin.php?page=wc-settings&tab=truebeep') . '">' . __('Settings', 'truebeep') . '</a>';
+        $docs_link = '<a href="https://docs.truebeep.com" target="_blank">' . __('Documentation', 'truebeep') . '</a>';
+        
+        array_unshift($links, $settings_link, $docs_link);
+        
+        return $links;
     }
 }
 

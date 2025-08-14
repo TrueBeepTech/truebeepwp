@@ -99,6 +99,19 @@ API Username: merchant_12345
 API Password: ••••••••••••
 ```
 
+### Connect TrueBeep to Shopify
+
+To connect TrueBeep to your Shopify store, add the API URL and API Key in the TrueBeep settings:
+
+1. **API URL**: Use `https://api.truebeep.com/v1` as the API URL
+2. **API Key**: Enter your API Key generated from the TrueBeep dashboard
+
+**Configuration Steps:**
+1. Navigate to **WooCommerce → Settings → Truebeep → Credentials**
+2. Enter `https://api.truebeep.com/v1` in the API URL field
+3. Enter your API Key from the TrueBeep dashboard in the appropriate field
+4. Save your settings
+
 ### Loyalty Settings
 
 Navigate to **WooCommerce → Settings → Truebeep → Loyalty**
@@ -172,6 +185,21 @@ Navigate to **WooCommerce → Settings → Truebeep → Wallet**
 | **Google Wallet Template ID** | Google-specific template ID | GOOGLE_TEMPLATE_789 |
 | **Show Floating Panel** | Enable loyalty panel on frontend | Yes |
 | **Panel Position** | Where to display the panel | Bottom Right |
+
+### Add Wallet Pass
+
+To add a wallet pass for your customers, navigate to the TrueBeep dashboard and follow these steps:
+
+1. **Navigate to the Wallet Pass section** in your TrueBeep dashboard
+2. **Copy the wallet pass ID** from the dashboard
+3. **Paste the wallet pass ID** into the Wallet Template ID field in the TrueBeep settings
+4. **Save your settings** to enable wallet pass functionality
+
+**Important Notes:**
+- The wallet pass ID is unique to your store
+- Different IDs may be needed for Apple Wallet and Google Wallet
+- Wallet passes automatically sync with customer point balances
+- [Learn more about Wallet Passes](https://docs.truebeep.com/wallet-passes)
 
 ---
 
