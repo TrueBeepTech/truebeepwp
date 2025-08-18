@@ -54,6 +54,9 @@ final class Truebeep
         register_activation_hook(__FILE__, [$this, 'activate']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_plugin_action_links']);
+        
+        // Initialize GitHub updater
+        $this->init_updater();
     }
 
     /**
@@ -144,6 +147,39 @@ final class Truebeep
         array_unshift($links, $settings_link, $docs_link);
         
         return $links;
+    }
+    
+    /**
+     * Initialize GitHub updater
+     *
+     * @return void
+     */
+    private function init_updater()
+    {
+        // Load GitHub configuration
+        $config_file = TRUEBEEP_PATH . '/github-config.php';
+        if (!file_exists($config_file)) {
+            return; // Skip updater if config file doesn't exist
+        }
+        
+        $config = include $config_file;
+        
+        // Validate configuration
+        if (empty($config['username']) || empty($config['repository'])) {
+            return; // Skip if not properly configured
+        }
+        
+        // Initialize the updater
+        $updater = new \Truebeep\GitHubUpdater(
+            TRUEBEEP_FILE,
+            $config['username'],
+            $config['repository']
+        );
+        
+        // Set access token if provided (for private repos)
+        if (!empty($config['access_token'])) {
+            $updater->set_access_token($config['access_token']);
+        }
     }
 }
 
