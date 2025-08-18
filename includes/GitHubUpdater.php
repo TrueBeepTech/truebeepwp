@@ -62,7 +62,7 @@ class GitHubUpdater {
         $this->plugin_file = $plugin_file;
         $this->username = $username;
         $this->repository = $repository;
-        $this->plugin_slug = plugin_basename(dirname($plugin_file));
+        $this->plugin_slug = basename(dirname($plugin_file));
         
         $this->initialize();
     }
@@ -71,10 +71,20 @@ class GitHubUpdater {
      * Initialize the updater
      */
     private function initialize() {
-        add_filter('pre_set_site_transient_update_plugins', [$this, 'check_for_update']);
-        add_filter('plugins_api', [$this, 'plugin_info'], 20, 3);
+        // Set plugin data immediately
+        $this->set_plugin_data();
+        
+        // Hook into WordPress update system with higher priority
+        add_filter('pre_set_site_transient_update_plugins', [$this, 'check_for_update'], 10);
+        add_filter('plugins_api', [$this, 'plugin_info'], 10, 3);
         add_filter('upgrader_post_install', [$this, 'after_install'], 10, 3);
-        add_action('admin_init', [$this, 'set_plugin_data']);
+        
+        // Also check on these hooks to ensure updates are detected
+        add_filter('site_transient_update_plugins', [$this, 'modify_transient'], 10);
+        add_filter('transient_update_plugins', [$this, 'modify_transient'], 10);
+        
+        // Force check for updates when viewing plugins page
+        add_action('admin_head-plugins.php', [$this, 'force_update_check']);
     }
     
     /**
@@ -97,31 +107,93 @@ class GitHubUpdater {
     }
     
     /**
+     * Force update check when viewing plugins page
+     */
+    public function force_update_check() {
+        // Clear the GitHub response cache to force a fresh check
+        $this->github_response = null;
+    }
+    
+    /**
+     * Modify transient to include our plugin update
+     * 
+     * @param object $transient
+     * @return object
+     */
+    public function modify_transient($transient) {
+        if (empty($transient) || !is_object($transient)) {
+            $transient = new \stdClass();
+        }
+        
+        // Initialize arrays if they don't exist
+        if (!isset($transient->response)) {
+            $transient->response = [];
+        }
+        if (!isset($transient->checked)) {
+            $transient->checked = [];
+        }
+        
+        // Ensure plugin data is loaded
+        if (empty($this->plugin_data)) {
+            $this->set_plugin_data();
+        }
+        
+        // Get GitHub release info
+        $this->get_github_release_info();
+        
+        if ($this->github_response) {
+            // Check if update is available
+            $github_version = ltrim($this->github_response->tag_name, 'v');
+            $current_version = $this->plugin_data['Version'];
+            
+            if (version_compare($github_version, $current_version, '>')) {
+                $plugin_info = $this->generate_plugin_info();
+                $transient->response[plugin_basename($this->plugin_file)] = $plugin_info;
+            }
+            
+            // Always add to checked
+            $transient->checked[plugin_basename($this->plugin_file)] = $current_version;
+        }
+        
+        return $transient;
+    }
+    
+    /**
      * Check for updates
      * 
      * @param object $transient WordPress update transient
      * @return object Modified transient
      */
     public function check_for_update($transient) {
-        
-        _log('check_for_update');   
-        _log($transient);
-        
+        // Initialize checked array if it doesn't exist
         if (empty($transient->checked)) {
-            return $transient;
+            $transient->checked = [];
         }
         
-        // Get GitHub release info
-        $this->get_github_release_info();
+        // Ensure plugin data is loaded
+        if (empty($this->plugin_data)) {
+            $this->set_plugin_data();
+        }
+        
+        // Get GitHub release info (force fresh check on plugins page)
+        $force = (isset($_GET['force-check']) && $_GET['force-check'] == 1);
+        $this->get_github_release_info($force);
         
         if (!$this->github_response) {
             return $transient;
         }
         
+        // Store current version in checked array
+        $transient->checked[plugin_basename($this->plugin_file)] = $this->plugin_data['Version'];
+        
         // Check if update is available
+        // Remove 'v' prefix from tag if present
+        $github_version = ltrim($this->github_response->tag_name, 'v');
+        $current_version = $this->plugin_data['Version'];
+        
         $do_update = version_compare(
-            $this->github_response->tag_name, 
-            $this->plugin_data['Version'], 
+            $github_version, 
+            $current_version, 
             '>'
         );
         
@@ -138,10 +210,11 @@ class GitHubUpdater {
     /**
      * Get GitHub release information
      * 
+     * @param bool $force_check Force a fresh API call
      * @return mixed GitHub API response or false
      */
-    private function get_github_release_info() {
-        if (!empty($this->github_response)) {
+    private function get_github_release_info($force_check = false) {
+        if (!$force_check && !empty($this->github_response)) {
             return $this->github_response;
         }
         
@@ -246,7 +319,7 @@ class GitHubUpdater {
         $plugin_info->id = $this->plugin_slug;
         $plugin_info->slug = $this->plugin_slug;
         $plugin_info->plugin = plugin_basename($this->plugin_file);
-        $plugin_info->new_version = $this->github_response->tag_name;
+        $plugin_info->new_version = ltrim($this->github_response->tag_name, 'v');
         $plugin_info->url = 'https://github.com/' . $this->username . '/' . $this->repository;
         $plugin_info->package = $this->get_download_url();
         $plugin_info->icons = $this->get_plugin_icons();
@@ -265,8 +338,8 @@ class GitHubUpdater {
      * @return string Download URL
      */
     private function get_download_url() {
-        if (!empty($this->github_response->assets)) {
-            // Look for a ZIP asset
+        // Check if there's a specific ZIP asset in the release
+        if (!empty($this->github_response->assets) && is_array($this->github_response->assets)) {
             foreach ($this->github_response->assets as $asset) {
                 if (strpos($asset->name, '.zip') !== false) {
                     return $asset->browser_download_url;
@@ -274,7 +347,12 @@ class GitHubUpdater {
             }
         }
         
-        // Fallback to zipball URL
+        // Use the zipball URL from the release if available
+        if (!empty($this->github_response->zipball_url)) {
+            return $this->github_response->zipball_url;
+        }
+        
+        // Fallback to constructing the archive URL
         return sprintf(
             'https://github.com/%s/%s/archive/refs/tags/%s.zip',
             $this->username,
@@ -312,7 +390,7 @@ class GitHubUpdater {
             return $result;
         }
         
-        $this->get_github_release_info();
+        $this->get_github_release_info(true);
         
         if (!$this->github_response) {
             return $result;
@@ -322,7 +400,7 @@ class GitHubUpdater {
         
         $plugin_info->name = $this->plugin_data['Name'];
         $plugin_info->slug = $this->plugin_slug;
-        $plugin_info->version = $this->github_response->tag_name;
+        $plugin_info->version = ltrim($this->github_response->tag_name, 'v');
         $plugin_info->author = $this->plugin_data['Author'];
         $plugin_info->author_profile = $this->plugin_data['AuthorURI'];
         $plugin_info->last_updated = $this->github_response->published_at;
@@ -380,15 +458,37 @@ class GitHubUpdater {
             return $response;
         }
         
-        // GitHub delivers the plugin in a folder named with the branch/tag
-        // We need to rename it to match our plugin folder name
-        $plugin_folder = WP_PLUGIN_DIR . '/' . $this->plugin_slug;
-        $wp_filesystem->move($result['destination'], $plugin_folder);
-        $result['destination'] = $plugin_folder;
+        // Get the installed plugin folder
+        $installed_dir = $result['destination'];
+        $plugin_dir = WP_PLUGIN_DIR . '/' . $this->plugin_slug;
         
-        // Reactivate plugin if it was active
-        if (is_plugin_active(plugin_basename($this->plugin_file))) {
-            activate_plugin(plugin_basename($this->plugin_file));
+        // GitHub delivers the plugin in a folder named repo-name-tag
+        // We need to handle the directory structure properly
+        if ($installed_dir !== $plugin_dir) {
+            // Check if the GitHub archive structure needs adjustment
+            // GitHub typically creates: repo-name-tagname/
+            $temp_dir = $installed_dir;
+            
+            // Find the actual plugin files (they might be in a subdirectory)
+            $possible_dirs = glob($temp_dir . '/*', GLOB_ONLYDIR);
+            if (count($possible_dirs) === 1 && $wp_filesystem->exists($possible_dirs[0] . '/truebeep.php')) {
+                // Plugin files are in a subdirectory
+                $temp_dir = $possible_dirs[0];
+            }
+            
+            // Remove existing plugin directory if it exists
+            if ($wp_filesystem->exists($plugin_dir)) {
+                $wp_filesystem->delete($plugin_dir, true);
+            }
+            
+            // Move the new files to the correct location
+            $wp_filesystem->move($temp_dir, $plugin_dir);
+            $result['destination'] = $plugin_dir;
+            
+            // Clean up any remaining temporary directories
+            if ($temp_dir !== $installed_dir && $wp_filesystem->exists($installed_dir)) {
+                $wp_filesystem->delete($installed_dir, true);
+            }
         }
         
         return $result;
