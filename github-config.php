@@ -7,17 +7,17 @@
  * and repository name.
  */
 
-return [
+ return [
     // Your GitHub username or organization name
-    'username' => 'your-github-username',
+    'username' => 'wildrain',
     
     // Your GitHub repository name
-    'repository' => 'TruebeepWp',
+    'repository' => 'tbpublic',
     
     // Optional: GitHub personal access token for private repositories
     // Leave empty for public repositories
     'access_token' => '',
     
     // Optional: Branch to check for updates (default: main/master)
-    'branch' => 'main',
+    'branch' => 'master',
 ];

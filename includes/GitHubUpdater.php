@@ -103,6 +103,10 @@ class GitHubUpdater {
      * @return object Modified transient
      */
     public function check_for_update($transient) {
+        
+        _log('check_for_update');   
+        _log($transient);
+        
         if (empty($transient->checked)) {
             return $transient;
         }
