@@ -14,5 +14,6 @@ class Admin
         new Admin\CMB2();
         new Admin\TestBgJob();
         new Admin\UserHandler();
+        new Admin\NetworkDiagnostics();
     }
 }
