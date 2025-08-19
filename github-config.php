@@ -9,10 +9,10 @@
 
  return [
     // Your GitHub username or organization name
-    'username' => 'wildrain',
+    'username' => 'TrueBeepTech',
     
     // Your GitHub repository name
-    'repository' => 'tbpublic',
+    'repository' => 'TruebeepWp',
     
     // Optional: GitHub personal access token for private repositories
     // Leave empty for public repositories
