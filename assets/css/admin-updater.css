@@ -1,0 +1,41 @@
+/**
+ * Admin Updater Styles
+ */
+
+/* Style the check for update link */
+.plugin-version-author-uri a[href*="truebeep-check-update"] {
+    color: #2271b1;
+    font-weight: 600;
+}
+
+.plugin-version-author-uri a[href*="truebeep-check-update"]:hover {
+    color: #135e96;
+    text-decoration: underline;
+}
+
+/* Highlight the update notice */
+.notice.truebeep-update-checked {
+    border-left-color: #00a32a;
+}
+
+/* Fix duplicate update button issue */
+.plugins .update-message.notice-warning {
+    margin-top: 0 !important;
+}
+
+/* Ensure proper spacing for update row */
+.plugins tr.plugin-update-tr[data-plugin*="truebeep"] .update-message {
+    margin: 5px 0 !important;
+}
+
+/* Style the checking indicator */
+.truebeep-checking-update {
+    display: inline-block;
+    margin-left: 10px;
+    color: #666;
+}
+
+.truebeep-checking-update .spinner {
+    float: none;
+    margin: 0 5px 0 0;
+}

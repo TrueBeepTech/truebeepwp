@@ -13,6 +13,7 @@ class Assets
     public function __construct()
     {
         add_action('wp_enqueue_scripts', [$this, 'register_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'register_admin_assets']);
     }
 
     /**
@@ -74,6 +75,22 @@ class Assets
             $version = isset($style['version']) ? $style['version'] : TRUEBEEP_VERSION;
 
             wp_register_style($handle, $style['src'], $deps, $version);
+        }
+    }
+    
+    /**
+     * Register admin assets
+     */
+    public function register_admin_assets($hook)
+    {
+        // Enqueue on plugins page
+        if ($hook === 'plugins.php') {
+            wp_enqueue_style(
+                'truebeep-admin-updater',
+                TRUEBEEP_ASSETS . '/css/admin-updater.css',
+                [],
+                filemtime(TRUEBEEP_PATH . '/assets/css/admin-updater.css')
+            );
         }
     }
 }
