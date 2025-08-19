@@ -13,10 +13,10 @@ This guide explains how to create releases on GitHub that will trigger automatic
 The plugin is configured to check for updates from the repository URL specified in `github-config.php`:
 
 ```php
-'repository_url' => 'https://github.com/wildrain/tbpublic'
+'repository_url' => 'https://github.com/YOUR_USERNAME/YOUR_REPOSITORY'
 ```
 
-To change the repository, simply update this URL in the `github-config.php` file.
+To change the repository, simply update this URL in the `github-config.php` file with your actual GitHub repository URL.
 
 ## Creating a New Release
 
