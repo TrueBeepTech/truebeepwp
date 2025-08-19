@@ -13,5 +13,6 @@ class Admin
         new Admin\Handler();
         new Admin\CMB2();
         new Admin\UserHandler();
+        new Admin\NetworkDiagnostics();
     }
 }
