@@ -113,6 +113,7 @@ class GitHubUpdater {
      * Maybe clear cache based on user actions
      */
     public function maybe_clear_cache() {
+                
         // Clear cache if force-check is requested
         if (isset($_GET['force-check']) && $_GET['force-check'] == 1) {
             delete_transient('truebeep_github_release_' . md5($this->username . $this->repository));
