@@ -5,7 +5,7 @@ namespace Truebeep;
 class Admin
 {
     /**
-     * Class initialize
+     * Class initialize test 123
      */
     function __construct()
     {
