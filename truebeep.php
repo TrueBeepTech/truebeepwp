@@ -16,20 +16,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/**
- * Check if WooCommerce is active
- */
-if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-    add_action('admin_notices', function () {
-?>
-        <div class="error">
-            <p><?php _e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
-        </div>
-<?php
-    });
-    return;
-}
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
@@ -52,6 +38,7 @@ final class Truebeep
         $this->define_constants();
 
         register_activation_hook(__FILE__, [$this, 'activate']);
+        add_action('init', [$this, 'load_textdomain']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
         
         // Initialize GitHub updater
@@ -89,6 +76,20 @@ final class Truebeep
         define('TRUEBEEP_DIR_PATH', plugin_dir_path(__FILE__));
         define('TRUEBEEP_ELEMENTOR', TRUEBEEP_DIR_PATH . 'includes/Elementor/');
     }
+    
+    /**
+     * Load plugin text domain
+     *
+     * @return void
+     */
+    public function load_textdomain()
+    {
+        load_plugin_textdomain(
+            'truebeep',
+            false,
+            dirname(plugin_basename(__FILE__)) . '/languages'
+        );
+    }
 
     /**
      * Plugin information
@@ -98,7 +99,10 @@ final class Truebeep
     public function activate()
     {
         // Check if WooCommerce is active when activating the plugin
-        if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+        if (!$this->is_woocommerce_active()) {
+            // Load text domain for activation error
+            load_plugin_textdomain('truebeep', false, dirname(plugin_basename(__FILE__)) . '/languages');
+            
             deactivate_plugins(plugin_basename(__FILE__));
             wp_die(__('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'));
         }
@@ -114,6 +118,12 @@ final class Truebeep
      */
     public function init_plugin()
     {
+        // Check if WooCommerce is active before initializing features
+        if (!$this->is_woocommerce_active()) {
+            add_action('admin_notices', [$this, 'woocommerce_missing_notice']);
+            return;
+        }
+        
         new Truebeep\Assets();
         new Truebeep\Ajax();
         new Truebeep\API();
@@ -130,6 +140,31 @@ final class Truebeep
         } else {
             new Truebeep\Frontend();
         }
+    }
+    
+    /**
+     * Check if WooCommerce is active
+     *
+     * @return bool
+     */
+    private function is_woocommerce_active()
+    {
+        return in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) || 
+               (is_multisite() && array_key_exists('woocommerce/woocommerce.php', get_site_option('active_sitewide_plugins', [])));
+    }
+    
+    /**
+     * Show admin notice when WooCommerce is missing
+     *
+     * @return void
+     */
+    public function woocommerce_missing_notice()
+    {
+        ?>
+        <div class="error">
+            <p><?php _e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
+        </div>
+        <?php
     }
     
     /**
