@@ -40,6 +40,9 @@ final class Truebeep
         register_activation_hook(__FILE__, [$this, 'activate']);
         add_action('init', [$this, 'load_textdomain']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
+        
+        // Add plugin action links
+        add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_plugin_action_links']);
 
         // Initialize GitHub updater
         $this->init_updater();
@@ -163,6 +166,59 @@ final class Truebeep
             <p><?php _e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
         </div>
 <?php
+    }
+    
+    /**
+     * Add plugin action links
+     *
+     * @param array $links Existing action links
+     * @return array Modified action links
+     */
+    public function add_plugin_action_links($links)
+    {
+        $settings_url = $this->get_settings_url();
+        
+        // Allow customization of documentation and support URLs
+        $docs_url = apply_filters('truebeep_docs_url', 'https://docs.truebeep.com');
+        $support_url = apply_filters('truebeep_support_url', 'https://truebeep.com/support');
+        
+        $action_links = [
+            'settings' => sprintf(
+                '<a href="%s">%s</a>',
+                esc_url($settings_url),
+                __('Settings', 'truebeep')
+            ),
+            'docs' => sprintf(
+                '<a href="%s" target="_blank">%s</a>',
+                esc_url($docs_url),
+                __('Docs', 'truebeep')
+            ),
+            'support' => sprintf(
+                '<a href="%s" target="_blank">%s</a>',
+                esc_url($support_url),
+                __('Support', 'truebeep')
+            )
+        ];
+
+        // Allow developers to add custom action links
+        $action_links = apply_filters('truebeep_plugin_action_links', $action_links);
+
+        return array_merge($action_links, $links);
+    }
+    
+    /**
+     * Get settings URL based on WooCommerce availability
+     *
+     * @return string Settings URL
+     */
+    private function get_settings_url()
+    {
+        if ($this->is_woocommerce_active()) {
+            return admin_url('admin.php?page=wc-settings&tab=truebeep');
+        }
+        
+        // Fallback to network diagnostics if WooCommerce is not active
+        return admin_url('tools.php?page=truebeep-diagnostics');
     }
 
     /**
