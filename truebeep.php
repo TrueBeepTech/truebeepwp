@@ -4,7 +4,7 @@
  * Plugin Name:       Truebeep: Smart Wallet Loyalty
  * Plugin URI:        https://truebeep.com
  * Description:       Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Truebeep
  * Author URI:        https://truebeep.com
  * License:           GPL v2 or later
@@ -28,7 +28,7 @@ final class Truebeep
      * 
      * @var string
      */
-    const version = '1.0.2';
+    const version = '1.0.3';
 
     /**
      * contractor
@@ -128,7 +128,6 @@ final class Truebeep
         new Truebeep\Ajax();
         new Truebeep\API();
         new Truebeep\LoadElementor();
-        new Truebeep\Customizer();
         new Truebeep\Admin\WooCommerceSettings();
         
         // Initialize Loyalty components
