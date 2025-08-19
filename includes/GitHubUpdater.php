@@ -88,6 +88,12 @@ class GitHubUpdater {
         
         // Clear cache on admin pages
         add_action('admin_init', [$this, 'maybe_clear_cache']);
+        
+        // Add check for update link
+        add_filter('plugin_row_meta', [$this, 'add_check_for_update_link'], 10, 2);
+        
+        // Handle check for update action
+        add_action('admin_init', [$this, 'handle_check_for_update']);
     }
     
     /**
@@ -113,17 +119,92 @@ class GitHubUpdater {
      * Maybe clear cache based on user actions
      */
     public function maybe_clear_cache() {
-                
         // Clear cache if force-check is requested
         if (isset($_GET['force-check']) && $_GET['force-check'] == 1) {
-            delete_transient('truebeep_github_release_' . md5($this->username . $this->repository));
-            $this->github_response = null;
+            $this->clear_all_caches();
         }
         
         // Clear cache on plugins page
         global $pagenow;
         if ($pagenow === 'plugins.php' && isset($_GET['force-check'])) {
-            delete_transient('truebeep_github_release_' . md5($this->username . $this->repository));
+            $this->clear_all_caches();
+        }
+    }
+    
+    /**
+     * Clear all plugin update caches
+     */
+    private function clear_all_caches() {
+        // Clear our custom cache
+        delete_transient('truebeep_github_release_' . md5($this->username . $this->repository));
+        
+        // Clear WordPress update cache
+        delete_site_transient('update_plugins');
+        delete_transient('update_plugins');
+        
+        // Clear plugin response
+        $this->github_response = null;
+        
+        // Force WordPress to check for updates
+        wp_clean_plugins_cache();
+    }
+    
+    /**
+     * Add check for update link to plugin row
+     * 
+     * @param array $links
+     * @param string $file
+     * @return array
+     */
+    public function add_check_for_update_link($links, $file) {
+        if ($file === plugin_basename($this->plugin_file)) {
+            $check_url = wp_nonce_url(
+                add_query_arg([
+                    'truebeep-check-update' => '1',
+                    'plugin' => plugin_basename($this->plugin_file)
+                ], admin_url('plugins.php')),
+                'truebeep_check_update'
+            );
+            
+            $links[] = '<a href="' . esc_url($check_url) . '">' . __('Check for update', 'truebeep') . '</a>';
+        }
+        
+        return $links;
+    }
+    
+    /**
+     * Handle check for update request
+     */
+    public function handle_check_for_update() {
+        if (isset($_GET['truebeep-check-update']) && $_GET['truebeep-check-update'] == '1') {
+            // Verify nonce
+            if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'truebeep_check_update')) {
+                return;
+            }
+            
+            // Check permissions
+            if (!current_user_can('update_plugins')) {
+                return;
+            }
+            
+            // Clear all caches
+            $this->clear_all_caches();
+            
+            // Force update check
+            wp_update_plugins();
+            
+            // Redirect back to plugins page without query args
+            wp_redirect(admin_url('plugins.php?truebeep_update_checked=1'));
+            exit;
+        }
+        
+        // Show admin notice if update was checked
+        if (isset($_GET['truebeep_update_checked'])) {
+            add_action('admin_notices', function() {
+                echo '<div class="notice notice-success is-dismissible">';
+                echo '<p>' . __('Update check completed for Truebeep plugin.', 'truebeep') . '</p>';
+                echo '</div>';
+            });
         }
     }
     
@@ -151,8 +232,10 @@ class GitHubUpdater {
             $this->set_plugin_data();
         }
         
-        // Get GitHub release info
-        $this->get_github_release_info();
+        // Get GitHub release info (force fresh check if requested)
+        $force = (isset($_GET['truebeep-check-update']) && $_GET['truebeep-check-update'] == 1) ||
+                 (isset($_GET['force-check']) && $_GET['force-check'] == 1);
+        $this->get_github_release_info($force);
         
         if ($this->github_response) {
             // Check if update is available
@@ -162,6 +245,9 @@ class GitHubUpdater {
             if (version_compare($github_version, $current_version, '>')) {
                 $plugin_info = $this->generate_plugin_info();
                 $transient->response[plugin_basename($this->plugin_file)] = $plugin_info;
+            } else {
+                // Remove from updates if version is current or newer
+                unset($transient->response[plugin_basename($this->plugin_file)]);
             }
             
             // Always add to checked
@@ -188,8 +274,9 @@ class GitHubUpdater {
             $this->set_plugin_data();
         }
         
-        // Get GitHub release info
-        $force = (isset($_GET['force-check']) && $_GET['force-check'] == 1);
+        // Get GitHub release info (force fresh check if requested)
+        $force = (isset($_GET['truebeep-check-update']) && $_GET['truebeep-check-update'] == 1) ||
+                 (isset($_GET['force-check']) && $_GET['force-check'] == 1);
         $this->get_github_release_info($force);
         
         if (!$this->github_response) {
@@ -214,6 +301,9 @@ class GitHubUpdater {
             
             // Add update info to transient
             $transient->response[plugin_basename($this->plugin_file)] = $plugin_info;
+        } else {
+            // Remove from updates if version is current
+            unset($transient->response[plugin_basename($this->plugin_file)]);
         }
         
         return $transient;
@@ -229,14 +319,21 @@ class GitHubUpdater {
         // Check cache first
         $cache_key = 'truebeep_github_release_' . md5($this->username . $this->repository);
         
+        // If force check, clear cache first
+        if ($force_check) {
+            delete_transient($cache_key);
+            $this->github_response = null;
+        }
+        
+        // Check for cached response
+        if (!$force_check && !empty($this->github_response)) {
+            return $this->github_response;
+        }
+        
         if (!$force_check) {
             $cached = get_transient($cache_key);
             if ($cached !== false) {
                 $this->github_response = $cached;
-                return $this->github_response;
-            }
-            
-            if (!empty($this->github_response)) {
                 return $this->github_response;
             }
         }
@@ -254,9 +351,9 @@ class GitHubUpdater {
             $this->github_response = $this->create_fallback_response();
         }
         
-        // Cache the response
+        // Cache the response for 30 minutes
         if ($this->github_response && !empty($this->github_response->tag_name)) {
-            set_transient($cache_key, $this->github_response, 2 * HOUR_IN_SECONDS);
+            set_transient($cache_key, $this->github_response, 30 * MINUTE_IN_SECONDS);
         }
         
         return $this->github_response;
