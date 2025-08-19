@@ -41,11 +41,11 @@ class NetworkDiagnostics {
             
             $this->github_config = $config;
         } else {
-            // Default fallback
+            // Default fallback - empty config, updater won't run without proper config
             $this->github_config = [
-                'username' => 'wildrain',
-                'repository' => 'tbpublic',
-                'repository_url' => 'https://github.com/wildrain/tbpublic'
+                'username' => '',
+                'repository' => '',
+                'repository_url' => ''
             ];
         }
     }
@@ -119,6 +119,18 @@ class NetworkDiagnostics {
         <div class="wrap">
             <h1>Truebeep Network Diagnostics</h1>
             <p>Use this tool to diagnose GitHub connectivity issues for plugin updates.</p>
+            
+            <?php if (empty($this->github_config['repository_url'])): ?>
+            <div class="notice notice-error">
+                <p><strong>GitHub repository not configured!</strong></p>
+                <p>Please configure your repository URL in <code>github-config.php</code>:</p>
+                <pre><code>'repository_url' => 'https://github.com/YOUR_USERNAME/YOUR_REPOSITORY'</code></pre>
+            </div>
+            <?php else: ?>
+            <div class="notice notice-info">
+                <p><strong>Configured Repository:</strong> <?php echo esc_html($this->github_config['repository_url']); ?></p>
+            </div>
+            <?php endif; ?>
             
             <div id="truebeep-diagnostics-results">
                 <button type="button" class="button button-primary" id="run-diagnostics">
@@ -194,6 +206,12 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (!current_user_can('manage_options')) {
             wp_die('Unauthorized');
+        }
+        
+        // Check if repository is configured
+        if (empty($this->github_config['repository_url'])) {
+            wp_send_json_error(['html' => '<div class="notice notice-error"><p>GitHub repository not configured! Please update github-config.php</p></div>']);
+            return;
         }
         
         $results = [];

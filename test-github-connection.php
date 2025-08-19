@@ -26,12 +26,10 @@ function load_github_config() {
         return $config;
     }
     
-    // Default fallback
-    return [
-        'username' => 'wildrain',
-        'repository' => 'tbpublic',
-        'repository_url' => 'https://github.com/wildrain/tbpublic'
-    ];
+    // Default fallback - empty config, test won't run without proper config
+    echo "ERROR: github-config.php not found!\n";
+    echo "Please create github-config.php with your repository URL.\n";
+    exit(1);
 }
 
 // Get configuration
