@@ -3,12 +3,14 @@
  */
 
 /* Style the check for update link */
-.plugin-version-author-uri a[href*="truebeep-check-update"] {
+.plugin-version-author-uri a[href*="truebeep-check-update"],
+.plugin-version-author-uri a[href*="-check-update"] {
     color: #2271b1;
     font-weight: 600;
 }
 
-.plugin-version-author-uri a[href*="truebeep-check-update"]:hover {
+.plugin-version-author-uri a[href*="truebeep-check-update"]:hover,
+.plugin-version-author-uri a[href*="-check-update"]:hover {
     color: #135e96;
     text-decoration: underline;
 }

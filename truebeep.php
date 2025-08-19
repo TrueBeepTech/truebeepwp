@@ -4,7 +4,7 @@
  * Plugin Name:       Truebeep: Smart Wallet Loyalty
  * Plugin URI:        https://truebeep.com
  * Description:       Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
- * Version:           1.0.7
+ * Version:           1.0.9
  * Author:            Truebeep
  * Author URI:        https://truebeep.com
  * License:           GPL v2 or later
@@ -28,7 +28,7 @@ final class Truebeep
      * 
      * @var string
      */
-    const version = '1.0.7';
+    const version = '1.0.9';
 
     /**
      * contractor
@@ -222,68 +222,34 @@ final class Truebeep
     }
 
     /**
-     * Initialize GitHub updater
+     * Initialize GitHub updater using the modular update system
      *
      * @return void
      */
     private function init_updater()
     {
-        // Load GitHub configuration
-        $config_file = TRUEBEEP_PATH . '/github-config.php';
+        // Try new modular config first, fallback to legacy config
+        $config_file = TRUEBEEP_PATH . '/includes/Update/update-config.php';
         if (!file_exists($config_file)) {
-            return; // Skip updater if config file doesn't exist
+            $config_file = TRUEBEEP_PATH . '/github-config.php'; // Legacy fallback
+        }
+        
+        if (!file_exists($config_file)) {
+            return; // Skip updater if no config file exists
         }
 
-        $config = include $config_file;
-
-        // Parse repository URL if provided
-        if (!empty($config['repository_url'])) {
-            $parsed = $this->parse_github_url($config['repository_url']);
-            if ($parsed) {
-                $config['username'] = $parsed['username'];
-                $config['repository'] = $parsed['repository'];
-            }
-        }
-
-        // Validate configuration
-        if (empty($config['username']) || empty($config['repository'])) {
-            return; // Skip if not properly configured
-        }
-
-        // Initialize the updater
-        $updater = new \Truebeep\GitHubUpdater(
+        // Initialize the modular update manager
+        $update_manager = \Truebeep\Update\UpdateManager::from_config_file(
             TRUEBEEP_FILE,
-            $config['username'],
-            $config['repository']
+            $config_file,
+            [
+                'text_domain' => 'truebeep',
+                'cache_prefix' => 'truebeep'
+            ]
         );
-
-        // Set access token if provided (for private repos)
-        if (!empty($config['access_token'])) {
-            $updater->set_access_token($config['access_token']);
-        }
-    }
-
-    /**
-     * Parse GitHub URL to extract username and repository
-     *
-     * @param string $url GitHub repository URL
-     * @return array|false Array with username and repository or false on failure
-     */
-    private function parse_github_url($url)
-    {
-        // Remove trailing .git if present
-        $url = rtrim($url, '/');
-        $url = preg_replace('/\.git$/', '', $url);
-
-        // Parse URL for github.com format
-        if (preg_match('/github\.com[\/:]([^\/]+)\/([^\/]+)/', $url, $matches)) {
-            return [
-                'username' => $matches[1],
-                'repository' => $matches[2]
-            ];
-        }
-
-        return false;
+        
+        // Store reference for potential future use
+        $this->update_manager = $update_manager;
     }
 }
 
