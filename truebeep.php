@@ -182,6 +182,15 @@ final class Truebeep
         
         $config = include $config_file;
         
+        // Parse repository URL if provided
+        if (!empty($config['repository_url'])) {
+            $parsed = $this->parse_github_url($config['repository_url']);
+            if ($parsed) {
+                $config['username'] = $parsed['username'];
+                $config['repository'] = $parsed['repository'];
+            }
+        }
+        
         // Validate configuration
         if (empty($config['username']) || empty($config['repository'])) {
             return; // Skip if not properly configured
@@ -198,6 +207,29 @@ final class Truebeep
         if (!empty($config['access_token'])) {
             $updater->set_access_token($config['access_token']);
         }
+    }
+    
+    /**
+     * Parse GitHub URL to extract username and repository
+     *
+     * @param string $url GitHub repository URL
+     * @return array|false Array with username and repository or false on failure
+     */
+    private function parse_github_url($url)
+    {
+        // Remove trailing .git if present
+        $url = rtrim($url, '/');
+        $url = preg_replace('/\.git$/', '', $url);
+        
+        // Parse URL for github.com format
+        if (preg_match('/github\.com[\/:]([^\/]+)\/([^\/]+)/', $url, $matches)) {
+            return [
+                'username' => $matches[1],
+                'repository' => $matches[2]
+            ];
+        }
+        
+        return false;
     }
 }
 

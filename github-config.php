@@ -3,16 +3,12 @@
  * GitHub Updater Configuration
  * 
  * Configure your GitHub repository details here for automatic updates.
- * This file should be updated with your actual GitHub username/organization
- * and repository name.
+ * Update the repository_url with your GitHub repository URL.
  */
 
  return [
-    // Your GitHub username or organization name
-    'username' => 'TrueBeepTech',
-    
-    // Your GitHub repository name
-    'repository' => 'TruebeepWp',
+    // GitHub repository URL - CHANGE THIS TO YOUR REPOSITORY
+    'repository_url' => 'https://github.com/TrueBeepTech/TruebeepWp',
     
     // Optional: GitHub personal access token for private repositories
     // Leave empty for public repositories
@@ -20,4 +16,8 @@
     
     // Optional: Branch to check for updates (default: main/master)
     'branch' => 'main',
+    
+    // Legacy fields (auto-populated from repository_url)
+    'username' => null,  // Will be extracted from repository_url
+    'repository' => null, // Will be extracted from repository_url
 ];
