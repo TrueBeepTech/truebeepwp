@@ -9,9 +9,6 @@ class Admin
      */
     function __construct()
     {
-        new Admin\Menu();
-        new Admin\Handler();
-        new Admin\CMB2();
         new Admin\UserHandler();
         new Admin\NetworkDiagnostics();
     }
