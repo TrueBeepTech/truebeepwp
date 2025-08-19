@@ -10,10 +10,13 @@ This guide explains how to create releases on GitHub that will trigger automatic
 
 ## Current Configuration
 
-The plugin is configured to check for updates from:
-- **GitHub Username/Organization:** wildrain
-- **Repository Name:** tbpublic
-- **Branch:** master
+The plugin is configured to check for updates from the repository URL specified in `github-config.php`:
+
+```php
+'repository_url' => 'https://github.com/wildrain/tbpublic'
+```
+
+To change the repository, simply update this URL in the `github-config.php` file.
 
 ## Creating a New Release
 
@@ -46,7 +49,7 @@ git push origin master
 
 #### Option A: Using GitHub Web Interface
 
-1. Go to your repository on GitHub: https://github.com/wildrain/tbpublic
+1. Go to your repository on GitHub (check `github-config.php` for your configured URL)
 2. Click on "Releases" (usually on the right side)
 3. Click "Create a new release" or "Draft a new release"
 4. Fill in the release details:

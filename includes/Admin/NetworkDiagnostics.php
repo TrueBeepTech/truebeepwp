@@ -8,11 +8,93 @@ namespace Truebeep\Admin;
 class NetworkDiagnostics {
     
     /**
+     * GitHub repository configuration
+     * @var array
+     */
+    private $github_config;
+    
+    /**
      * Constructor
      */
     public function __construct() {
+        $this->load_github_config();
         add_action('admin_menu', [$this, 'add_diagnostics_page']);
         add_action('wp_ajax_truebeep_test_github_connection', [$this, 'test_github_connection']);
+    }
+    
+    /**
+     * Load GitHub configuration
+     */
+    private function load_github_config() {
+        $config_file = TRUEBEEP_PATH . '/github-config.php';
+        if (file_exists($config_file)) {
+            $config = include $config_file;
+            
+            // Parse repository URL if provided
+            if (!empty($config['repository_url'])) {
+                $parsed = $this->parse_github_url($config['repository_url']);
+                if ($parsed) {
+                    $config['username'] = $parsed['username'];
+                    $config['repository'] = $parsed['repository'];
+                }
+            }
+            
+            $this->github_config = $config;
+        } else {
+            // Default fallback
+            $this->github_config = [
+                'username' => 'wildrain',
+                'repository' => 'tbpublic',
+                'repository_url' => 'https://github.com/wildrain/tbpublic'
+            ];
+        }
+    }
+    
+    /**
+     * Parse GitHub URL to extract username and repository
+     */
+    private function parse_github_url($url) {
+        $url = rtrim($url, '/');
+        $url = preg_replace('/\.git$/', '', $url);
+        
+        if (preg_match('/github\.com[\/:]([^\/]+)\/([^\/]+)/', $url, $matches)) {
+            return [
+                'username' => $matches[1],
+                'repository' => $matches[2]
+            ];
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Get releases URL
+     */
+    private function get_releases_url() {
+        return $this->github_config['repository_url'] . '/releases';
+    }
+    
+    /**
+     * Get API URL
+     */
+    private function get_api_url($endpoint = '') {
+        return sprintf(
+            'https://api.github.com/repos/%s/%s/%s',
+            $this->github_config['username'],
+            $this->github_config['repository'],
+            $endpoint
+        );
+    }
+    
+    /**
+     * Get download URL
+     */
+    private function get_download_url() {
+        return sprintf(
+            'https://github.com/%s/%s/archive/refs/heads/master.zip',
+            $this->github_config['username'],
+            $this->github_config['repository']
+        );
     }
     
     /**
@@ -63,7 +145,7 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
                 
                 <h3>Manual Update Process:</h3>
                 <ol>
-                    <li>Go to: <a href="https://github.com/wildrain/tbpublic/releases" target="_blank">https://github.com/wildrain/tbpublic/releases</a></li>
+                    <li>Go to: <a href="<?php echo esc_url($this->get_releases_url()); ?>" target="_blank"><?php echo esc_html($this->get_releases_url()); ?></a></li>
                     <li>Download the latest release ZIP file</li>
                     <li>In WordPress admin, go to Plugins > Add New > Upload Plugin</li>
                     <li>Upload the ZIP file and activate</li>
@@ -175,7 +257,8 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
     private function test_github_api() {
         $start_time = microtime(true);
         
-        $response = wp_remote_get('https://api.github.com/repos/wildrain/tbpublic/releases/latest', [
+        $api_url = $this->get_api_url('releases/latest');
+        $response = wp_remote_get($api_url, [
             'headers' => [
                 'Accept' => 'application/vnd.github.v3+json',
                 'User-Agent' => 'WordPress/' . get_bloginfo('version')
@@ -231,7 +314,8 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         $start_time = microtime(true);
         
         // Try to download a small file from GitHub
-        $response = wp_remote_get('https://github.com/wildrain/tbpublic/archive/refs/heads/master.zip', [
+        $download_url = $this->get_download_url();
+        $response = wp_remote_get($download_url, [
             'timeout' => 20,
             'sslverify' => false,
             'headers' => [

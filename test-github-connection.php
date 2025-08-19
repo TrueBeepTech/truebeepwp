@@ -6,9 +6,43 @@
  * Usage: php test-github-connection.php
  */
 
+// Load configuration
+function load_github_config() {
+    $config_file = __DIR__ . '/github-config.php';
+    if (file_exists($config_file)) {
+        $config = include $config_file;
+        
+        // Parse repository URL if provided
+        if (!empty($config['repository_url'])) {
+            $url = rtrim($config['repository_url'], '/');
+            $url = preg_replace('/\.git$/', '', $url);
+            
+            if (preg_match('/github\.com[\/:]([^\/]+)\/([^\/]+)/', $url, $matches)) {
+                $config['username'] = $matches[1];
+                $config['repository'] = $matches[2];
+            }
+        }
+        
+        return $config;
+    }
+    
+    // Default fallback
+    return [
+        'username' => 'wildrain',
+        'repository' => 'tbpublic',
+        'repository_url' => 'https://github.com/wildrain/tbpublic'
+    ];
+}
+
+// Get configuration
+$github_config = load_github_config();
+
 // Test functions
 function test_github_connectivity() {
+    global $github_config;
+    
     echo "Testing GitHub Connectivity...\n";
+    echo "Repository: " . $github_config['repository_url'] . "\n";
     echo str_repeat("-", 50) . "\n";
     
     // Test 1: Basic connectivity
@@ -39,8 +73,13 @@ function test_github_connectivity() {
     echo "\n2. Testing GitHub API access...\n";
     $start = microtime(true);
     
+    $api_url = sprintf('https://api.github.com/repos/%s/%s/releases/latest', 
+        $github_config['username'], 
+        $github_config['repository']
+    );
+    
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api.github.com/repos/wildrain/tbpublic/releases/latest');
+    curl_setopt($ch, CURLOPT_URL, $api_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -73,8 +112,13 @@ function test_github_connectivity() {
     echo "\n3. Testing download capability...\n";
     $start = microtime(true);
     
+    $download_url = sprintf('https://github.com/%s/%s/archive/refs/heads/master.zip',
+        $github_config['username'],
+        $github_config['repository']
+    );
+    
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://github.com/wildrain/tbpublic/archive/refs/heads/master.zip');
+    curl_setopt($ch, CURLOPT_URL, $download_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 20);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
