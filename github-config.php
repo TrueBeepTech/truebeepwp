@@ -19,5 +19,5 @@
     'access_token' => '',
     
     // Optional: Branch to check for updates (default: main/master)
-    'branch' => 'master',
+    'branch' => 'main',
 ];
