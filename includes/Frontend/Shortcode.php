@@ -5,7 +5,7 @@ namespace Truebeep\Frontend;
 use Truebeep\Traits\ApiHelper;
 
 /**
- * Shortcode class
+ * Shortcode class Test
  */
 class Shortcode
 {
