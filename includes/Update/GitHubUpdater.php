@@ -1,11 +1,12 @@
 <?php
 
-namespace Truebeep;
+namespace Truebeep\Update;
 
 /**
  * GitHub Plugin Updater
  * 
- * Handles automatic updates from GitHub repository with improved network handling
+ * A modular GitHub-based plugin updater that can be easily moved between plugins.
+ * Handles automatic updates from GitHub repository with improved network handling.
  */
 class GitHubUpdater {
     
@@ -52,17 +53,32 @@ class GitHubUpdater {
     private $access_token;
     
     /**
+     * Plugin text domain for translations
+     * @var string
+     */
+    private $text_domain;
+    
+    /**
+     * Cache prefix for this plugin
+     * @var string
+     */
+    private $cache_prefix;
+    
+    /**
      * Constructor
      * 
      * @param string $plugin_file Main plugin file path
      * @param string $username GitHub username or organization
      * @param string $repository GitHub repository name
+     * @param array $args Additional arguments (text_domain, cache_prefix)
      */
-    public function __construct($plugin_file, $username, $repository) {
+    public function __construct($plugin_file, $username, $repository, $args = []) {
         $this->plugin_file = $plugin_file;
         $this->username = $username;
         $this->repository = $repository;
         $this->plugin_slug = basename(dirname($plugin_file));
+        $this->text_domain = isset($args['text_domain']) ? $args['text_domain'] : 'default';
+        $this->cache_prefix = isset($args['cache_prefix']) ? $args['cache_prefix'] : sanitize_title($this->plugin_slug);
         
         $this->initialize();
     }
@@ -136,7 +152,7 @@ class GitHubUpdater {
      */
     private function clear_all_caches() {
         // Clear our custom cache
-        delete_transient('truebeep_github_release_' . md5($this->username . $this->repository));
+        delete_transient($this->cache_prefix . '_github_release_' . md5($this->username . $this->repository));
         
         // Clear WordPress update cache
         delete_site_transient('update_plugins');
@@ -160,13 +176,13 @@ class GitHubUpdater {
         if ($file === plugin_basename($this->plugin_file)) {
             $check_url = wp_nonce_url(
                 add_query_arg([
-                    'truebeep-check-update' => '1',
+                    $this->cache_prefix . '-check-update' => '1',
                     'plugin' => plugin_basename($this->plugin_file)
                 ], admin_url('plugins.php')),
-                'truebeep_check_update'
+                $this->cache_prefix . '_check_update'
             );
             
-            $links[] = '<a href="' . esc_url($check_url) . '">' . __('Check for update', 'truebeep') . '</a>';
+            $links[] = '<a href="' . esc_url($check_url) . '">' . __('Check for update', $this->text_domain) . '</a>';
         }
         
         return $links;
@@ -176,9 +192,9 @@ class GitHubUpdater {
      * Handle check for update request
      */
     public function handle_check_for_update() {
-        if (isset($_GET['truebeep-check-update']) && $_GET['truebeep-check-update'] == '1') {
+        if (isset($_GET[$this->cache_prefix . '-check-update']) && $_GET[$this->cache_prefix . '-check-update'] == '1') {
             // Verify nonce
-            if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'truebeep_check_update')) {
+            if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], $this->cache_prefix . '_check_update')) {
                 return;
             }
             
@@ -194,15 +210,15 @@ class GitHubUpdater {
             wp_update_plugins();
             
             // Redirect back to plugins page without query args
-            wp_redirect(admin_url('plugins.php?truebeep_update_checked=1'));
+            wp_redirect(admin_url('plugins.php?' . $this->cache_prefix . '_update_checked=1'));
             exit;
         }
         
         // Show admin notice if update was checked
-        if (isset($_GET['truebeep_update_checked'])) {
+        if (isset($_GET[$this->cache_prefix . '_update_checked'])) {
             add_action('admin_notices', function() {
                 echo '<div class="notice notice-success is-dismissible">';
-                echo '<p>' . __('Update check completed for Truebeep plugin.', 'truebeep') . '</p>';
+                echo '<p>' . sprintf(__('Update check completed for %s plugin.', $this->text_domain), $this->plugin_data['Name']) . '</p>';
                 echo '</div>';
             });
         }
@@ -233,7 +249,7 @@ class GitHubUpdater {
         }
         
         // Get GitHub release info (force fresh check if requested)
-        $force = (isset($_GET['truebeep-check-update']) && $_GET['truebeep-check-update'] == 1) ||
+        $force = (isset($_GET[$this->cache_prefix . '-check-update']) && $_GET[$this->cache_prefix . '-check-update'] == 1) ||
                  (isset($_GET['force-check']) && $_GET['force-check'] == 1);
         $this->get_github_release_info($force);
         
@@ -275,7 +291,7 @@ class GitHubUpdater {
         }
         
         // Get GitHub release info (force fresh check if requested)
-        $force = (isset($_GET['truebeep-check-update']) && $_GET['truebeep-check-update'] == 1) ||
+        $force = (isset($_GET[$this->cache_prefix . '-check-update']) && $_GET[$this->cache_prefix . '-check-update'] == 1) ||
                  (isset($_GET['force-check']) && $_GET['force-check'] == 1);
         $this->get_github_release_info($force);
         
@@ -317,7 +333,7 @@ class GitHubUpdater {
      */
     private function get_github_release_info($force_check = false) {
         // Check cache first
-        $cache_key = 'truebeep_github_release_' . md5($this->username . $this->repository);
+        $cache_key = $this->cache_prefix . '_github_release_' . md5($this->username . $this->repository);
         
         // If force check, clear cache first
         if ($force_check) {
@@ -387,7 +403,7 @@ class GitHubUpdater {
             'httpversion' => '1.1',
             'sslverify' => false, // Disable SSL verification for local environments
             'blocking' => true,
-            'user-agent' => 'WordPress/' . get_bloginfo('version') . '; Truebeep Updater',
+            'user-agent' => 'WordPress/' . get_bloginfo('version') . '; ' . $this->plugin_data['Name'] . ' Updater',
             'compress' => true
         ];
         
@@ -403,7 +419,7 @@ class GitHubUpdater {
         $response = wp_remote_get($api_url, $args);
         
         if (is_wp_error($response)) {
-            error_log('Truebeep GitHub API Error: ' . $response->get_error_message());
+            error_log($this->plugin_data['Name'] . ' GitHub API Error: ' . $response->get_error_message());
             
             // Try alternative URL without API
             return $this->try_direct_github_access();
@@ -540,8 +556,7 @@ class GitHubUpdater {
      */
     private function create_fallback_response() {
         // Check if we have a known version to compare against
-        // This allows manual version checking via direct download
-        $fallback_version = get_option('truebeep_latest_version', false);
+        $fallback_version = get_option($this->cache_prefix . '_latest_version', false);
         
         if ($fallback_version) {
             $release = new \stdClass();
@@ -611,15 +626,18 @@ class GitHubUpdater {
     }
     
     /**
-     * Get plugin icons
+     * Get plugin icons (can be overridden by setting a filter)
      * 
      * @return array Icon URLs
      */
     private function get_plugin_icons() {
-        return [
-            '1x' => TRUEBEEP_URL . '/assets/images/icon-128x128.png',
-            '2x' => TRUEBEEP_URL . '/assets/images/icon-256x256.png'
+        $default_icons = [
+            '1x' => '',
+            '2x' => ''
         ];
+        
+        // Allow filtering of icons for customization
+        return apply_filters($this->cache_prefix . '_plugin_icons', $default_icons, $this->plugin_file);
     }
     
     /**
@@ -732,8 +750,9 @@ class GitHubUpdater {
             $temp_dir = $installed_dir;
             
             // Find the actual plugin files (they might be in a subdirectory)
+            $main_file = basename($this->plugin_file);
             $possible_dirs = glob($temp_dir . '/*', GLOB_ONLYDIR);
-            if (count($possible_dirs) === 1 && $wp_filesystem->exists($possible_dirs[0] . '/truebeep.php')) {
+            if (count($possible_dirs) === 1 && $wp_filesystem->exists($possible_dirs[0] . '/' . $main_file)) {
                 // Plugin files are in a subdirectory
                 $temp_dir = $possible_dirs[0];
             }
@@ -761,7 +780,10 @@ class GitHubUpdater {
      * 
      * @param string $version
      */
-    public static function set_fallback_version($version) {
-        update_option('truebeep_latest_version', $version);
+    public static function set_fallback_version($version, $cache_prefix = '') {
+        if (empty($cache_prefix)) {
+            $cache_prefix = 'plugin';
+        }
+        update_option($cache_prefix . '_latest_version', $version);
     }
 }
