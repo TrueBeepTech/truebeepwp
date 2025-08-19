@@ -39,3 +39,17 @@
     float: none;
     margin: 0 5px 0 0;
 }
+
+/* Plugin Action Links Styling */
+.plugins tr[data-plugin*="truebeep"] .plugin-title .row-actions {
+    visibility: visible !important;
+}
+
+.plugins tr[data-plugin*="truebeep"] .plugin-title .row-actions a {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.plugins tr[data-plugin*="truebeep"] .plugin-title .row-actions a:hover {
+    text-decoration: underline;
+}
