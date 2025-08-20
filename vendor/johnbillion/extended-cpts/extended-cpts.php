@@ -9,7 +9,7 @@ declare( strict_types=1 );
  * @link      https://github.com/johnbillion/extended-cpts
  * @copyright 2012-2025 John Blackbourn
  * @license   GPL v2 or later
- * @version   5.0.12
+ * @version   5.1.0
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
