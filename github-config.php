@@ -8,14 +8,14 @@
 
  return [
     // GitHub repository URL - CHANGE THIS TO YOUR REPOSITORY
-    'repository_url' => 'https://github.com/TrueBeepTech/TruebeepWp',
+    'repository_url' => 'https://github.com/TrueBeepTech/truebeepwp',
     
     // Optional: GitHub personal access token for private repositories
     // Leave empty for public repositories
     'access_token' => '',
     
     // Optional: Branch to check for updates (default: main/master)
-    'branch' => 'main',
+    'branch' => 'master',
     
     // Legacy fields (auto-populated from repository_url)
     'username' => null,  // Will be extracted from repository_url
