@@ -229,7 +229,7 @@ final class Truebeep
     private function init_updater()
     {
         // Try new modular config first, fallback to legacy config
-        $config_file = TRUEBEEP_PATH . '/includes/Update/update-config.php';
+        $config_file = TRUEBEEP_PATH . '/Update/update-config.php';
         if (!file_exists($config_file)) {
             $config_file = TRUEBEEP_PATH . '/github-config.php'; // Legacy fallback
         }
