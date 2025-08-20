@@ -1,9 +1,14 @@
 # Development and documentation files
 *.md
-!README.md
 CLAUDE.md
 CHANGELOG.md
 TODO.md
+DOCUMENTATION.md
+GITHUB_RELEASE_GUIDE.md
+GITHUB_UPDATER_README.md
+README.md
+SECURITY_REPORT.md
+WORDPRESS_ORG_COMPLIANCE.md
 
 # Test files and directories
 tests/
