@@ -1,0 +1,42 @@
+# Development and documentation files
+*.md
+!README.md
+CLAUDE.md
+CHANGELOG.md
+TODO.md
+
+# Test files and directories
+tests/
+test/
+*test.php
+*Test.php
+phpunit.xml
+phpunit.xml.dist
+.phpunit.result.cache
+
+# Development dependencies
+node_modules/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build files
+*.log
+*.cache
+.sass-cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Composer lock (optional - uncomment if you don't want to include it)
+# composer.lock
+
+# Package lock (optional - uncomment if you don't want to include it)  
+# package-lock.json
