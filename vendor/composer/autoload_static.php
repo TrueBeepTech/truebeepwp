@@ -20,6 +20,7 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
+            'Truebeep\\Update\\' => 16,
             'Truebeep\\' => 9,
         ),
         'S' => 
@@ -35,7 +36,6 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         ),
         'E' => 
         array (
-            'ExtCPTs\\Tests\\' => 14,
             'ExtCPTs\\' => 8,
         ),
         'C' => 
@@ -50,6 +50,10 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
     );
 
     public static $prefixDirsPsr4 = array (
+        'Truebeep\\Update\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Update',
+        ),
         'Truebeep\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
@@ -73,10 +77,6 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Psr\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
-        ),
-        'ExtCPTs\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/johnbillion/extended-cpts/tests/integration',
         ),
         'ExtCPTs\\' => 
         array (
@@ -106,9 +106,7 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Truebeep\\API' => __DIR__ . '/../..' . '/includes/API.php',
         'Truebeep\\Admin' => __DIR__ . '/../..' . '/includes/Admin.php',
         'Truebeep\\Admin\\CMB2' => __DIR__ . '/../..' . '/includes/Admin/CMB2.php',
-        'Truebeep\\Admin\\Handler' => __DIR__ . '/../..' . '/includes/Admin/Handler.php',
-        'Truebeep\\Admin\\Menu' => __DIR__ . '/../..' . '/includes/Admin/Menu.php',
-        'Truebeep\\Admin\\Settings' => __DIR__ . '/../..' . '/includes/Admin/Settings.php',
+        'Truebeep\\Admin\\NetworkDiagnostics' => __DIR__ . '/../..' . '/includes/Admin/NetworkDiagnostics.php',
         'Truebeep\\Admin\\UserHandler' => __DIR__ . '/../..' . '/includes/Admin/UserHandler.php',
         'Truebeep\\Admin\\WooCommerceSettings' => __DIR__ . '/../..' . '/includes/Admin/WooCommerceSettings.php',
         'Truebeep\\Ajax' => __DIR__ . '/../..' . '/includes/Ajax.php',
@@ -116,10 +114,6 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Truebeep\\Api\\LoyaltyHandler' => __DIR__ . '/../..' . '/includes/Api/LoyaltyHandler.php',
         'Truebeep\\Assets' => __DIR__ . '/../..' . '/includes/Assets.php',
         'Truebeep\\Checkout\\PointsRedemption' => __DIR__ . '/../..' . '/includes/Checkout/PointsRedemption.php',
-        'Truebeep\\Customizer' => __DIR__ . '/../..' . '/includes/Customizer.php',
-        'Truebeep\\Customizer\\GeneralSettings' => __DIR__ . '/../..' . '/includes/Customizer/GeneralSettings.php',
-        'Truebeep\\Customizer\\HeaderSettings' => __DIR__ . '/../..' . '/includes/Customizer/HeaderSettings.php',
-        'Truebeep\\Customizer\\InitCustomizer' => __DIR__ . '/../..' . '/includes/Customizer/InitCustomizer.php',
         'Truebeep\\Elementor\\HelloWorld' => __DIR__ . '/../..' . '/includes/Elementor/HelloWorld.php',
         'Truebeep\\Frontend' => __DIR__ . '/../..' . '/includes/Frontend.php',
         'Truebeep\\Frontend\\LoyaltyPanel' => __DIR__ . '/../..' . '/includes/Frontend/LoyaltyPanel.php',
@@ -130,6 +124,8 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Truebeep\\Loyalty\\PointsManager' => __DIR__ . '/../..' . '/includes/Loyalty/PointsManager.php',
         'Truebeep\\Security\\RateLimiter' => __DIR__ . '/../..' . '/includes/Security/RateLimiter.php',
         'Truebeep\\Traits\\ApiHelper' => __DIR__ . '/../..' . '/includes/Traits/ApiHelper.php',
+        'Truebeep\\Update\\GitHubUpdater' => __DIR__ . '/../..' . '/Update/GitHubUpdater.php',
+        'Truebeep\\Update\\UpdateManager' => __DIR__ . '/../..' . '/Update/UpdateManager.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'WP_Async_Request' => __DIR__ . '/..' . '/deliciousbrains/wp-background-processing/classes/wp-async-request.php',

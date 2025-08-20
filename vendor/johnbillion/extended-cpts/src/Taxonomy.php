@@ -3,6 +3,8 @@ declare( strict_types=1 );
 
 namespace ExtCPTs;
 
+use WP_Taxonomy;
+
 class Taxonomy {
 
 	/**
@@ -149,7 +151,7 @@ class Taxonomy {
 			'edit_item'                  => sprintf( 'Edit %s', $this->tax_singular ),
 			'view_item'                  => sprintf( 'View %s', $this->tax_singular ),
 			'update_item'                => sprintf( 'Update %s', $this->tax_singular ),
-			'add_new_item'               => sprintf( 'Add New %s', $this->tax_singular ),
+			'add_new_item'               => sprintf( 'Add %s', $this->tax_singular ),
 			'new_item_name'              => sprintf( 'New %s Name', $this->tax_singular ),
 			'separate_items_with_commas' => sprintf( 'Separate %s with commas', $this->tax_plural_low ),
 			'add_or_remove_items'        => sprintf( 'Add or remove %s', $this->tax_plural_low ),
@@ -197,8 +199,14 @@ class Taxonomy {
 			add_filter( 'rewrite_testing_tests', [ $this, 'rewrite_testing_tests' ], 1 );
 		}
 
-		# Register taxonomy:
-		$this->register_taxonomy();
+		$existing = get_taxonomy( $this->taxonomy );
+
+		if ( empty( $existing ) ) {
+			# Register taxonomy:
+			$this->register_taxonomy();
+		} else {
+			$this->extend( $existing );
+		}
 
 		/**
 		 * Fired when the extended taxonomy instance is set up.
@@ -208,6 +216,23 @@ class Taxonomy {
 		 * @param \ExtCPTs\Taxonomy $instance The extended taxonomy instance.
 		 */
 		do_action( "ext-taxos/{$this->taxonomy}/instance", $this );
+	}
+
+	/**
+	 * Extends an existing taxonomy object. Currently only handles labels.
+	 *
+	 * @param WP_Taxonomy $taxonomy A taxonomy object.
+	 */
+	public function extend( WP_Taxonomy $taxonomy ): void {
+		# Merge core with overridden labels
+		$this->args['labels'] = array_merge( (array) get_taxonomy_labels( $taxonomy ), $this->args['labels'] );
+
+		$GLOBALS['wp_taxonomies'][ $taxonomy->name ]->labels = (object) $this->args['labels'];
+
+		// Register taxonomy for object types
+		foreach ( $this->object_type as $object_type ) {
+			register_taxonomy_for_object_type( $this->taxonomy, $object_type );
+		}
 	}
 
 	/**

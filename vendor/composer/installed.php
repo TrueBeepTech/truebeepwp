@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'truebeep/truebeep',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '3e818b0cf97b6355da95793629be01a2e7406bb7',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '62b1eba35d2f82fa7e365f158936aeb44ab9610d',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -53,7 +53,7 @@
         'johnbillion/extended-cpts' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '34f0f4232d1645cd3024646cda1a32a2631cddad',
+            'reference' => '20b7e9773b60f7301cd59ee520affa0ff63f90e6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../johnbillion/extended-cpts',
             'aliases' => array(
@@ -117,7 +117,7 @@
         'symfony/translation' => array(
             'pretty_version' => '6.4.x-dev',
             'version' => '6.4.9999999.9999999-dev',
-            'reference' => 'bb92ea5588396b319ba43283a5a3087a034cb29c',
+            'reference' => '300b72643e89de0734d99a9e3f8494a3ef6936e1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
@@ -126,7 +126,7 @@
         'symfony/translation-contracts' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'df210c7a2573f1913b2d17cc95f90f53a73d8f7d',
+            'reference' => '65a8bc82080447fae78373aa10f8d13b38338977',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation-contracts',
             'aliases' => array(
@@ -141,9 +141,9 @@
             ),
         ),
         'truebeep/truebeep' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '3e818b0cf97b6355da95793629be01a2e7406bb7',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '62b1eba35d2f82fa7e365f158936aeb44ab9610d',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
