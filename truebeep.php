@@ -38,6 +38,7 @@ final class Truebeep
         $this->define_constants();
 
         register_activation_hook(__FILE__, [$this, 'activate']);
+        register_deactivation_hook(__FILE__, [$this, 'deactivate']);
         add_action('init', [$this, 'load_textdomain']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
         
@@ -112,6 +113,28 @@ final class Truebeep
 
         $installer = new Truebeep\Installer();
         $installer->run();
+    }
+
+    /**
+     * Plugin deactivation
+     *
+     * @return void
+     */
+    public function deactivate()
+    {
+        // Clear scheduled update checks
+        $hook_name = 'truebeep_daily_update_check';
+        $timestamp = wp_next_scheduled($hook_name);
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, $hook_name);
+        }
+        wp_clear_scheduled_hook($hook_name);
+        
+        // Clear update caches
+        delete_transient('truebeep_github_release_' . md5('TruebeepTech' . 'TruebeepWp'));
+        delete_site_transient('update_plugins');
+        
+        // Additional cleanup can be added here if needed
     }
 
     /**
