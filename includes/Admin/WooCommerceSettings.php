@@ -2,12 +2,15 @@
 
 namespace Truebeep\Admin;
 
+use Truebeep\Traits\ApiHelper;
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 class WooCommerceSettings
 {
+    use ApiHelper;
     public function __construct()
     {
         add_filter('woocommerce_settings_tabs_array', [$this, 'add_settings_tab'], 50);
@@ -18,6 +21,7 @@ class WooCommerceSettings
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('wp_ajax_truebeep_save_loyalty', [$this, 'ajax_save_loyalty']);
         add_action('wp_ajax_truebeep_save_coupons', [$this, 'ajax_save_coupons']);
+        add_action('wp_ajax_truebeep_update_connection', [$this, 'ajax_update_connection']);
         add_action('woocommerce_admin_field_truebeep_coupons', [$this, 'output_loyalty_field']);
     }
 
@@ -69,11 +73,17 @@ class WooCommerceSettings
 
     private function get_credentials_settings()
     {
+        // Get connection status
+        $connection_status = get_option('truebeep_connection_status', 'disconnected');
+        $status_text = ($connection_status === 'connected') ? __('Connected', 'truebeep') : __('Disconnected', 'truebeep');
+        $status_color = ($connection_status === 'connected') ? 'green' : 'red';
+        $button_text = ($connection_status === 'connected') ? __('Disconnect', 'truebeep') : __('Connect', 'truebeep');
+        
         $settings = [
             [
                 'title' => __('Truebeep Credentials', 'truebeep'),
                 'type' => 'title',
-                'desc' => __('Configure your Truebeep API credentials', 'truebeep'),
+                'desc' => __('Configure your Truebeep API credentials', 'truebeep') . '<br/>Status: <span id="truebeep-status" style="color: ' . $status_color . '; font-weight: bold;">' . $status_text . '</span>',
                 'id' => 'truebeep_credentials_section'
             ],
             [
@@ -86,11 +96,11 @@ class WooCommerceSettings
             ],
             [
                 'title' => __('API Key', 'truebeep'),
-                'desc' => __('Enter your Truebeep API Key', 'truebeep'),
+                'desc' => __('Enter your Truebeep API Key', 'truebeep') . '<br/><br/><button type="button" class="button button-primary" id="truebeep-connection-btn" data-status="' . $connection_status . '">' . $button_text . '</button><span id="truebeep-connection-message" style="margin-left: 10px;"></span>',
                 'id' => 'truebeep_api_key',
                 'type' => 'password',
                 'css' => 'min-width:400px;',
-                'desc_tip' => true,
+                'desc_tip' => false,
             ],
             [
                 'type' => 'sectionend',
@@ -424,6 +434,62 @@ class WooCommerceSettings
 
         wp_send_json_success(['message' => __('Coupons saved successfully!', 'truebeep')]);
     }
+    
+    /**
+     * AJAX handler for updating connection status
+     */
+    public function ajax_update_connection()
+    {
+        check_ajax_referer('truebeep_connection', 'nonce');
+        
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => __('You do not have permission to perform this action.', 'truebeep')]);
+        }
+        
+        $action = isset($_POST['connection_action']) ? sanitize_text_field($_POST['connection_action']) : '';
+        
+        if ($action === 'connect') {
+            // Send connect status to TrueBeep
+            $response = $this->make_api_request('connection-status', 'POST', [
+                'type' => 'wordpress',
+                'status' => 'connected'
+            ]);
+            
+            if (!is_wp_error($response) && $response['success']) {
+                update_option('truebeep_connection_status', 'connected');
+                wp_send_json_success([
+                    'message' => __('Connected successfully!', 'truebeep'),
+                    'status' => 'connected'
+                ]);
+            } else {
+                $error_message = is_wp_error($response) ? $response->get_error_message() : ($response['error'] ?? __('Connection failed', 'truebeep'));
+                wp_send_json_error(['message' => $error_message]);
+            }
+        } elseif ($action === 'disconnect') {
+            // Send disconnect status to TrueBeep
+            $response = $this->make_api_request('connection-status', 'POST', [
+                'type' => 'wordpress',
+                'status' => 'disconnected'
+            ]);
+            
+            if (!is_wp_error($response) && $response['success']) {
+                update_option('truebeep_connection_status', 'disconnected');
+                wp_send_json_success([
+                    'message' => __('Disconnected successfully!', 'truebeep'),
+                    'status' => 'disconnected'
+                ]);
+            } else {
+                // Even if API fails, update local status
+                update_option('truebeep_connection_status', 'disconnected');
+                wp_send_json_success([
+                    'message' => __('Disconnected locally', 'truebeep'),
+                    'status' => 'disconnected'
+                ]);
+            }
+        } else {
+            wp_send_json_error(['message' => __('Invalid action', 'truebeep')]);
+        }
+    }
 
     public function enqueue_admin_scripts($hook)
     {
@@ -444,6 +510,7 @@ class WooCommerceSettings
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('truebeep_save_loyalty'),
                 'coupons_nonce' => wp_create_nonce('truebeep_save_coupons'),
+                'connection_nonce' => wp_create_nonce('truebeep_connection'),
                 'strings' => [
                     'tier_name' => __('Tier Name', 'truebeep'),
                     'remove' => __('Remove', 'truebeep'),

@@ -96,7 +96,7 @@ final class Truebeep
     }
 
     /**
-     * Plugin information
+     * Plugin activation
      *
      * @return void
      */
@@ -113,6 +113,61 @@ final class Truebeep
 
         $installer = new Truebeep\Installer();
         $installer->run();
+        
+        // Send connection status if API credentials exist
+        $this->update_connection_status_on_activation();
+    }
+    
+    /**
+     * Plugin deactivation
+     *
+     * @return void
+     */
+    public function deactivate()
+    {
+        // Send disconnected status to TrueBeep
+        $this->update_connection_status_on_deactivation();
+    }
+    
+    /**
+     * Update connection status when plugin is activated
+     *
+     * @return void
+     */
+    private function update_connection_status_on_activation()
+    {
+        $api_url = get_option('truebeep_api_url', '');
+        $api_key = get_option('truebeep_api_key', '');
+        
+        // Only send connected status if both URL and key are configured
+        if (!empty($api_url) && !empty($api_key)) {
+            $connection_helper = new Truebeep\Admin\ConnectionHelper();
+            $response = $connection_helper->send_connection_status('connected');
+            
+            if ($response['success']) {
+                update_option('truebeep_connection_status', 'connected');
+            }
+        }
+    }
+    
+    /**
+     * Update connection status when plugin is deactivated
+     *
+     * @return void
+     */
+    private function update_connection_status_on_deactivation()
+    {
+        $api_url = get_option('truebeep_api_url', '');
+        $api_key = get_option('truebeep_api_key', '');
+        
+        // Send disconnected status if credentials exist
+        if (!empty($api_url) && !empty($api_key)) {
+            $connection_helper = new Truebeep\Admin\ConnectionHelper();
+            $connection_helper->send_connection_status('disconnected');
+        }
+        
+        // Always update local status to disconnected
+        update_option('truebeep_connection_status', 'disconnected');
     }
 
     /**
