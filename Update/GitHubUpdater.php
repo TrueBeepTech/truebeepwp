@@ -110,6 +110,9 @@ class GitHubUpdater {
         
         // Handle check for update action
         add_action('admin_init', [$this, 'handle_check_for_update']);
+        
+        // Initialize scheduled daily update check
+        $this->init_scheduled_update_check();
     }
     
     /**
@@ -222,6 +225,57 @@ class GitHubUpdater {
                 echo '</div>';
             });
         }
+    }
+    
+    /**
+     * Initialize scheduled daily update check
+     */
+    private function init_scheduled_update_check() {
+        // Hook name for this plugin's scheduled event
+        $hook_name = $this->cache_prefix . '_daily_update_check';
+        
+        // Register the scheduled event action
+        add_action($hook_name, [$this, 'run_scheduled_update_check']);
+        
+        // Schedule the event if not already scheduled
+        if (!wp_next_scheduled($hook_name)) {
+            // Schedule to run daily starting from tomorrow at 2 AM
+            $tomorrow_2am = strtotime('tomorrow 2:00 AM');
+            wp_schedule_event($tomorrow_2am, 'daily', $hook_name);
+        }
+        
+        // Clean up scheduled event on plugin deactivation
+        register_deactivation_hook($this->plugin_file, function() use ($hook_name) {
+            $timestamp = wp_next_scheduled($hook_name);
+            if ($timestamp) {
+                wp_unschedule_event($timestamp, $hook_name);
+            }
+            // Clear all scheduled events with this hook
+            wp_clear_scheduled_hook($hook_name);
+        });
+    }
+    
+    /**
+     * Run the scheduled update check
+     * This runs automatically once daily via WP Cron
+     */
+    public function run_scheduled_update_check() {
+        // Log the update check (optional, for debugging)
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log(sprintf('[%s] Running scheduled daily update check for %s', 
+                date('Y-m-d H:i:s'), 
+                $this->plugin_data['Name']
+            ));
+        }
+        
+        // Clear all caches to force fresh check
+        $this->clear_all_caches();
+        
+        // Force WordPress to check for plugin updates
+        wp_update_plugins();
+        
+        // Store last check time in option (optional, for tracking)
+        update_option($this->cache_prefix . '_last_scheduled_check', current_time('timestamp'));
     }
     
     /**
