@@ -96,17 +96,11 @@ class WooCommerceSettings
             ],
             [
                 'title' => __('API Key', 'truebeep'),
-                'desc' => __('Enter your Truebeep API Key', 'truebeep'),
+                'desc' => __('Enter your Truebeep API Key', 'truebeep') . '<br/><br/><button type="button" class="button button-primary" id="truebeep-connection-btn" data-status="' . $connection_status . '">' . $button_text . '</button><span id="truebeep-connection-message" style="margin-left: 10px;"></span>',
                 'id' => 'truebeep_api_key',
                 'type' => 'password',
                 'css' => 'min-width:400px;',
-                'desc_tip' => true,
-            ],
-            [
-                'title' => __('Connection', 'truebeep'),
-                'type' => 'button',
-                'desc' => '<button type="button" class="button button-primary" id="truebeep-connection-btn" data-status="' . $connection_status . '">' . $button_text . '</button><span id="truebeep-connection-message" style="margin-left: 10px;"></span>',
-                'id' => 'truebeep_connection'
+                'desc_tip' => false,
             ],
             [
                 'type' => 'sectionend',
