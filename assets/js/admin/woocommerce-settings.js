@@ -2,6 +2,63 @@ jQuery(document).ready(function($) {
     var tiersData = [];
     var couponsData = [];
     
+    // Connection button functionality
+    $('#truebeep-connection-btn').on('click', function(e) {
+        e.preventDefault();
+        
+        var $button = $(this);
+        var $message = $('#truebeep-connection-message');
+        var $status = $('#truebeep-status');
+        var currentStatus = $button.data('status');
+        var action = (currentStatus === 'connected') ? 'disconnect' : 'connect';
+        var originalText = $button.text();
+        
+        // Show loading state
+        $button.text('Processing...').prop('disabled', true);
+        $message.html('<span style="color: blue;">Processing...</span>');
+        
+        // Make AJAX request
+        $.ajax({
+            url: truebeep_admin.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'truebeep_update_connection',
+                nonce: truebeep_admin.connection_nonce,
+                connection_action: action
+            },
+            success: function(response) {
+                if (response.success) {
+                    var newStatus = response.data.status;
+                    var newButtonText = (newStatus === 'connected') ? 'Disconnect' : 'Connect';
+                    var statusText = (newStatus === 'connected') ? 'Connected' : 'Disconnected';
+                    var statusColor = (newStatus === 'connected') ? 'green' : 'red';
+                    
+                    // Update button
+                    $button.text(newButtonText).data('status', newStatus);
+                    
+                    // Update status display
+                    $status.text(statusText).css('color', statusColor);
+                    
+                    // Show success message
+                    $message.html('<span style="color: green;">✓ ' + response.data.message + '</span>');
+                    
+                    // Clear message after 3 seconds
+                    setTimeout(function() {
+                        $message.html('');
+                    }, 3000);
+                } else {
+                    $message.html('<span style="color: red;">✗ ' + response.data.message + '</span>');
+                }
+            },
+            error: function() {
+                $message.html('<span style="color: red;">✗ Connection failed. Please try again.</span>');
+            },
+            complete: function() {
+                $button.prop('disabled', false);
+            }
+        });
+    });
+    
     // Initialize tiers data from table
     function initializeTiersData() {
         tiersData = [];
