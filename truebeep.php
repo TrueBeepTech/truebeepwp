@@ -127,6 +127,18 @@ final class Truebeep
     {
         // Send disconnected status to TrueBeep
         $this->update_connection_status_on_deactivation();
+        
+        // Clear scheduled update checks
+        $hook_name = 'truebeep_daily_update_check';
+        $timestamp = wp_next_scheduled($hook_name);
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, $hook_name);
+        }
+        wp_clear_scheduled_hook($hook_name);
+        
+        // Clear update caches
+        delete_transient('truebeep_github_release_' . md5('TruebeepTech' . 'TruebeepWp'));
+        delete_site_transient('update_plugins');
     }
     
     /**
@@ -168,28 +180,6 @@ final class Truebeep
         
         // Always update local status to disconnected
         update_option('truebeep_connection_status', 'disconnected');
-    }
-
-    /**
-     * Plugin deactivation
-     *
-     * @return void
-     */
-    public function deactivate()
-    {
-        // Clear scheduled update checks
-        $hook_name = 'truebeep_daily_update_check';
-        $timestamp = wp_next_scheduled($hook_name);
-        if ($timestamp) {
-            wp_unschedule_event($timestamp, $hook_name);
-        }
-        wp_clear_scheduled_hook($hook_name);
-        
-        // Clear update caches
-        delete_transient('truebeep_github_release_' . md5('TruebeepTech' . 'TruebeepWp'));
-        delete_site_transient('update_plugins');
-        
-        // Additional cleanup can be added here if needed
     }
 
     /**
