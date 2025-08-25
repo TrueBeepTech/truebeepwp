@@ -356,7 +356,63 @@ class LoyaltyHandler
         // Check if order has a user
         $user_id = $order->get_user_id();
         if ($user_id) {
-            return get_user_meta($user_id, '_truebeep_customer_id', true);
+            $customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
+            if ($customer_id) {
+                return $customer_id;
+            }
+        }
+        
+        // Fallback: If no customer ID found and this is a guest order, try to create one
+        if (!$user_id) {
+            $billing_email = $order->get_billing_email();
+            if ($billing_email) {
+                // Try to find or create a Truebeep customer
+                $customer_data = [
+                    'firstName' => $order->get_billing_first_name() ?: 'Guest',
+                    'lastName' => $order->get_billing_last_name() ?: '',
+                    'email' => $billing_email,
+                    'phone' => $order->get_billing_phone(),
+                    'source' => 'WordPress'
+                ];
+                
+                // Check if customer exists
+                $existing_customer_response = $this->list_truebeep_customers(['email' => $billing_email]);
+                
+                if (!is_wp_error($existing_customer_response) && $existing_customer_response['success'] && !empty($existing_customer_response['data'])) {
+                    $existing_customer = is_array($existing_customer_response['data']) && isset($existing_customer_response['data'][0]) 
+                        ? $existing_customer_response['data'][0] 
+                        : $existing_customer_response['data'];
+                        
+                    if (isset($existing_customer['id'])) {
+                        $customer_id = $existing_customer['id'];
+                        // Store it with the order for future reference
+                        $order->update_meta_data('_truebeep_customer_id', $customer_id);
+                        $order->update_meta_data('_truebeep_customer_email', $billing_email);
+                        $order->save();
+                        return $customer_id;
+                    }
+                }
+                
+                // Create new customer if not found
+                $response = $this->create_truebeep_customer($customer_data);
+                if (!is_wp_error($response) && $response['success']) {
+                    $response_data = !empty($response['data']['data']) ? $response['data']['data'] : $response['data'];
+                    if (isset($response_data['id'])) {
+                        $customer_id = $response_data['id'];
+                        // Store it with the order
+                        $order->update_meta_data('_truebeep_customer_id', $customer_id);
+                        $order->update_meta_data('_truebeep_customer_email', $billing_email);
+                        $order->save();
+                        
+                        $order->add_order_note(sprintf(
+                            __('Truebeep customer created (fallback) for guest with email %s', 'truebeep'),
+                            $billing_email
+                        ));
+                        
+                        return $customer_id;
+                    }
+                }
+            }
         }
 
         return null;

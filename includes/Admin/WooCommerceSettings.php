@@ -452,7 +452,8 @@ class WooCommerceSettings
             // Send connect status to TrueBeep
             $response = $this->make_api_request('connection-status', 'POST', [
                 'type' => 'wordpress',
-                'status' => 'connected'
+                'status' => 'connected',
+                'url' => get_site_url()
             ]);
             
             if (!is_wp_error($response) && $response['success']) {
@@ -469,7 +470,8 @@ class WooCommerceSettings
             // Send disconnect status to TrueBeep
             $response = $this->make_api_request('connection-status', 'POST', [
                 'type' => 'wordpress',
-                'status' => 'disconnected'
+                'status' => 'disconnected',
+                'url' => get_site_url()
             ]);
             
             if (!is_wp_error($response) && $response['success']) {

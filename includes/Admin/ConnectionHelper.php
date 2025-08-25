@@ -35,7 +35,8 @@ class ConnectionHelper
         
         $response = $this->make_api_request('connection-status', 'POST', [
             'type' => 'wordpress',
-            'status' => $status
+            'status' => $status,
+            'url' => get_site_url()
         ]);
         
         if (!is_wp_error($response) && $response['success']) {

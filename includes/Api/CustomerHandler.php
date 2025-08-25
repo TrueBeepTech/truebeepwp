@@ -33,7 +33,8 @@ class CustomerHandler
         add_action('profile_update', [$this, 'handle_user_profile_update'], 10, 2);
         add_action('edit_user_profile_update', [$this, 'handle_admin_user_update'], 10, 1);
         add_action('delete_user', [$this, 'handle_user_deletion'], 10, 1);
-        add_action('woocommerce_checkout_order_processed', [$this, 'handle_guest_checkout'], 10, 3);
+        // Set priority to 5 to ensure guest customer is created before loyalty points processing (priority 20)
+        add_action('woocommerce_checkout_order_processed', [$this, 'handle_guest_checkout'], 5, 3);
         add_action('admin_notices', [$this, 'show_api_notices']);
         add_action('wp_ajax_truebeep_sync_user', [$this, 'ajax_sync_user']);
         add_action('wp_ajax_truebeep_remove_sync', [$this, 'ajax_remove_sync']);
@@ -105,29 +106,89 @@ class CustomerHandler
      */
     public function handle_guest_checkout($order_id, $posted_data, $order)
     {
-        // Check if this is a guest order
+        // Check if this is a guest order (no user ID associated)
         if (!$order->get_user_id()) {
-            $customer_data = [
-                'firstName' => $order->get_billing_first_name(),
-                'lastName' => $order->get_billing_last_name(),
-                'email' => $order->get_billing_email(),
-                'phone' => $order->get_billing_phone(),
-                'source' => 'WordPress'
-            ];
+            // Get billing information from the order
+            $billing_email = $order->get_billing_email();
+            $billing_first_name = $order->get_billing_first_name();
+            $billing_last_name = $order->get_billing_last_name();
+            $billing_phone = $order->get_billing_phone();
+            
+            // Ensure we have at least an email to create the customer
+            if (empty($billing_email)) {
+                $this->log_api_activity('Cannot create guest customer - no billing email provided', $order_id, 'error');
+                return;
+            }
 
-            $response = $this->create_truebeep_customer($customer_data);
+            // Check if a Truebeep customer already exists for this email
+            $existing_customer_response = $this->list_truebeep_customers(['email' => $billing_email]);
+            
+            $truebeep_customer_id = null;
+            
+            if (!is_wp_error($existing_customer_response) && $existing_customer_response['success'] && !empty($existing_customer_response['data'])) {
+                // Customer exists, use their ID
+                $existing_customer = is_array($existing_customer_response['data']) && isset($existing_customer_response['data'][0]) 
+                    ? $existing_customer_response['data'][0] 
+                    : $existing_customer_response['data'];
+                    
+                if (isset($existing_customer['id'])) {
+                    $truebeep_customer_id = $existing_customer['id'];
+                    $this->log_api_activity('Found existing Truebeep customer for guest email', $billing_email);
+                }
+            }
+            
+            // If no existing customer found, create a new one
+            if (!$truebeep_customer_id) {
+                $customer_data = [
+                    'firstName' => !empty($billing_first_name) ? $billing_first_name : 'Guest',
+                    'lastName' => !empty($billing_last_name) ? $billing_last_name : '',
+                    'email' => $billing_email,
+                    'phone' => $billing_phone,
+                    'source' => 'WordPress'
+                ];
 
-            if (!is_wp_error($response) && $response['success']) {
-                // Store Truebeep customer ID with the order
-                $order->update_meta_data('_truebeep_customer_id', $response['data']['id']);
+                $response = $this->create_truebeep_customer($customer_data);
+
+                if (!is_wp_error($response) && $response['success']) {
+                    // Extract the customer ID from response
+                    $response_data = !empty($response['data']['data']) ? $response['data']['data'] : $response['data'];
+                    if (isset($response_data['id'])) {
+                        $truebeep_customer_id = $response_data['id'];
+                        $this->log_api_activity('Guest customer created in Truebeep', [
+                            'customer_id' => $truebeep_customer_id,
+                            'email' => $billing_email,
+                            'order_id' => $order_id
+                        ]);
+                    }
+                } else {
+                    // Log error
+                    $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
+                    $this->log_api_activity('Failed to create guest customer in Truebeep', [
+                        'error' => $error_message,
+                        'email' => $billing_email,
+                        'order_id' => $order_id
+                    ], 'error');
+                    
+                    // Add order note about the failure
+                    $order->add_order_note(sprintf(
+                        __('Failed to create Truebeep customer for guest checkout: %s', 'truebeep'),
+                        $error_message
+                    ));
+                }
+            }
+            
+            // Store Truebeep customer ID with the order if we have one
+            if ($truebeep_customer_id) {
+                $order->update_meta_data('_truebeep_customer_id', $truebeep_customer_id);
+                $order->update_meta_data('_truebeep_customer_email', $billing_email);
                 $order->save();
-
-                // Log success
-                $this->log_api_activity('Guest customer created in Truebeep', $response['data']['id']);
-            } else {
-                // Log error
-                $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-                $this->log_api_activity('Failed to create guest customer in Truebeep', $error_message, 'error');
+                
+                // Add order note
+                $order->add_order_note(sprintf(
+                    __('Truebeep customer %s for guest checkout with email %s', 'truebeep'),
+                    $existing_customer_response ? 'found' : 'created',
+                    $billing_email
+                ));
             }
         }
     }
