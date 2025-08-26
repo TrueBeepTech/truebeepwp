@@ -43,6 +43,9 @@ class LoyaltyHandler
         add_action('woocommerce_order_details_after_order_table', [$this, 'display_earned_points'], 10, 1);
         add_action('woocommerce_admin_order_data_after_order_details', [$this, 'display_admin_points_info']);
         add_action('woocommerce_checkout_order_processed', [$this, 'handle_points_redemption'], 20, 3);
+        
+        // Add hook for customer interaction API when order is placed
+        add_action('woocommerce_checkout_order_processed', [$this, 'send_order_interaction'], 15, 3);
     }
 
     /**
@@ -438,6 +441,183 @@ class LoyaltyHandler
         }
     }
 
+    /**
+     * Send order interaction to Truebeep API
+     *
+     * @param int $order_id Order ID
+     * @param array $posted_data Posted data
+     * @param object $order Order object
+     */
+    public function send_order_interaction($order_id, $posted_data, $order)
+    {
+        // Get customer Truebeep ID
+        $customer_id = $this->get_customer_truebeep_id($order);
+        if (!$customer_id) {
+            $order->add_order_note(__('Order interaction not sent to Truebeep: Customer ID not found', 'truebeep'));
+            return;
+        }
+
+        // Build order data payload
+        $order_data = $this->build_order_interaction_payload($order);
+        
+        // Send interaction to API
+        $response = $this->send_customer_interaction($customer_id, 'order', $order_data);
+        
+        if (!is_wp_error($response) && $response['success']) {
+            $order->update_meta_data('_truebeep_interaction_sent', 'yes');
+            $order->update_meta_data('_truebeep_interaction_date', current_time('mysql'));
+            $order->save();
+            
+            $order->add_order_note(__('Order interaction successfully sent to Truebeep', 'truebeep'));
+        } else {
+            $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
+            $order->add_order_note(sprintf(__('Failed to send order interaction to Truebeep: %s', 'truebeep'), $error_message));
+        }
+    }
+    
+    /**
+     * Build order interaction payload
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    private function build_order_interaction_payload($order)
+    {
+        // Extract order items and build keywords
+        $items = [];
+        $keywords = [];
+        $categories = [];
+        
+        foreach ($order->get_items() as $item) {
+            $product = $item->get_product();
+            
+            if ($product) {
+                // Add product name to keywords
+                $keywords[] = $product->get_name();
+                
+                // Add SKU if available
+                if ($product->get_sku()) {
+                    $keywords[] = $product->get_sku();
+                }
+                
+                // Get product categories
+                $product_categories = get_the_terms($product->get_id(), 'product_cat');
+                if ($product_categories && !is_wp_error($product_categories)) {
+                    foreach ($product_categories as $category) {
+                        $categories[] = $category->name;
+                        $keywords[] = $category->name;
+                    }
+                }
+                
+                // Build item data
+                $items[] = [
+                    'product_id' => $product->get_id(),
+                    'product_name' => $product->get_name(),
+                    'sku' => $product->get_sku(),
+                    'quantity' => $item->get_quantity(),
+                    'price' => $item->get_total(),
+                    'variation_id' => $product->is_type('variation') ? $product->get_id() : null,
+                ];
+            }
+        }
+        
+        // Remove duplicate keywords and categories
+        $keywords = array_unique($keywords);
+        $categories = array_unique($categories);
+        
+        // Build the complete payload
+        $payload = [
+            'order_id' => $order->get_id(),
+            'order_number' => $order->get_order_number(),
+            'order_status' => $order->get_status(),
+            'order_date' => $order->get_date_created()->format('Y-m-d H:i:s'),
+            'order_total' => $order->get_total(),
+            'order_subtotal' => $order->get_subtotal(),
+            'order_tax' => $order->get_total_tax(),
+            'order_shipping' => $order->get_shipping_total(),
+            'order_discount' => $order->get_discount_total(),
+            'currency' => $order->get_currency(),
+            'payment_method' => $order->get_payment_method(),
+            'payment_method_title' => $order->get_payment_method_title(),
+            
+            // Customer information
+            'customer_id' => $order->get_user_id(),
+            'customer_email' => $order->get_billing_email(),
+            'customer_phone' => $order->get_billing_phone(),
+            
+            // Billing details
+            'billing' => [
+                'first_name' => $order->get_billing_first_name(),
+                'last_name' => $order->get_billing_last_name(),
+                'company' => $order->get_billing_company(),
+                'address_1' => $order->get_billing_address_1(),
+                'address_2' => $order->get_billing_address_2(),
+                'city' => $order->get_billing_city(),
+                'state' => $order->get_billing_state(),
+                'postcode' => $order->get_billing_postcode(),
+                'country' => $order->get_billing_country(),
+                'email' => $order->get_billing_email(),
+                'phone' => $order->get_billing_phone(),
+            ],
+            
+            // Shipping details
+            'shipping' => [
+                'first_name' => $order->get_shipping_first_name(),
+                'last_name' => $order->get_shipping_last_name(),
+                'company' => $order->get_shipping_company(),
+                'address_1' => $order->get_shipping_address_1(),
+                'address_2' => $order->get_shipping_address_2(),
+                'city' => $order->get_shipping_city(),
+                'state' => $order->get_shipping_state(),
+                'postcode' => $order->get_shipping_postcode(),
+                'country' => $order->get_shipping_country(),
+            ],
+            
+            // Order items
+            'items' => $items,
+            
+            // Keywords for the order
+            'keywords' => implode(', ', $keywords),
+            'categories' => $categories,
+            
+            // Loyalty points information if available
+            'points_earned' => floatval($order->get_meta('_truebeep_points_earned')),
+            'points_redeemed' => floatval($order->get_meta('_truebeep_points_redeemed_amount')),
+            
+            // Store information
+            'store_url' => get_site_url(),
+            'store_name' => get_bloginfo('name'),
+        ];
+        
+        return $payload;
+    }
+    
+    /**
+     * Send customer interaction to API
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @param string $type Interaction type
+     * @param array $data Interaction data
+     * @return array|WP_Error
+     */
+    private function send_customer_interaction($customer_id, $type, $data)
+    {
+        $api_url = $this->get_api_url();
+        if (empty($api_url)) {
+            return new \WP_Error('missing_api_url', __('API URL is not configured', 'truebeep'));
+        }
+        
+        // Build the interaction endpoint URL
+        $endpoint = sprintf(
+            'customer-interactions?subscriber_id=%s&channel=wordpress&type=%s',
+            urlencode($customer_id),
+            urlencode($type)
+        );
+        
+        // Send the interaction data
+        return $this->make_api_request($endpoint, 'POST', $data);
+    }
+    
     /**
      * Display points info in admin order page
      */
