@@ -620,4 +620,162 @@ trait ApiHelper
             ]
         ];
     }
+
+    /**
+     * Build full refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    protected function build_refund_payload($order)
+    {
+        // Get the base order payload
+        $payload = $this->build_order_payload($order);
+        
+        // Add refund-specific data
+        $payload['refund_reason'] = $order->get_status();
+        $payload['refund_date'] = current_time('Y-m-d H:i:s');
+        
+        // Get customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['customer_note'] = $customer_note;
+        }
+        
+        // Get all order notes for additional context
+        $order_notes = wc_get_order_notes([
+            'order_id' => $order->get_id(),
+            'type' => 'customer',
+            'limit' => 10
+        ]);
+        
+        if (!empty($order_notes)) {
+            $notes = [];
+            foreach ($order_notes as $note) {
+                $notes[] = [
+                    'date' => $note->date_created->format('Y-m-d H:i:s'),
+                    'content' => $note->content,
+                    'added_by' => $note->added_by
+                ];
+            }
+            $payload['order_notes'] = $notes;
+        }
+        
+        // Add refund status flags
+        $payload['is_refunded'] = true;
+        $payload['is_cancelled'] = ($order->get_status() === 'cancelled');
+        
+        return $payload;
+    }
+
+    /**
+     * Build structured refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    protected function build_structured_refund_payload($order)
+    {
+        // Get base structured payload
+        $payload = $this->build_structured_order_payload($order);
+        
+        // Add refund-specific structured data
+        $payload['refund'] = [
+            'status' => $order->get_status(),
+            'date' => current_time('Y-m-d H:i:s'),
+            'type' => 'full'
+        ];
+        
+        // Add customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['refund']['customer_note'] = $customer_note;
+        }
+        
+        return $payload;
+    }
+
+    /**
+     * Build full partial refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @param WC_Order_Refund $refund
+     * @return array
+     */
+    protected function build_partial_refund_payload($order, $refund)
+    {
+        // Get the base order payload
+        $payload = $this->build_order_payload($order);
+        
+        // Add partial refund specific data
+        $payload['partial_refund'] = [
+            'refund_id' => $refund->get_id(),
+            'refund_amount' => abs($refund->get_total()),
+            'refund_reason' => $refund->get_reason(),
+            'refund_date' => $refund->get_date_created()->format('Y-m-d H:i:s'),
+            'refunded_by' => $refund->get_refunded_by()
+        ];
+        
+        // Get refunded items
+        $refunded_items = [];
+        foreach ($refund->get_items() as $item) {
+            $product = $item->get_product();
+            if ($product) {
+                $refunded_items[] = [
+                    'product_name' => $product->get_name(),
+                    'quantity' => abs($item->get_quantity()),
+                    'refund_total' => abs($item->get_total())
+                ];
+            }
+        }
+        
+        if (!empty($refunded_items)) {
+            $payload['partial_refund']['refunded_items'] = $refunded_items;
+        }
+        
+        // Add customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['customer_note'] = $customer_note;
+        }
+        
+        // Calculate totals after refund
+        $total_refunded = $order->get_total_refunded();
+        $payload['totals_after_refund'] = [
+            'total_refunded' => $total_refunded,
+            'remaining_total' => $order->get_total() - $total_refunded
+        ];
+        
+        return $payload;
+    }
+
+    /**
+     * Build structured partial refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @param WC_Order_Refund $refund
+     * @return array
+     */
+    protected function build_structured_partial_refund_payload($order, $refund)
+    {
+        // Get base structured payload
+        $payload = $this->build_structured_order_payload($order);
+        
+        // Add partial refund structured data
+        $payload['refund'] = [
+            'status' => 'partial_refund',
+            'date' => $refund->get_date_created()->format('Y-m-d H:i:s'),
+            'type' => 'partial',
+            'amount' => abs($refund->get_total()),
+            'reason' => $refund->get_reason()
+        ];
+        
+        // Add customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['refund']['customer_note'] = $customer_note;
+        }
+        
+        return $payload;
+    }
 }
