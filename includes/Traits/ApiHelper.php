@@ -426,4 +426,356 @@ trait ApiHelper
             ];
         }
     }
+
+    /**
+     * Send customer interaction to API
+     *
+     * @param string $customer_id Truebeep customer ID
+     * @param string $type Interaction type
+     * @param array $data Interaction data
+     * @return array|WP_Error
+     */
+    protected function send_customer_interaction($customer_id, $type, $data)
+    {
+        $api_url = $this->get_api_url();
+        if (empty($api_url)) {
+            return new \WP_Error('missing_api_url', __('API URL is not configured', 'truebeep'));
+        }
+        
+        // Build the interaction endpoint URL
+        $endpoint = sprintf(
+            'customer-interactions?subscriber_id=%s&channel=woocommerce&type=%s',
+            urlencode($customer_id),
+            urlencode($type)
+        );
+        
+        // Send the interaction data
+        return $this->make_api_request($endpoint, 'POST', $data);
+    }
+
+    /**
+     * Build full order payload for interactions
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    protected function build_order_payload($order)
+    {
+        // Extract order items and build keywords
+        $items = [];
+        $keywords = [];
+        $categories = [];
+        
+        foreach ($order->get_items() as $item) {
+            $product = $item->get_product();
+            
+            if ($product) {
+                // Add product name to keywords
+                $keywords[] = $product->get_name();
+                
+                // Add SKU if available
+                if ($product->get_sku()) {
+                    $keywords[] = $product->get_sku();
+                }
+                
+                // Get product categories
+                $product_categories = get_the_terms($product->get_id(), 'product_cat');
+                if ($product_categories && !is_wp_error($product_categories)) {
+                    foreach ($product_categories as $category) {
+                        $categories[] = $category->name;
+                        $keywords[] = $category->name;
+                    }
+                }
+                
+                // Build item data
+                $items[] = [
+                    'product_id' => $product->get_id(),
+                    'product_name' => $product->get_name(),
+                    'sku' => $product->get_sku(),
+                    'quantity' => $item->get_quantity(),
+                    'price' => $item->get_total(),
+                    'variation_id' => $product->is_type('variation') ? $product->get_id() : null,
+                ];
+            }
+        }
+        
+        // Remove duplicate keywords and categories
+        $keywords = array_unique($keywords);
+        $categories = array_unique($categories);
+        
+        // Build the complete payload
+        $payload = [
+            'order_id' => $order->get_id(),
+            'order_number' => $order->get_order_number(),
+            'order_status' => $order->get_status(),
+            'order_date' => $order->get_date_created()->format('Y-m-d H:i:s'),
+            'order_total' => $order->get_total(),
+            'order_subtotal' => $order->get_subtotal(),
+            'order_tax' => $order->get_total_tax(),
+            'order_shipping' => $order->get_shipping_total(),
+            'order_discount' => $order->get_discount_total(),
+            'currency' => $order->get_currency(),
+            'payment_method' => $order->get_payment_method(),
+            'payment_method_title' => $order->get_payment_method_title(),
+            
+            // Customer information
+            'customer_id' => $order->get_user_id(),
+            'customer_email' => $order->get_billing_email(),
+            'customer_phone' => $order->get_billing_phone(),
+            
+            // Billing details
+            'billing' => [
+                'first_name' => $order->get_billing_first_name(),
+                'last_name' => $order->get_billing_last_name(),
+                'company' => $order->get_billing_company(),
+                'address_1' => $order->get_billing_address_1(),
+                'address_2' => $order->get_billing_address_2(),
+                'city' => $order->get_billing_city(),
+                'state' => $order->get_billing_state(),
+                'postcode' => $order->get_billing_postcode(),
+                'country' => $order->get_billing_country(),
+                'email' => $order->get_billing_email(),
+                'phone' => $order->get_billing_phone(),
+            ],
+            
+            // Shipping details
+            'shipping' => [
+                'first_name' => $order->get_shipping_first_name(),
+                'last_name' => $order->get_shipping_last_name(),
+                'company' => $order->get_shipping_company(),
+                'address_1' => $order->get_shipping_address_1(),
+                'address_2' => $order->get_shipping_address_2(),
+                'city' => $order->get_shipping_city(),
+                'state' => $order->get_shipping_state(),
+                'postcode' => $order->get_shipping_postcode(),
+                'country' => $order->get_shipping_country(),
+            ],
+            
+            // Order items
+            'items' => $items,
+            
+            // Keywords for the order
+            'keywords' => implode(', ', $keywords),
+            'categories' => $categories,
+            
+            // Loyalty points information if available
+            'points_earned' => floatval($order->get_meta('_truebeep_points_earned')),
+            'points_redeemed' => floatval($order->get_meta('_truebeep_points_redeemed_amount')),
+            
+            // Store information
+            'store_url' => get_site_url(),
+            'store_name' => get_bloginfo('name'),
+        ];
+        
+        return $payload;
+    }
+
+    /**
+     * Build structured minimal order payload for interactions
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    protected function build_structured_order_payload($order)
+    {
+        // Build product list with just names and quantities
+        $products = [];
+        foreach ($order->get_items() as $item) {
+            $product = $item->get_product();
+            if ($product) {
+                $products[] = [
+                    'name' => $product->get_name(),
+                    'quantity' => $item->get_quantity(),
+                    'price' => $item->get_total()
+                ];
+            }
+        }
+        
+        // Build minimal structured payload
+        return [
+            'order' => [
+                'id' => $order->get_order_number(),
+                'total' => $order->get_total(),
+                'currency' => $order->get_currency(),
+                'status' => $order->get_status(),
+                'date' => $order->get_date_created()->format('Y-m-d H:i:s')
+            ],
+            'customer' => [
+                'email' => $order->get_billing_email(),
+                'name' => trim($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()),
+                'phone' => $order->get_billing_phone()
+            ],
+            'products' => $products,
+            'summary' => [
+                'items_count' => count($order->get_items()),
+                'subtotal' => $order->get_subtotal(),
+                'shipping' => $order->get_shipping_total(),
+                'tax' => $order->get_total_tax(),
+                'discount' => $order->get_discount_total()
+            ],
+            'location' => [
+                'city' => $order->get_billing_city(),
+                'state' => $order->get_billing_state(),
+                'country' => $order->get_billing_country()
+            ]
+        ];
+    }
+
+    /**
+     * Build full refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    protected function build_refund_payload($order)
+    {
+        // Get the base order payload
+        $payload = $this->build_order_payload($order);
+        
+        // Add refund-specific data
+        $payload['refund_reason'] = $order->get_status();
+        $payload['refund_date'] = current_time('Y-m-d H:i:s');
+        
+        // Get customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['customer_note'] = $customer_note;
+        }
+        
+        // Get all order notes for additional context
+        $order_notes = wc_get_order_notes([
+            'order_id' => $order->get_id(),
+            'type' => 'customer',
+            'limit' => 10
+        ]);
+        
+        if (!empty($order_notes)) {
+            $notes = [];
+            foreach ($order_notes as $note) {
+                $notes[] = [
+                    'date' => $note->date_created->format('Y-m-d H:i:s'),
+                    'content' => $note->content,
+                    'added_by' => $note->added_by
+                ];
+            }
+            $payload['order_notes'] = $notes;
+        }
+        
+        // Add refund status flags
+        $payload['is_refunded'] = true;
+        $payload['is_cancelled'] = ($order->get_status() === 'cancelled');
+        
+        return $payload;
+    }
+
+    /**
+     * Build structured refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @return array
+     */
+    protected function build_structured_refund_payload($order)
+    {
+        // Get base structured payload
+        $payload = $this->build_structured_order_payload($order);
+        
+        // Add refund-specific structured data
+        $payload['refund'] = [
+            'status' => $order->get_status(),
+            'date' => current_time('Y-m-d H:i:s'),
+            'type' => 'full'
+        ];
+        
+        // Add customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['refund']['customer_note'] = $customer_note;
+        }
+        
+        return $payload;
+    }
+
+    /**
+     * Build full partial refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @param WC_Order_Refund $refund
+     * @return array
+     */
+    protected function build_partial_refund_payload($order, $refund)
+    {
+        // Get the base order payload
+        $payload = $this->build_order_payload($order);
+        
+        // Add partial refund specific data
+        $payload['partial_refund'] = [
+            'refund_id' => $refund->get_id(),
+            'refund_amount' => abs($refund->get_total()),
+            'refund_reason' => $refund->get_reason(),
+            'refund_date' => $refund->get_date_created()->format('Y-m-d H:i:s'),
+            'refunded_by' => $refund->get_refunded_by()
+        ];
+        
+        // Get refunded items
+        $refunded_items = [];
+        foreach ($refund->get_items() as $item) {
+            $product = $item->get_product();
+            if ($product) {
+                $refunded_items[] = [
+                    'product_name' => $product->get_name(),
+                    'quantity' => abs($item->get_quantity()),
+                    'refund_total' => abs($item->get_total())
+                ];
+            }
+        }
+        
+        if (!empty($refunded_items)) {
+            $payload['partial_refund']['refunded_items'] = $refunded_items;
+        }
+        
+        // Add customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['customer_note'] = $customer_note;
+        }
+        
+        // Calculate totals after refund
+        $total_refunded = $order->get_total_refunded();
+        $payload['totals_after_refund'] = [
+            'total_refunded' => $total_refunded,
+            'remaining_total' => $order->get_total() - $total_refunded
+        ];
+        
+        return $payload;
+    }
+
+    /**
+     * Build structured partial refund payload for interactions
+     *
+     * @param WC_Order $order
+     * @param WC_Order_Refund $refund
+     * @return array
+     */
+    protected function build_structured_partial_refund_payload($order, $refund)
+    {
+        // Get base structured payload
+        $payload = $this->build_structured_order_payload($order);
+        
+        // Add partial refund structured data
+        $payload['refund'] = [
+            'status' => 'partial_refund',
+            'date' => $refund->get_date_created()->format('Y-m-d H:i:s'),
+            'type' => 'partial',
+            'amount' => abs($refund->get_total()),
+            'reason' => $refund->get_reason()
+        ];
+        
+        // Add customer note if available
+        $customer_note = $order->get_customer_note();
+        if (!empty($customer_note)) {
+            $payload['refund']['customer_note'] = $customer_note;
+        }
+        
+        return $payload;
+    }
 }

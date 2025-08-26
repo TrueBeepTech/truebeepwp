@@ -14,5 +14,6 @@ class API
     {
         new Api\CustomerHandler();
         new Api\LoyaltyHandler();
+        new Api\InteractionHandler();
     }
 }
