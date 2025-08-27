@@ -18,6 +18,9 @@ class CustomerImporter
      */
     public function process_batch($customer_ids)
     {
+        _log('process_batch');
+        _log($customer_ids);
+
         $result = [
             'success' => true,
             'processed' => [],
@@ -62,6 +65,9 @@ class CustomerImporter
      */
     private function import_single_customer($user_id)
     {
+        _log('import_single_customer');
+        _log($user_id);
+        
         $user = get_user_by('ID', $user_id);
         if (!$user) {
             return [
@@ -84,7 +90,14 @@ class CustomerImporter
         }
 
         $customer_data = $this->prepare_customer_data($user);
+
+        _log('customer_data');
+        _log($customer_data);
+
         $response = $this->create_truebeep_customer($customer_data);
+
+        _log('response');
+        _log($response);
 
         if (is_wp_error($response)) {
             error_log('Truebeep API Error for user ' . $user_id . ': ' . $response->get_error_message());

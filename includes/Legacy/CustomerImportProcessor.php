@@ -33,6 +33,9 @@ class CustomerImportProcessor
      */
     public function schedule_import($batches)
     {
+        _log('schedule_import');
+        _log($batches);
+
         if (empty($batches) || !is_array($batches)) {
             return false;
         }
@@ -78,6 +81,9 @@ class CustomerImportProcessor
      */
     public function process_batch($batch)
     {
+        _log('process_batch');
+        _log($batch);
+
         if (empty($batch) || !is_array($batch)) {
             return;
         }
