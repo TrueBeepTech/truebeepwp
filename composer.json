@@ -14,7 +14,7 @@
     "nesbot/carbon": "2.x-dev",
     "cmb2/cmb2": "dev-master",
     "johnbillion/extended-cpts": "dev-develop",
-    "deliciousbrains/wp-background-processing": "dev-master"
+    "woocommerce/action-scheduler": "^3.8"
   },
   "autoload": {
     "classmap": [
