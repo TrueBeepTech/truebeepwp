@@ -136,6 +136,118 @@ trait ApiHelper
     }
 
     /**
+     * Create multiple customers in bulk
+     */
+    public function create_truebeep_customers_bulk($customers_data)
+    {
+        if (empty($customers_data) || !is_array($customers_data)) {
+            return new \WP_Error('invalid_data', __('Invalid customer data array', 'truebeep'));
+        }
+
+        $formatted_customers = [];
+        
+        foreach ($customers_data as $index => $customer_data) {
+            if (empty($customer_data['firstName'])) {
+                continue;
+            }
+
+            $formatted_customer = [
+                'firstName' => sanitize_text_field($customer_data['firstName']),
+            ];
+
+            if (!empty($customer_data['lastName'])) {
+                $formatted_customer['lastName'] = sanitize_text_field($customer_data['lastName']);
+            }
+
+            if (!empty($customer_data['email'])) {
+                $formatted_customer['email'] = sanitize_email($customer_data['email']);
+            }
+
+            if (!empty($customer_data['phone'])) {
+                $phone = preg_replace('/\s+/', '', $customer_data['phone']);
+                if (substr($phone, 0, 1) === "'") {
+                    $phone = ltrim($phone, "'");
+                }
+                $formatted_customer['phone'] = sanitize_text_field($phone);
+            }
+
+            if (!empty($customer_data['source'])) {
+                $formatted_customer['source'] = sanitize_text_field($customer_data['source']);
+            }
+            
+            if (!empty($customer_data['metadata'])) {
+                $formatted_customer['metadata'] = $customer_data['metadata'];
+            }
+
+            if (!empty($customer_data['wordpress_user_id'])) {
+                $formatted_customer['wordpress_user_id'] = $customer_data['wordpress_user_id'];
+            }
+
+            $formatted_customers[] = $formatted_customer;
+        }
+
+        if (empty($formatted_customers)) {
+            return new \WP_Error('no_valid_customers', __('No valid customers to import', 'truebeep'));
+        }
+
+        $api_url = $this->get_api_url();
+        $api_key = $this->get_api_key();
+
+        if (empty($api_url) || empty($api_key)) {
+            return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep'));
+        }
+
+        _log('bulk_formatted_customers');
+        _log($formatted_customers);
+
+        $args = [
+            'method' => 'POST',
+            'headers' => [
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type' => 'application/json'
+            ],
+            'body' => json_encode($formatted_customers),
+            'timeout' => 30,
+            'sslverify' => true,
+        ];
+
+        $response = wp_remote_post(rtrim($api_url, '/') . '/customers', $args);
+
+        _log('bulk_response');
+        // _log($response);
+        
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $response_code = wp_remote_retrieve_response_code($response);
+        $response_body = wp_remote_retrieve_body($response);
+       
+       
+
+        _log('bulk_response_body');
+        _log($response_body);
+
+       
+        $response_data = json_decode($response_body, true);
+
+        if ($response_code >= 200 && $response_code < 300) {
+            return [
+                'success' => true,
+                'data' => $response_data,
+                'code' => $response_code,
+            ];
+        } else {
+            return [
+                'success' => false,
+                'error' => $response_data['message'] ?? __('Bulk API request failed', 'truebeep'),
+                'data' => $response_data,
+                'code' => $response_code,
+            ];
+        }
+    }
+
+    /**
      * Get customer by ID
      */
     public function get_truebeep_customer($customer_id)

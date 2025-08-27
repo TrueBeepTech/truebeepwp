@@ -59,8 +59,6 @@ class ImportManager
         delete_option('truebeep_import_log');
         
         $customer_ids = $this->importer->get_customers_to_import();
-        _log('customer_ids');
-        _log($customer_ids);
         
         if (empty($customer_ids)) {
             update_option('truebeep_import_status', 'completed');

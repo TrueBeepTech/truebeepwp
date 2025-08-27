@@ -14,13 +14,10 @@ class CustomerImporter
     const BATCH_SIZE = 20;
 
     /**
-     * Process batch of customers
+     * Process batch of customers using bulk API
      */
     public function process_batch($customer_ids)
     {
-        _log('process_batch');
-        _log($customer_ids);
-
         $result = [
             'success' => true,
             'processed' => [],
@@ -30,126 +27,142 @@ class CustomerImporter
             'errors' => []
         ];
 
+        // Filter out already imported customers and prepare data
+        $customers_to_import = [];
+        $user_id_map = [];
+        
         foreach ($customer_ids as $user_id) {
-            try {
-                $import_result = $this->import_single_customer($user_id);
-                
-                $result['processed'][] = $user_id;
-                
-                if ($import_result['success']) {
-                    $result['successful']++;
-                } elseif ($import_result['skipped']) {
-                    $result['skipped']++;
-                } else {
-                    $result['failed']++;
-                    $result['errors'][$user_id] = $import_result['error'];
-                }
-                
-                update_option('truebeep_import_last_update', time());
-                usleep(100000);
-                
-            } catch (\Exception $e) {
-                $result['failed']++;
-                $result['errors'][$user_id] = $e->getMessage();
-                error_log('Exception while importing customer ' . $user_id . ': ' . $e->getMessage());
+            $user = get_user_by('ID', $user_id);
+            if (!$user) {
+                $result['skipped']++;
+                $result['errors'][$user_id] = 'User not found';
+                continue;
             }
+
+            // Check if already imported
+            $existing_truebeep_id = get_user_meta($user_id, '_truebeep_customer_id', true);
+            if (!empty($existing_truebeep_id)) {
+                $verify_response = $this->get_truebeep_customer($existing_truebeep_id);
+                if (!is_wp_error($verify_response) && $verify_response['success']) {
+                    $result['skipped']++;
+                    $result['processed'][] = $user_id;
+                    continue;
+                }
+            }
+
+            // Prepare customer data
+            $customer_data = $this->prepare_customer_data($user);
+            $customer_data['wordpress_user_id'] = $user_id;
+            $customers_to_import[] = $customer_data;
+            $user_id_map[] = $user_id;
         }
 
+        // If no customers to import, return early
+        if (empty($customers_to_import)) {
+            return $result;
+        }
+
+        // Make bulk API call
+        $response = $this->create_truebeep_customers_bulk($customers_to_import);
+        
+        if (is_wp_error($response)) {
+            error_log('Truebeep Bulk API Error: ' . $response->get_error_message());
+            foreach ($user_id_map as $user_id) {
+                $result['failed']++;
+                $result['errors'][$user_id] = $response->get_error_message();
+                $result['processed'][] = $user_id;
+            }
+            return $result;
+        }
+
+        if (!$response['success']) {
+            error_log('Truebeep Bulk API Failed: ' . ($response['error'] ?? 'Unknown error'));
+            foreach ($user_id_map as $user_id) {
+                $result['failed']++;
+                $result['errors'][$user_id] = $response['error'] ?? 'Failed to create customer';
+                $result['processed'][] = $user_id;
+            }
+            return $result;
+        }
+
+        // Process the bulk response
+        $this->process_bulk_response($response, $user_id_map, $customers_to_import, $result);
+
+        update_option('truebeep_import_last_update', time());
+        
         $this->log_batch_result($result);
 
         return $result;
     }
 
     /**
-     * Import single customer
+     * Process bulk API response
      */
-    private function import_single_customer($user_id)
+    private function process_bulk_response($response, $user_id_map, $customers_data, &$result)
     {
-        _log('import_single_customer');
-        _log($user_id);
+        $response_data = $response['data'];
         
-        $user = get_user_by('ID', $user_id);
-        if (!$user) {
-            return [
-                'success' => false,
-                'skipped' => true,
-                'error' => 'User not found'
-            ];
+        // Handle different response structures
+        if (isset($response_data['data']) && is_array($response_data['data'])) {
+            $created_customers = $response_data['data'];
+        } elseif (isset($response_data['customers']) && is_array($response_data['customers'])) {
+            $created_customers = $response_data['customers'];
+        } elseif (is_array($response_data) && isset($response_data[0])) {
+            $created_customers = $response_data;
+        } else {
+            // If structure is unclear, try to extract customer IDs
+            $created_customers = [$response_data];
         }
 
-        $existing_truebeep_id = get_user_meta($user_id, '_truebeep_customer_id', true);
-        if (!empty($existing_truebeep_id)) {
-            $verify_response = $this->get_truebeep_customer($existing_truebeep_id);
-            if (!is_wp_error($verify_response) && $verify_response['success']) {
-                return [
-                    'success' => false,
-                    'skipped' => true,
-                    'error' => 'Already imported'
-                ];
+        // Match created customers with WordPress user IDs
+        foreach ($created_customers as $index => $customer) {
+            if (!isset($user_id_map[$index])) {
+                continue;
+            }
+            
+            $user_id = $user_id_map[$index];
+            $result['processed'][] = $user_id;
+            
+            // Extract customer ID from response
+            $truebeep_customer_id = null;
+            if (isset($customer['_id'])) {
+                $truebeep_customer_id = $customer['_id'];
+            } elseif (isset($customer['id'])) {
+                $truebeep_customer_id = $customer['id'];
+            } elseif (isset($customer['customer_id'])) {
+                $truebeep_customer_id = $customer['customer_id'];
+            }
+            
+            if (!empty($truebeep_customer_id)) {
+                // Store the Truebeep customer ID
+                update_user_meta($user_id, '_truebeep_customer_id', $truebeep_customer_id);
+                update_user_meta($user_id, '_truebeep_import_date', current_time('mysql'));
+                
+                // Import customer statistics
+                $this->import_customer_statistics($user_id, $truebeep_customer_id);
+                
+                $result['successful']++;
+            } else {
+                $result['failed']++;
+                $result['errors'][$user_id] = 'No customer ID in response';
+                error_log('No customer ID found for user ' . $user_id . ' in response: ' . json_encode($customer));
             }
         }
 
-        $customer_data = $this->prepare_customer_data($user);
-
-        _log('customer_data');
-        _log($customer_data);
-
-        $response = $this->create_truebeep_customer($customer_data);
-
-        _log('response');
-        _log($response);
-
-        if (is_wp_error($response)) {
-            error_log('Truebeep API Error for user ' . $user_id . ': ' . $response->get_error_message());
-            return [
-                'success' => false,
-                'skipped' => false,
-                'error' => $response->get_error_message()
-            ];
-        }
-
-        if (!$response['success']) {
-            error_log('Truebeep API Failed for user ' . $user_id . ': ' . ($response['error'] ?? 'Unknown error'));
-            return [
-                'success' => false,
-                'skipped' => false,
-                'error' => $response['error'] ?? 'Failed to create customer'
-            ];
-        }
-
-        $truebeep_customer_id = null;
+        // Handle any customers that weren't in the response
+        $processed_count = count($result['processed']);
+        $expected_count = count($user_id_map);
         
-        if (!empty($response['data']['data']['_id'])) {
-            $truebeep_customer_id = $response['data']['data']['_id'];
-        } elseif (!empty($response['data']['_id'])) {
-            $truebeep_customer_id = $response['data']['_id'];
-        } elseif (!empty($response['data']['customer']['_id'])) {
-            $truebeep_customer_id = $response['data']['customer']['_id'];
-        } elseif (!empty($response['data']['id'])) {
-            $truebeep_customer_id = $response['data']['id'];
-        } elseif (!empty($response['data']['data']['id'])) {
-            $truebeep_customer_id = $response['data']['data']['id'];
+        if ($processed_count < $expected_count) {
+            for ($i = $processed_count; $i < $expected_count; $i++) {
+                if (isset($user_id_map[$i])) {
+                    $user_id = $user_id_map[$i];
+                    $result['processed'][] = $user_id;
+                    $result['failed']++;
+                    $result['errors'][$user_id] = 'Not found in API response';
+                }
+            }
         }
-        
-        if (!empty($truebeep_customer_id)) {
-            update_user_meta($user_id, '_truebeep_customer_id', $truebeep_customer_id);
-            update_user_meta($user_id, '_truebeep_import_date', current_time('mysql'));
-            
-            $this->import_customer_statistics($user_id, $truebeep_customer_id);
-            
-            return [
-                'success' => true,
-                'customer_id' => $truebeep_customer_id
-            ];
-        }
-
-        error_log('No customer ID found in response for user ' . $user_id . '. Response structure: ' . json_encode($response));
-        
-        return [
-            'success' => false,
-            'skipped' => false,
-            'error' => 'No customer ID returned from API'
-        ];
     }
 
     /**
