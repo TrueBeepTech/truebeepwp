@@ -126,7 +126,7 @@ class SyncSettings
             <?php endif; ?>
             
             <!-- Full Width Status Card -->
-            <div class="card sync-status-card">
+            <div class="card sync-status-card status-<?php echo esc_attr($status['status']); ?>">
                 <h2 class="title"><?php _e('Sync Status', 'truebeep'); ?></h2>
                 <div class="card-body">
                     <div class="sync-status-indicator">
@@ -142,7 +142,7 @@ class SyncSettings
                         <?php $progress = $status['progress'] ?? []; ?>
                         <div class="progress-container">
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
+                                <div class="progress-fill <?php echo esc_attr($status['status']); ?>" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
                             </div>
                             <div class="progress-text">
                                 <?php printf(

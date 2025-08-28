@@ -154,6 +154,12 @@
 /* Progress Bar */
 .progress-container {
   margin: 24px 20px 24px 0;
+  transition: all 0.3s ease;
+}
+
+/* Completed state container glow */
+.status-completed .progress-container {
+  animation: success-glow 3s ease-in-out infinite;
 }
 
 .progress-bar {
@@ -164,11 +170,51 @@
   margin-bottom: 14px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #dee2e6;
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Status-specific progress bar styling */
+.status-completed .progress-bar {
+  border-color: #28a745;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(40, 167, 69, 0.1);
+}
+
+.status-failed .progress-bar {
+  border-color: #dc3545;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(220, 53, 69, 0.1);
+}
+
+.status-cancelled .progress-bar {
+  border-color: #fd7e14;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(253, 126, 20, 0.1);
+}
+
+.status-paused .progress-bar {
+  border-color: #ffc107;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(255, 193, 7, 0.1);
+}
+
+.status-running .progress-bar,
+.status-processing .progress-bar {
+  border-color: #4a90e2;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+/* Default Progress Fill - Running State */
 .progress-fill {
   height: 100%;
-  background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   background-image: linear-gradient(
     -45deg,
     rgba(255, 255, 255, 0.6) 25%,
@@ -181,11 +227,47 @@
   );
   background-size: 32px 32px;
   animation: progress-animation 1.5s linear infinite;
-  transition: width 1s ease;
+  transition: width 1s ease, background 0.5s ease;
   box-shadow: 
-    0 2px 8px rgba(40, 167, 69, 0.4),
+    0 2px 8px rgba(74, 144, 226, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
   position: relative;
+}
+
+/* Completed State - Green */
+.progress-fill.completed {
+  background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+  animation: progress-completed 0.8s ease-in-out, shimmer-success 2s infinite;
+  box-shadow: 
+    0 2px 12px rgba(40, 167, 69, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Failed State - Red */
+.progress-fill.failed {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  animation: none;
+  box-shadow: 
+    0 2px 8px rgba(220, 53, 69, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Cancelled State - Orange */
+.progress-fill.cancelled {
+  background: linear-gradient(135deg, #fd7e14 0%, #e8590c 100%);
+  animation: none;
+  box-shadow: 
+    0 2px 8px rgba(253, 126, 20, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Paused State - Yellow */
+.progress-fill.paused {
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+  animation: progress-pulse 2s ease-in-out infinite;
+  box-shadow: 
+    0 2px 8px rgba(255, 193, 7, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .progress-fill::after {
@@ -202,6 +284,25 @@
   animation: shimmer 3s infinite;
 }
 
+/* Remove shimmer for completed state */
+.progress-fill.completed::after {
+  display: none;
+}
+
+/* Completion celebration effect */
+.progress-fill.completed::before {
+  content: '✓';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  animation: checkmark-appear 0.5s ease-in-out 0.3s both;
+}
+
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
@@ -216,12 +317,108 @@
   }
 }
 
+@keyframes progress-completed {
+  0% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.02);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes shimmer-success {
+  0% {
+    box-shadow: 
+      0 2px 12px rgba(40, 167, 69, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 
+      0 2px 16px rgba(40, 167, 69, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    box-shadow: 
+      0 2px 12px rgba(40, 167, 69, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+}
+
+@keyframes progress-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes checkmark-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@keyframes success-glow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(40, 167, 69, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(40, 167, 69, 0.5));
+  }
+  100% {
+    filter: drop-shadow(0 0 5px rgba(40, 167, 69, 0.3));
+  }
+}
+
 .progress-text {
   text-align: center;
   color: #495057;
   font-size: 14px;
   font-weight: 500;
   margin-right: 20px;
+  transition: color 0.3s ease;
+}
+
+/* Progress text color variations */
+.sync-status-card .progress-text {
+  color: #495057;
+}
+
+.sync-status-card.status-completed .progress-text {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.sync-status-card.status-failed .progress-text {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.sync-status-card.status-cancelled .progress-text {
+  color: #fd7e14;
+  font-weight: 600;
+}
+
+.sync-status-card.status-paused .progress-text {
+  color: #856404;
+  font-weight: 600;
+}
+
+.sync-status-card.status-running .progress-text {
+  color: #4a90e2;
+  font-weight: 500;
 }
 
 /* Stats Grid */
