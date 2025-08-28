@@ -35,6 +35,11 @@ class CustomerSyncProcessor
     const BATCH_SIZE = 20; // Process 20 customers per batch
 
     /**
+     * @var CustomerSyncProcessor Single instance for hooks registration
+     */
+    private static $instance = null;
+
+    /**
      * Initialize processor
      * 
      * Registers action hooks for batch processing and completion.
@@ -43,6 +48,19 @@ class CustomerSyncProcessor
      */
     public function __construct()
     {
+        $this->register_hooks();
+    }
+
+    /**
+     * Register WordPress action hooks
+     * 
+     * Registers the action hooks needed for background processing.
+     * This method is public so it can be called early in WordPress loading.
+     * 
+     * @return void
+     */
+    public function register_hooks()
+    {
         add_action($this->action, [$this, 'process_batch'], 10, 1);
         add_action($this->action . '_complete', [$this, 'complete']);
     }
@@ -50,13 +68,34 @@ class CustomerSyncProcessor
     /**
      * Static initializer
      * 
-     * Creates a new instance of the processor.
+     * Creates a new instance of the processor and ensures hooks are registered.
      * 
      * @return void
      */
     public static function init()
     {
-        new self();
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Register hooks early in WordPress loading process
+     * 
+     * This method should be called during WordPress init to ensure
+     * Action Scheduler can find the callback functions.
+     * 
+     * @return void
+     */
+    public static function register_action_hooks()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        } else {
+            // Ensure hooks are registered even if instance already exists
+            self::$instance->register_hooks();
+        }
     }
 
     /**
@@ -171,6 +210,48 @@ class CustomerSyncProcessor
     public function complete()
     {
         $progress = get_option('truebeep_sync_progress', []);
+        
+        // Check if there are still customers to sync
+        $syncer = new CustomerSyncer();
+        $remaining_customers = count($syncer->get_customers_to_sync());
+        
+        if ($remaining_customers > 0) {
+            // If there are customers remaining but no pending actions, something went wrong
+            $pending = as_get_scheduled_actions([
+                'group' => $this->group,
+                'status' => \ActionScheduler_Store::STATUS_PENDING,
+                'per_page' => 1
+            ]);
+            
+            if (empty($pending)) {
+                // Reschedule remaining customers
+                $customer_ids = $syncer->get_customers_to_sync();
+                $batches = array_chunk($customer_ids, self::BATCH_SIZE);
+                
+                error_log('Truebeep Sync: Rescheduling ' . count($customer_ids) . ' remaining customers in ' . count($batches) . ' batches');
+                
+                foreach ($batches as $index => $batch) {
+                    $scheduled_time = time() + ($index * self::RATE_LIMIT_INTERVAL);
+                    
+                    as_schedule_single_action(
+                        $scheduled_time,
+                        $this->action,
+                        [$batch],
+                        $this->group
+                    );
+                }
+                
+                // Reschedule completion check
+                $completion_time = time() + (count($batches) * self::RATE_LIMIT_INTERVAL) + 120;
+                as_schedule_single_action(
+                    $completion_time,
+                    $this->action . '_complete',
+                    [],
+                    $this->group
+                );
+                return;
+            }
+        }
         
         if (($progress['completed_batches'] ?? 0) < ($progress['total_batches'] ?? 0)) {
             $pending = as_get_scheduled_actions([

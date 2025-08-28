@@ -300,7 +300,7 @@ class CustomerSyncer
             LEFT JOIN {$wpdb->usermeta} tb ON u.ID = tb.user_id AND tb.meta_key = '_truebeep_customer_id'
             WHERE um.meta_key = %s
             AND um.meta_value LIKE %s
-            AND (tb.meta_value IS NULL OR tb.meta_value = '')
+            AND (tb.meta_value IS NULL OR tb.meta_value = '' OR tb.meta_value = '0')
             ORDER BY u.ID ASC
         ", $wpdb->prefix . 'capabilities', '%customer%');
 
@@ -333,7 +333,7 @@ class CustomerSyncer
             WHERE p.post_type = 'shop_order'
             AND pm.meta_key = '_customer_user'
             AND pm.meta_value > 0
-            AND (tb.meta_value IS NULL OR tb.meta_value = '')
+            AND (tb.meta_value IS NULL OR tb.meta_value = '' OR tb.meta_value = '0')
         ";
 
         return $wpdb->get_col($query);
@@ -385,7 +385,7 @@ class CustomerSyncer
      */
     public function get_sync_statistics()
     {
-        $total_customers = count($this->get_customers_to_sync());
+        $current_remaining = count($this->get_customers_to_sync());
         $progress = get_option('truebeep_sync_progress', [
             'total' => 0,
             'processed' => 0,
@@ -396,14 +396,21 @@ class CustomerSyncer
             'completed_batches' => 0
         ]);
         
+        // If sync hasn't started yet, set initial total
         if (empty($progress['total']) || $progress['total'] == 0) {
-            $progress['total'] = $total_customers;
+            $progress['total'] = $current_remaining;
         }
         
-        $progress['remaining'] = $total_customers;
-        $progress['percentage'] = $progress['total'] > 0 
-            ? round(($progress['processed'] / $progress['total']) * 100, 2) 
-            : 0;
+        // Calculate remaining as current unsynced customers
+        $progress['remaining'] = $current_remaining;
+        
+        // Calculate percentage based on actual remaining vs initial total
+        if ($progress['total'] > 0) {
+            $synced_count = $progress['total'] - $current_remaining;
+            $progress['percentage'] = round(($synced_count / $progress['total']) * 100, 2);
+        } else {
+            $progress['percentage'] = 0;
+        }
 
         return $progress;
     }

@@ -157,10 +157,25 @@ class SyncManager
         $progress = get_option('truebeep_sync_progress', []);
         $statistics = $this->syncer->get_sync_statistics();
         
-        if ($status === 'running' && !$this->processor->has_pending_actions()) {
+        if ($status === 'running') {
+            // Auto-complete if no customers remaining to sync
             if ($statistics['remaining'] === 0) {
+                $this->processor->clear_scheduled_actions();
                 update_option('truebeep_sync_status', 'completed');
+                update_option('truebeep_sync_completed_at', current_time('mysql'));
+                delete_option('truebeep_sync_lock');
                 $status = 'completed';
+            }
+            // Also check if no pending actions and should be completed
+            elseif (!$this->processor->has_pending_actions()) {
+                // Double-check remaining count in case of race condition
+                $fresh_stats = $this->syncer->get_sync_statistics();
+                if ($fresh_stats['remaining'] === 0) {
+                    update_option('truebeep_sync_status', 'completed');
+                    update_option('truebeep_sync_completed_at', current_time('mysql'));
+                    delete_option('truebeep_sync_lock');
+                    $status = 'completed';
+                }
             }
         }
 

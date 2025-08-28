@@ -40,6 +40,7 @@ final class Truebeep
         register_activation_hook(__FILE__, [$this, 'activate']);
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
         add_action('init', [$this, 'load_textdomain']);
+        add_action('init', [$this, 'register_early_hooks'], 1); // Register hooks early
         add_action('plugins_loaded', [$this, 'init_plugin']);
         
         // Add plugin action links
@@ -93,6 +94,22 @@ final class Truebeep
             false,
             dirname(plugin_basename(__FILE__)) . '/languages'
         );
+    }
+
+    /**
+     * Register hooks that need to be available early
+     * 
+     * This method registers Action Scheduler hooks that need to be available
+     * when Action Scheduler tries to execute scheduled actions.
+     *
+     * @return void
+     */
+    public function register_early_hooks()
+    {
+        // Register Action Scheduler hooks for customer sync
+        if (class_exists('Truebeep\\Legacy\\CustomerSyncProcessor')) {
+            Truebeep\Legacy\CustomerSyncProcessor::register_action_hooks();
+        }
     }
 
     /**
