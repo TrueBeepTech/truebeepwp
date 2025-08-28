@@ -311,4 +311,42 @@ class SyncManager
         $this->reset_sync();
         wp_send_json_success(__('Sync data reset', 'truebeep'));
     }
+
+    /**
+     * Get sync log entries
+     * 
+     * Retrieves recent sync log entries with detailed information
+     * about each batch processing result.
+     * 
+     * @param int $limit Maximum number of log entries to return
+     * @return array Array of log entries with timestamps, results, and errors
+     */
+    public function get_sync_logs($limit = 50)
+    {
+        $logs = get_option('truebeep_sync_log', []);
+        
+        if ($limit > 0) {
+            $logs = array_slice($logs, 0, $limit);
+        }
+        
+        // Format logs for display
+        foreach ($logs as &$log) {
+            // Add formatted timestamp
+            $log['formatted_timestamp'] = wp_date(
+                get_option('date_format') . ' ' . get_option('time_format'),
+                strtotime($log['timestamp'])
+            );
+            
+            // Add summary
+            $log['summary'] = sprintf(
+                __('%d processed (%d successful, %d failed, %d skipped)', 'truebeep'),
+                count($log['processed'] ?? []),
+                $log['successful'] ?? 0,
+                $log['failed'] ?? 0,
+                $log['skipped'] ?? 0
+            );
+        }
+        
+        return $logs;
+    }
 }

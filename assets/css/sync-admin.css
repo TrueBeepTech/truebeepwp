@@ -342,6 +342,16 @@
   background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
 }
 
+#cancel-sync.button-hero.button-secondary {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border-color: #dc3545;
+}
+
+#cancel-sync.button-hero.button-secondary:hover {
+  background: linear-gradient(135deg, #c82333 0%, #b21e2f 100%);
+  border-color: #b21e2f;
+}
+
 .sync-actions .button-hero .dashicons {
   font-size: 20px;
   width: 20px;
@@ -406,6 +416,130 @@
   margin-top: 0;
 }
 
+/* Sync Log Section */
+.sync-log-card {
+  width: 100%;
+  max-width: 100%;
+  margin: 30px 20px 20px 0;
+  border-left: 4px solid #17a2b8;
+}
+
+.sync-log-card .title {
+  background: linear-gradient(135deg, #d1ecf1 0%, #f8f9fa 100%);
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.sync-log-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.log-entry {
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+.log-entry:hover {
+  background: #e9ecef;
+}
+
+.log-entry:last-child {
+  margin-bottom: 0;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.log-timestamp {
+  font-size: 13px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.log-summary {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.log-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dee2e6;
+}
+
+.log-errors strong {
+  color: #dc3545;
+  font-size: 13px;
+}
+
+.error-list {
+  margin: 8px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.error-item {
+  margin-bottom: 6px;
+  padding: 8px 12px;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.error-item:last-child {
+  margin-bottom: 0;
+}
+
+.error-user {
+  font-weight: 600;
+  color: #721c24;
+}
+
+.error-message {
+  color: #721c24;
+  margin-left: 8px;
+}
+
+.log-success {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+}
+
+.success-count {
+  color: #155724;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.log-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #dee2e6;
+  text-align: center;
+}
+
+.log-note {
+  color: #6c757d;
+  font-size: 12px;
+  margin: 0;
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 1200px) {
   .truebeep-sync-container {
@@ -426,6 +560,28 @@
 
   .truebeep-sync-container {
     gap: 12px;
+  }
+  
+  .sync-log-card {
+    margin: 20px 10px 20px 0;
+  }
+  
+  .log-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .log-timestamp {
+    font-size: 12px;
+  }
+  
+  .log-summary {
+    font-size: 13px;
+  }
+  
+  .sync-log-container {
+    max-height: 300px;
   }
 
   .sync-status-card {
@@ -497,6 +653,11 @@
   .sync-status-card {
     margin-right: 0;
     width: 100% !important;
+  }
+  
+  .sync-log-card {
+    margin: 20px 0 20px 0;
+    width: 100%;
   }
 
   .sync-stats-grid {

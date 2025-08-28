@@ -222,7 +222,7 @@ class SyncSettings
                                         <?php _e('Start Sync', 'truebeep'); ?>
                                     </button>
                                 </p>
-                            <?php elseif ($status['status'] === 'processing'): ?>
+                            <?php elseif ($status['status'] === 'processing' || $status['status'] === 'running'): ?>
                                 <p class="sync-actions">
                                     <button type="button" class="button button-secondary button-hero" id="cancel-sync">
                                         <span class="dashicons dashicons-no"></span>
@@ -289,6 +289,54 @@ class SyncSettings
                     </div>
                 </div>
             </div>
+            
+            <!-- Sync Log Section -->
+            <?php $logs = $this->sync_manager->get_sync_logs(20); ?>
+            <?php if (!empty($logs)): ?>
+            <div class="card sync-log-card">
+                <h2 class="title"><?php _e('Sync Activity Log', 'truebeep'); ?></h2>
+                <div class="card-body">
+                    <div class="sync-log-container">
+                        <?php foreach ($logs as $log): ?>
+                            <div class="log-entry">
+                                <div class="log-header">
+                                    <span class="log-timestamp"><?php echo esc_html($log['formatted_timestamp']); ?></span>
+                                    <span class="log-summary"><?php echo esc_html($log['summary']); ?></span>
+                                </div>
+                                
+                                <?php if (!empty($log['errors'])): ?>
+                                    <div class="log-details">
+                                        <div class="log-errors">
+                                            <strong><?php _e('Errors:', 'truebeep'); ?></strong>
+                                            <ul class="error-list">
+                                                <?php foreach ($log['errors'] as $user_id => $error): ?>
+                                                    <li class="error-item">
+                                                        <span class="error-user"><?php printf(__('User ID %s:', 'truebeep'), $user_id); ?></span>
+                                                        <span class="error-message"><?php echo esc_html($error); ?></span>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <?php if (($log['successful'] ?? 0) > 0): ?>
+                                    <div class="log-success">
+                                        <span class="success-count"><?php printf(__('%d customers synced successfully', 'truebeep'), $log['successful']); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                    <?php if (count($logs) >= 20): ?>
+                        <div class="log-footer">
+                            <p class="log-note"><?php _e('Showing latest 20 log entries. Logs are automatically cleaned after 100 entries.', 'truebeep'); ?></p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
         <?php
     }
