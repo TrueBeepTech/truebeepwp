@@ -125,74 +125,75 @@ class SyncSettings
                 <?php return; ?>
             <?php endif; ?>
             
-            <div class="truebeep-sync-container">
-                <!-- Status Card -->
-                <div class="card">
-                    <h2 class="title"><?php _e('Sync Status', 'truebeep'); ?></h2>
-                    <div class="card-body">
-                        <div class="sync-status-indicator">
-                            <span class="status-badge status-<?php echo esc_attr($status['status']); ?>">
-                                <?php echo $this->get_status_label($status['status']); ?>
-                            </span>
-                            <?php if ($status['status'] === 'processing'): ?>
-                                <span class="spinner is-active" style="margin: 0 10px; float: none;"></span>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <?php if ($status['status'] !== 'idle'): ?>
-                            <?php $progress = $status['progress'] ?? []; ?>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
-                                </div>
-                                <div class="progress-text">
-                                    <?php printf(
-                                        __('%d of %d customers synced (%s%%)', 'truebeep'),
-                                        $progress['processed'] ?? 0,
-                                        $progress['total'] ?? 0,
-                                        number_format($stats['percentage'] ?? 0, 1)
-                                    ); ?>
-                                </div>
-                            </div>
-                            
-                            <div class="sync-stats-grid">
-                                <div class="stat-item">
-                                    <span class="stat-label"><?php _e('Successful', 'truebeep'); ?></span>
-                                    <span class="stat-value success"><?php echo number_format($progress['successful'] ?? 0); ?></span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label"><?php _e('Failed', 'truebeep'); ?></span>
-                                    <span class="stat-value error"><?php echo number_format($progress['failed'] ?? 0); ?></span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label"><?php _e('Skipped', 'truebeep'); ?></span>
-                                    <span class="stat-value warning"><?php echo number_format($progress['skipped'] ?? 0); ?></span>
-                                </div>
-                            </div>
-                            
-                            <?php if (isset($status['rate_limit']) && !empty($status['rate_limit'])): ?>
-                                <div class="rate-limit-info">
-                                    <p class="description">
-                                        <?php printf(
-                                            __('Processing %d customers per batch, with %d second intervals between batches.', 'truebeep'),
-                                            $status['rate_limit']['batch_size'] ?? 20,
-                                            $status['rate_limit']['interval'] ?? 60
-                                        ); ?>
-                                    </p>
-                                    <?php if (isset($status['estimated_time_remaining']) && $status['estimated_time_remaining'] > 0): ?>
-                                        <p class="description">
-                                            <?php printf(
-                                                __('Estimated time remaining: %s', 'truebeep'),
-                                                human_time_diff(time(), time() + $status['estimated_time_remaining'])
-                                            ); ?>
-                                        </p>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
+            <!-- Full Width Status Card -->
+            <div class="card sync-status-card">
+                <h2 class="title"><?php _e('Sync Status', 'truebeep'); ?></h2>
+                <div class="card-body">
+                    <div class="sync-status-indicator">
+                        <span class="status-badge status-<?php echo esc_attr($status['status']); ?>">
+                            <?php echo $this->get_status_label($status['status']); ?>
+                        </span>
+                        <?php if ($status['status'] === 'processing'): ?>
+                            <span class="spinner is-active" style="margin: 0 10px; float: none;"></span>
                         <?php endif; ?>
                     </div>
+                    
+                    <?php if ($status['status'] !== 'idle'): ?>
+                        <?php $progress = $status['progress'] ?? []; ?>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <?php printf(
+                                    __('%d of %d customers synced (%s%%)', 'truebeep'),
+                                    $progress['processed'] ?? 0,
+                                    $progress['total'] ?? 0,
+                                    number_format($stats['percentage'] ?? 0, 1)
+                                ); ?>
+                            </div>
+                        </div>
+                        
+                        <div class="sync-stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label"><?php _e('Successful', 'truebeep'); ?></span>
+                                <span class="stat-value success"><?php echo number_format($progress['successful'] ?? 0); ?></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label"><?php _e('Failed', 'truebeep'); ?></span>
+                                <span class="stat-value error"><?php echo number_format($progress['failed'] ?? 0); ?></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label"><?php _e('Skipped', 'truebeep'); ?></span>
+                                <span class="stat-value warning"><?php echo number_format($progress['skipped'] ?? 0); ?></span>
+                            </div>
+                        </div>
+                        
+                        <?php if (isset($status['rate_limit']) && !empty($status['rate_limit'])): ?>
+                            <div class="rate-limit-info">
+                                <p class="description">
+                                    <?php printf(
+                                        __('Processing %d customers per batch, with %d second intervals between batches.', 'truebeep'),
+                                        $status['rate_limit']['batch_size'] ?? 20,
+                                        $status['rate_limit']['interval'] ?? 60
+                                    ); ?>
+                                </p>
+                                <?php if (isset($status['estimated_time_remaining']) && $status['estimated_time_remaining'] > 0): ?>
+                                    <p class="description">
+                                        <?php printf(
+                                            __('Estimated time remaining: %s', 'truebeep'),
+                                            human_time_diff(time(), time() + $status['estimated_time_remaining'])
+                                        ); ?>
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
-                
+            </div>
+            
+            <!-- Bottom Row Container -->
+            <div class="truebeep-sync-container">
                 <!-- Controls Card -->
                 <div class="card">
                     <h2 class="title"><?php _e('Sync Controls', 'truebeep'); ?></h2>
