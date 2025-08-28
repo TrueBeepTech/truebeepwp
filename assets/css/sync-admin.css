@@ -1,0 +1,299 @@
+/**
+ * Truebeep Customer Sync Admin Styles
+ */
+
+.truebeep-sync-wrap {
+    max-width: 1200px;
+    margin: 20px 20px 20px 0;
+}
+
+.truebeep-sync-wrap h1 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.truebeep-sync-container {
+    display: grid;
+    gap: 20px;
+}
+
+/* Card Styling */
+.truebeep-sync-wrap .card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+}
+
+.truebeep-sync-wrap .card .title {
+    font-size: 14px;
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 1px solid #e1e1e1;
+    background: #f9f9f9;
+}
+
+.truebeep-sync-wrap .card-body {
+    padding: 20px;
+}
+
+/* Status Indicator */
+.sync-status-indicator {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.status-idle {
+    background: #f0f0f1;
+    color: #50575e;
+}
+
+.status-preparing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-processing,
+.status-running {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-paused {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Progress Bar */
+.progress-container {
+    margin: 20px 0;
+}
+
+.progress-bar {
+    height: 25px;
+    background: #f0f0f1;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #007cba;
+    background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 40px 40px;
+    animation: progress-animation 1s linear infinite;
+    transition: width 0.5s ease;
+}
+
+@keyframes progress-animation {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 40px 40px;
+    }
+}
+
+.progress-text {
+    text-align: center;
+    color: #50575e;
+    font-size: 13px;
+}
+
+/* Stats Grid */
+.sync-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 3px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.stat-value.success {
+    color: #46b450;
+}
+
+.stat-value.error {
+    color: #dc3232;
+}
+
+.stat-value.warning {
+    color: #ffb900;
+}
+
+/* Rate Limit Info */
+.rate-limit-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0f8ff;
+    border-left: 4px solid #007cba;
+    border-radius: 3px;
+}
+
+.rate-limit-info .description {
+    margin: 5px 0;
+    color: #50575e;
+}
+
+/* Sync Controls */
+.sync-controls {
+    padding: 10px 0;
+}
+
+.sync-actions {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.sync-actions button {
+    margin: 0 5px;
+}
+
+.sync-actions .button-hero {
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 10px 30px;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sync-actions .button-hero .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+/* Notices */
+.truebeep-sync-wrap .notice {
+    margin: 15px 0;
+}
+
+.truebeep-sync-wrap .notice.inline {
+    display: block;
+    margin: 15px 0;
+}
+
+.truebeep-sync-wrap .notice p {
+    margin: 10px;
+}
+
+/* Table Improvements */
+.truebeep-sync-wrap table.widefat {
+    border: none;
+    box-shadow: none;
+}
+
+.truebeep-sync-wrap table.widefat th {
+    font-weight: 500;
+    color: #50575e;
+    width: 40%;
+}
+
+.truebeep-sync-wrap table.widefat td {
+    color: #2c3338;
+}
+
+.truebeep-sync-wrap table.widefat tr:last-child td,
+.truebeep-sync-wrap table.widefat tr:last-child th {
+    border-bottom: none;
+}
+
+/* Button Improvements */
+.truebeep-sync-wrap .button-link-delete {
+    color: #a00;
+    text-decoration: none;
+}
+
+.truebeep-sync-wrap .button-link-delete:hover {
+    color: #dc3232;
+    border: none;
+    background: none;
+}
+
+/* Spinner Adjustment */
+.truebeep-sync-wrap .spinner {
+    visibility: visible;
+    margin-top: 0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 782px) {
+    .truebeep-sync-wrap {
+        margin: 10px;
+    }
+    
+    .sync-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sync-actions .button-hero {
+        width: 100%;
+        justify-content: center;
+        margin: 10px 0;
+    }
+    
+    .truebeep-sync-wrap h1 {
+        font-size: 23px;
+    }
+    
+    .truebeep-sync-wrap h1 .dashicons {
+        font-size: 23px !important;
+        width: 23px !important;
+        height: 23px !important;
+    }
+}

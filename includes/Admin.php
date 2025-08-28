@@ -12,13 +12,8 @@ class Admin
         new Admin\UserHandler();
         new Admin\NetworkDiagnostics();
         
-        // Initialize import functionality
-        new Legacy\ImportSettings();
+        // Initialize sync functionality
+        new Legacy\SyncSettings();
         Legacy\LegacyIntegration::init();
-        
-        // Initialize debug page (only in admin)
-        if (is_admin()) {
-            new Admin\ImportDebugPage();
-        }
     }
 }
