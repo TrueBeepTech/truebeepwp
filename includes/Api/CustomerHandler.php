@@ -148,7 +148,7 @@ class CustomerHandler
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
         $customer_data = [
             'firstName' => get_user_meta($user_id, 'first_name', true) ?: $user->display_name,
-            'lastName' => get_user_meta($user_id, 'last_name', true),
+            'lastName' => get_user_meta($user_id, 'last_name', true) ?: '',
             'email' => $user->user_email,
             'source' => $source
         ];
@@ -266,7 +266,7 @@ class CustomerHandler
         }
 
         $user_id = intval($_POST['user_id']);
-        $this->create_or_update_truebeep_customer($user_id, 'manual_sync');
+        $this->create_or_update_truebeep_customer($user_id, 'WordPress');
 
         $sync_status = get_user_meta($user_id, '_truebeep_sync_status', true);
 

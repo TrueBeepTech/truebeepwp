@@ -5,9 +5,7 @@ namespace Truebeep\Traits;
 trait ApiHelper
 {
     /**
-     * Get API URL from WooCommerce settings
-     *
-     * @return string
+     * Get API URL
      */
     protected function get_api_url()
     {
@@ -15,9 +13,7 @@ trait ApiHelper
     }
 
     /**
-     * Get API Key from WooCommerce settings
-     *
-     * @return string
+     * Get API Key
      */
     protected function get_api_key()
     {
@@ -25,9 +21,7 @@ trait ApiHelper
     }
 
     /**
-     * Get Wallet Base URL from WooCommerce settings
-     *
-     * @return string
+     * Get Wallet Base URL
      */
     protected function get_wallet_base_url()
     {
@@ -35,9 +29,7 @@ trait ApiHelper
     }
 
     /**
-     * Get Wallet ID from WooCommerce settings
-     *
-     * @return string
+     * Get Wallet ID
      */
     protected function get_wallet_id()
     {
@@ -46,12 +38,6 @@ trait ApiHelper
 
     /**
      * Make API request
-     *
-     * @param string $endpoint
-     * @param string $method
-     * @param array $data
-     * @param array $additional_headers
-     * @return array|WP_Error
      */
     protected function make_api_request($endpoint, $method = 'GET', $data = [], $additional_headers = [])
     {
@@ -106,10 +92,7 @@ trait ApiHelper
     }
 
     /**
-     * Create Truebeep customer
-     *
-     * @param array $customer_data
-     * @return array|WP_Error
+     * Create customer in Truebeep
      */
     public function create_truebeep_customer($customer_data)
     {
@@ -134,21 +117,125 @@ trait ApiHelper
         }
 
         if (!empty($customer_data['phone'])) {
+            $customer_data['phone'] = preg_replace('/\s+/', '', $customer_data['phone']);
+            if (substr($customer_data['phone'], 0, 1) === "'") {
+                $customer_data['phone'] = ltrim($customer_data['phone'], "'");
+            }
             $formatted_data['phone'] = sanitize_text_field($customer_data['phone']);
         }
 
         if (!empty($customer_data['source'])) {
             $formatted_data['source'] = sanitize_text_field($customer_data['source']);
         }
+        
+        if (!empty($customer_data['metadata'])) {
+            $formatted_data['metadata'] = $customer_data['metadata'];
+        }
 
         return $this->make_api_request('customer', 'POST', $formatted_data);
     }
 
     /**
-     * Get Truebeep customer by ID
-     *
-     * @param string $customer_id
-     * @return array|WP_Error
+     * Create multiple customers in bulk
+     */
+    public function create_truebeep_customers_bulk($customers_data)
+    {
+        if (empty($customers_data) || !is_array($customers_data)) {
+            return new \WP_Error('invalid_data', __('Invalid customer data array', 'truebeep'));
+        }
+
+        $formatted_customers = [];
+        
+        foreach ($customers_data as $index => $customer_data) {
+            if (empty($customer_data['firstName'])) {
+                continue;
+            }
+
+            $formatted_customer = [
+                'firstName' => sanitize_text_field($customer_data['firstName']),
+            ];
+
+            if (!empty($customer_data['lastName'])) {
+                $formatted_customer['lastName'] = sanitize_text_field($customer_data['lastName']);
+            }
+
+            if (!empty($customer_data['email'])) {
+                $formatted_customer['email'] = sanitize_email($customer_data['email']);
+            }
+
+            if (!empty($customer_data['phone'])) {
+                $phone = preg_replace('/\s+/', '', $customer_data['phone']);
+                if (substr($phone, 0, 1) === "'") {
+                    $phone = ltrim($phone, "'");
+                }
+                $formatted_customer['phone'] = sanitize_text_field($phone);
+            }
+
+            if (!empty($customer_data['source'])) {
+                $formatted_customer['source'] = sanitize_text_field($customer_data['source']);
+            }
+            
+            if (!empty($customer_data['metadata'])) {
+                $formatted_customer['metadata'] = $customer_data['metadata'];
+            }
+
+            if (!empty($customer_data['wordpress_user_id'])) {
+                $formatted_customer['wordpress_user_id'] = $customer_data['wordpress_user_id'];
+            }
+
+            $formatted_customers[] = $formatted_customer;
+        }
+
+        if (empty($formatted_customers)) {
+            return new \WP_Error('no_valid_customers', __('No valid customers to sync', 'truebeep'));
+        }
+
+        $api_url = $this->get_api_url();
+        $api_key = $this->get_api_key();
+
+        if (empty($api_url) || empty($api_key)) {
+            return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep'));
+        }
+
+        $args = [
+            'method' => 'POST',
+            'headers' => [
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type' => 'application/json'
+            ],
+            'body' => json_encode($formatted_customers),
+            'timeout' => 30,
+            'sslverify' => true,
+        ];
+
+        $response = wp_remote_post(rtrim($api_url, '/') . '/customers', $args);
+        
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $response_code = wp_remote_retrieve_response_code($response);
+        $response_body = wp_remote_retrieve_body($response);
+        $response_data = json_decode($response_body, true);
+
+        if ($response_code >= 200 && $response_code < 300) {
+            return [
+                'success' => true,
+                'data' => $response_data,
+                'code' => $response_code,
+            ];
+        } else {
+            return [
+                'success' => false,
+                'error' => $response_data['message'] ?? __('Bulk API request failed', 'truebeep'),
+                'data' => $response_data,
+                'code' => $response_code,
+            ];
+        }
+    }
+
+    /**
+     * Get customer by ID
      */
     public function get_truebeep_customer($customer_id)
     {
@@ -160,11 +247,7 @@ trait ApiHelper
     }
 
     /**
-     * Update Truebeep customer
-     *
-     * @param string $customer_id
-     * @param array $customer_data
-     * @return array|WP_Error
+     * Update customer
      */
     public function update_truebeep_customer($customer_id, $customer_data)
     {
@@ -198,10 +281,7 @@ trait ApiHelper
     }
 
     /**
-     * Delete Truebeep customer
-     *
-     * @param string $customer_id
-     * @return array|WP_Error
+     * Delete customer
      */
     public function delete_truebeep_customer($customer_id)
     {
@@ -213,10 +293,7 @@ trait ApiHelper
     }
 
     /**
-     * List Truebeep customers
-     *
-     * @param array $params Query parameters
-     * @return array|WP_Error
+     * List customers
      */
     public function list_truebeep_customers($params = [])
     {
@@ -225,13 +302,7 @@ trait ApiHelper
     }
 
     /**
-     * Update customer loyalty points
-     *
-     * @param string $customer_id Truebeep customer ID
-     * @param float $points Points to add/subtract
-     * @param string $type 'increment' or 'decrement'
-     * @param string $channel Channel source (default: 'woocommerce')
-     * @return array|WP_Error
+     * Update loyalty points
      */
     public function update_loyalty_points($customer_id, $points, $type = 'increment', $channel = 'woocommerce')
     {
@@ -253,10 +324,7 @@ trait ApiHelper
     }
 
     /**
-     * Get customer tier information based on total earned points
-     *
-     * @param string $customer_id Truebeep customer ID
-     * @return array Contains tier_tag, tier_name, and full_tier
+     * Get customer tier
      */
     public function get_customer_tier($customer_id)
     {
@@ -311,11 +379,7 @@ trait ApiHelper
     }
 
     /**
-     * Calculate loyalty points based on order and settings
-     *
-     * @param float $order_total Order total amount
-     * @param int $user_id WordPress user ID (optional)
-     * @return float Calculated points
+     * Calculate loyalty points
      */
     public function calculate_loyalty_points($order_total, $user_id = null)
     {
@@ -339,10 +403,7 @@ trait ApiHelper
     }
 
     /**
-     * Get customer's total earned points
-     *
-     * @param string $customer_id Truebeep customer ID
-     * @return float Total earned points
+     * Get total earned points
      */
     public function get_customer_total_earned_points($customer_id)
     {
@@ -359,10 +420,7 @@ trait ApiHelper
     }
 
     /**
-     * Get customer's complete data including points and tier from API
-     *
-     * @param string $customer_id Truebeep customer ID
-     * @return array Customer data including points, totalEarnedPoints, totalSpentPoints
+     * Get customer points data
      */
     public function get_customer_points($customer_id)
     {
@@ -380,10 +438,7 @@ trait ApiHelper
     }
 
     /**
-     * Get customer's current balance only
-     *
-     * @param string $customer_id Truebeep customer ID
-     * @return float Current balance points
+     * Get customer balance
      */
     public function get_customer_balance($customer_id)
     {
@@ -392,9 +447,7 @@ trait ApiHelper
     }
 
     /**
-     * Check if points should be earned on redeemed orders
-     *
-     * @return bool
+     * Check earn on redeemed orders
      */
     public function should_earn_on_redeemed_orders()
     {
@@ -403,8 +456,6 @@ trait ApiHelper
 
     /**
      * Test API connection
-     *
-     * @return array|WP_Error
      */
     public function test_api_connection()
     {
@@ -428,12 +479,7 @@ trait ApiHelper
     }
 
     /**
-     * Send customer interaction to API
-     *
-     * @param string $customer_id Truebeep customer ID
-     * @param string $type Interaction type
-     * @param array $data Interaction data
-     * @return array|WP_Error
+     * Send customer interaction
      */
     protected function send_customer_interaction($customer_id, $type, $data)
     {
@@ -454,10 +500,7 @@ trait ApiHelper
     }
 
     /**
-     * Build full order payload for interactions
-     *
-     * @param WC_Order $order
-     * @return array
+     * Build order payload
      */
     protected function build_order_payload($order)
     {
@@ -571,10 +614,7 @@ trait ApiHelper
     }
 
     /**
-     * Build structured minimal order payload for interactions
-     *
-     * @param WC_Order $order
-     * @return array
+     * Build structured order payload
      */
     protected function build_structured_order_payload($order)
     {
@@ -622,10 +662,7 @@ trait ApiHelper
     }
 
     /**
-     * Build full refund payload for interactions
-     *
-     * @param WC_Order $order
-     * @return array
+     * Build refund payload
      */
     protected function build_refund_payload($order)
     {
@@ -669,10 +706,7 @@ trait ApiHelper
     }
 
     /**
-     * Build structured refund payload for interactions
-     *
-     * @param WC_Order $order
-     * @return array
+     * Build structured refund payload
      */
     protected function build_structured_refund_payload($order)
     {
@@ -696,11 +730,7 @@ trait ApiHelper
     }
 
     /**
-     * Build full partial refund payload for interactions
-     *
-     * @param WC_Order $order
-     * @param WC_Order_Refund $refund
-     * @return array
+     * Build partial refund payload
      */
     protected function build_partial_refund_payload($order, $refund)
     {
@@ -750,11 +780,7 @@ trait ApiHelper
     }
 
     /**
-     * Build structured partial refund payload for interactions
-     *
-     * @param WC_Order $order
-     * @param WC_Order_Refund $refund
-     * @return array
+     * Build structured partial refund payload
      */
     protected function build_structured_partial_refund_payload($order, $refund)
     {
