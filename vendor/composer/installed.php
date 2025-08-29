@@ -3,7 +3,7 @@
         'name' => 'truebeep/truebeep',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3e70a1c3f1bb81820c3c8e4b75351c547729a8f1',
+        'reference' => 'ef7fde0c16b5352e4f538c2206f778a888a60c4f',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -42,7 +42,7 @@
         'johnbillion/extended-cpts' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '20b7e9773b60f7301cd59ee520affa0ff63f90e6',
+            'reference' => '353a07acf750a85014988cd3a85f77eb40e7b355',
             'type' => 'library',
             'install_path' => __DIR__ . '/../johnbillion/extended-cpts',
             'aliases' => array(
@@ -132,7 +132,7 @@
         'truebeep/truebeep' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3e70a1c3f1bb81820c3c8e4b75351c547729a8f1',
+            'reference' => 'ef7fde0c16b5352e4f538c2206f778a888a60c4f',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

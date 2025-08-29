@@ -116,6 +116,7 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Truebeep\\Api\\LoyaltyHandler' => __DIR__ . '/../..' . '/includes/Api/LoyaltyHandler.php',
         'Truebeep\\Assets' => __DIR__ . '/../..' . '/includes/Assets.php',
         'Truebeep\\Checkout\\PointsRedemption' => __DIR__ . '/../..' . '/includes/Checkout/PointsRedemption.php',
+        'Truebeep\\Config\\Constants' => __DIR__ . '/../..' . '/includes/Config/Constants.php',
         'Truebeep\\Elementor\\HelloWorld' => __DIR__ . '/../..' . '/includes/Elementor/HelloWorld.php',
         'Truebeep\\Frontend' => __DIR__ . '/../..' . '/includes/Frontend.php',
         'Truebeep\\Frontend\\LoyaltyPanel' => __DIR__ . '/../..' . '/includes/Frontend/LoyaltyPanel.php',
