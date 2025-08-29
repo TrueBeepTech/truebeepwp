@@ -140,9 +140,10 @@ class SyncSettings
                     
                     <?php if ($status['status'] !== 'idle'): ?>
                         <?php $progress = $status['progress'] ?? []; ?>
+                        <?php $isCompleted = ($status['status'] === 'completed' && ($stats['percentage'] ?? 0) == 100); ?>
                         <div class="progress-container">
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
+                                <div class="progress-fill<?php echo $isCompleted ? ' completed' : ''; ?>" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
                             </div>
                             <div class="progress-text">
                                 <?php printf(
