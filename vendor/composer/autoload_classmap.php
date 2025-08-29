@@ -25,6 +25,7 @@ return array(
     'Truebeep\\Api\\LoyaltyHandler' => $baseDir . '/includes/Api/LoyaltyHandler.php',
     'Truebeep\\Assets' => $baseDir . '/includes/Assets.php',
     'Truebeep\\Checkout\\PointsRedemption' => $baseDir . '/includes/Checkout/PointsRedemption.php',
+    'Truebeep\\Config\\Constants' => $baseDir . '/includes/Config/Constants.php',
     'Truebeep\\Elementor\\HelloWorld' => $baseDir . '/includes/Elementor/HelloWorld.php',
     'Truebeep\\Frontend' => $baseDir . '/includes/Frontend.php',
     'Truebeep\\Frontend\\LoyaltyPanel' => $baseDir . '/includes/Frontend/LoyaltyPanel.php',
