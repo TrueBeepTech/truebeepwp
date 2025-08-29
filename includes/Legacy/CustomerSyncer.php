@@ -293,16 +293,13 @@ class CustomerSyncer
     {
         global $wpdb;
 
-        $query = $wpdb->prepare("
+        $query = "
             SELECT u.ID 
             FROM {$wpdb->users} u
-            INNER JOIN {$wpdb->usermeta} um ON u.ID = um.user_id
             LEFT JOIN {$wpdb->usermeta} tb ON u.ID = tb.user_id AND tb.meta_key = '_truebeep_customer_id'
-            WHERE um.meta_key = %s
-            AND um.meta_value LIKE %s
-            AND (tb.meta_value IS NULL OR tb.meta_value = '' OR tb.meta_value = '0')
+            WHERE tb.meta_value IS NULL OR tb.meta_value = '' OR tb.meta_value = '0'
             ORDER BY u.ID ASC
-        ", $wpdb->prefix . 'capabilities', '%customer%');
+        ";
 
         $user_ids = $wpdb->get_col($query);
         $order_customer_ids = $this->get_order_customer_ids();

@@ -167,6 +167,13 @@
                 var total = data.progress.total || 0;
                 var percentage = data.statistics.percentage || 0;
                 
+                // Add completed class if sync is complete
+                if (data.status === 'completed' && percentage === 100) {
+                    $('.progress-fill').addClass('completed');
+                } else {
+                    $('.progress-fill').removeClass('completed');
+                }
+                
                 $('.progress-text').text(
                     processed + ' of ' + total + ' customers synced (' + percentage.toFixed(1) + '%)'
                 );
