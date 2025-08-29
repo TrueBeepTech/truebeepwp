@@ -133,6 +133,23 @@ trait ApiHelper
         if (!empty($customer_data['metadata'])) {
             $formatted_data['metadata'] = $customer_data['metadata'];
         }
+        
+        // Add address fields if present
+        if (!empty($customer_data['city'])) {
+            $formatted_data['city'] = sanitize_text_field($customer_data['city']);
+        }
+        
+        if (!empty($customer_data['state'])) {
+            $formatted_data['state'] = sanitize_text_field($customer_data['state']);
+        }
+        
+        if (!empty($customer_data['country'])) {
+            $formatted_data['country'] = sanitize_text_field($customer_data['country']);
+        }
+        
+        if (!empty($customer_data['zipCode'])) {
+            $formatted_data['zipCode'] = sanitize_text_field($customer_data['zipCode']);
+        }
 
         return $this->make_api_request('customer', 'POST', $formatted_data);
     }
@@ -179,6 +196,23 @@ trait ApiHelper
             
             if (!empty($customer_data['metadata'])) {
                 $formatted_customer['metadata'] = $customer_data['metadata'];
+            }
+            
+            // Add address fields if present
+            if (!empty($customer_data['city'])) {
+                $formatted_customer['city'] = sanitize_text_field($customer_data['city']);
+            }
+            
+            if (!empty($customer_data['state'])) {
+                $formatted_customer['state'] = sanitize_text_field($customer_data['state']);
+            }
+            
+            if (!empty($customer_data['country'])) {
+                $formatted_customer['country'] = sanitize_text_field($customer_data['country']);
+            }
+            
+            if (!empty($customer_data['zipCode'])) {
+                $formatted_customer['zipCode'] = sanitize_text_field($customer_data['zipCode']);
             }
 
             if (!empty($customer_data['wordpress_user_id'])) {
@@ -277,6 +311,27 @@ trait ApiHelper
 
         if (isset($customer_data['source'])) {
             $formatted_data['source'] = sanitize_text_field($customer_data['source']);
+        }
+        
+        // Add address fields if present
+        if (isset($customer_data['city'])) {
+            $formatted_data['city'] = sanitize_text_field($customer_data['city']);
+        }
+        
+        if (isset($customer_data['state'])) {
+            $formatted_data['state'] = sanitize_text_field($customer_data['state']);
+        }
+        
+        if (isset($customer_data['country'])) {
+            $formatted_data['country'] = sanitize_text_field($customer_data['country']);
+        }
+        
+        if (isset($customer_data['zipCode'])) {
+            $formatted_data['zipCode'] = sanitize_text_field($customer_data['zipCode']);
+        }
+        
+        if (isset($customer_data['metadata'])) {
+            $formatted_data['metadata'] = $customer_data['metadata'];
         }
 
         return $this->make_api_request('customer/' . $customer_id, 'PUT', $formatted_data);

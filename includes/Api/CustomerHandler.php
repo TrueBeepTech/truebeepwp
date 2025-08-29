@@ -34,6 +34,8 @@ class CustomerHandler
         add_action('edit_user_profile_update', [$this, 'handle_admin_user_update'], 10, 1);
         add_action('delete_user', [$this, 'handle_user_deletion'], 10, 1);
         add_action('woocommerce_checkout_order_processed', [$this, 'handle_guest_checkout'], 10, 3);
+        add_action('woocommerce_checkout_update_user_meta', [$this, 'handle_checkout_user_update'], 10, 2);
+        add_action('woocommerce_customer_save_address', [$this, 'handle_address_update'], 10, 2);
         add_action('admin_notices', [$this, 'show_api_notices']);
         add_action('wp_ajax_truebeep_sync_user', [$this, 'ajax_sync_user']);
         add_action('wp_ajax_truebeep_remove_sync', [$this, 'ajax_remove_sync']);
@@ -114,6 +116,50 @@ class CustomerHandler
                 'phone' => $order->get_billing_phone(),
                 'source' => 'WordPress'
             ];
+            
+            // Add address fields
+            if ($order->get_billing_city()) {
+                $customer_data['city'] = $order->get_billing_city();
+            }
+            
+            if ($order->get_billing_state()) {
+                $customer_data['state'] = $order->get_billing_state();
+            }
+            
+            if ($order->get_billing_country()) {
+                $customer_data['country'] = $order->get_billing_country();
+            }
+            
+            if ($order->get_billing_postcode()) {
+                $customer_data['zipCode'] = $order->get_billing_postcode();
+            }
+            
+            // Add additional metadata
+            $metadata = [];
+            
+            if ($order->get_billing_address_1()) {
+                $metadata['billing_address_1'] = $order->get_billing_address_1();
+            }
+            
+            if ($order->get_billing_address_2()) {
+                $metadata['billing_address_2'] = $order->get_billing_address_2();
+            }
+            
+            if ($order->get_billing_company()) {
+                $metadata['company'] = $order->get_billing_company();
+            }
+            
+            // Add shipping information if present
+            if ($order->get_shipping_city()) {
+                $metadata['shipping_city'] = $order->get_shipping_city();
+                $metadata['shipping_state'] = $order->get_shipping_state();
+                $metadata['shipping_country'] = $order->get_shipping_country();
+                $metadata['shipping_postcode'] = $order->get_shipping_postcode();
+            }
+            
+            if (!empty($metadata)) {
+                $customer_data['metadata'] = $metadata;
+            }
 
             $response = $this->create_truebeep_customer($customer_data);
 
@@ -153,9 +199,65 @@ class CustomerHandler
             'source' => $source
         ];
 
+        // Add phone number
         $billing_phone = get_user_meta($user_id, 'billing_phone', true);
         if ($billing_phone) {
             $customer_data['phone'] = $billing_phone;
+        }
+        
+        // Add address fields from billing information
+        $billing_city = get_user_meta($user_id, 'billing_city', true);
+        if ($billing_city) {
+            $customer_data['city'] = $billing_city;
+        }
+        
+        $billing_state = get_user_meta($user_id, 'billing_state', true);
+        if ($billing_state) {
+            $customer_data['state'] = $billing_state;
+        }
+        
+        $billing_country = get_user_meta($user_id, 'billing_country', true);
+        if ($billing_country) {
+            $customer_data['country'] = $billing_country;
+        }
+        
+        $billing_postcode = get_user_meta($user_id, 'billing_postcode', true);
+        if ($billing_postcode) {
+            $customer_data['zipCode'] = $billing_postcode;
+        }
+        
+        // Collect all other user metadata as additional metadata
+        $metadata = [];
+        
+        // Add billing address line 1 and 2 if present
+        $billing_address_1 = get_user_meta($user_id, 'billing_address_1', true);
+        if ($billing_address_1) {
+            $metadata['billing_address_1'] = $billing_address_1;
+        }
+        
+        $billing_address_2 = get_user_meta($user_id, 'billing_address_2', true);
+        if ($billing_address_2) {
+            $metadata['billing_address_2'] = $billing_address_2;
+        }
+        
+        // Add company if present
+        $billing_company = get_user_meta($user_id, 'billing_company', true);
+        if ($billing_company) {
+            $metadata['company'] = $billing_company;
+        }
+        
+        // Add shipping information if different from billing
+        $shipping_city = get_user_meta($user_id, 'shipping_city', true);
+        if ($shipping_city && $shipping_city !== $billing_city) {
+            $metadata['shipping_city'] = $shipping_city;
+            $metadata['shipping_state'] = get_user_meta($user_id, 'shipping_state', true);
+            $metadata['shipping_country'] = get_user_meta($user_id, 'shipping_country', true);
+            $metadata['shipping_postcode'] = get_user_meta($user_id, 'shipping_postcode', true);
+        }
+        
+        // Add metadata if not empty
+        if (!empty($metadata)) {
+            $customer_data['metadata'] = $metadata;
         }
 
         $response = !empty($truebeep_customer_id)
@@ -176,6 +278,30 @@ class CustomerHandler
             update_user_meta($user_id, '_truebeep_sync_error', $error_message);
             $this->log_api_activity("Failed to create or update user in Truebeep", $error_message, 'error');
         }
+    }
+
+    /**
+     * Handle checkout user update
+     *
+     * @param int $user_id User ID
+     * @param array $data Checkout data
+     */
+    public function handle_checkout_user_update($user_id, $data)
+    {
+        // Sync user data after checkout updates their billing/shipping information
+        $this->create_or_update_truebeep_customer($user_id, 'WordPress');
+    }
+    
+    /**
+     * Handle address update from My Account page
+     *
+     * @param int $user_id User ID
+     * @param string $address_type Type of address (billing or shipping)
+     */
+    public function handle_address_update($user_id, $address_type)
+    {
+        // Sync user data after they update their address in My Account
+        $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
     /**
