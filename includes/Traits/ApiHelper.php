@@ -2,6 +2,8 @@
 
 namespace Truebeep\Traits;
 
+use Truebeep\Config\Constants;
+
 trait ApiHelper
 {
     /**
@@ -9,7 +11,7 @@ trait ApiHelper
      */
     protected function get_api_url()
     {
-        return get_option('truebeep_api_url', '');
+        return Constants::API_URL;
     }
 
     /**
@@ -25,7 +27,7 @@ trait ApiHelper
      */
     protected function get_wallet_base_url()
     {
-        return get_option('truebeep_wallet_base_url', '');
+        return Constants::WALLET_BASE_URL;
     }
 
     /**

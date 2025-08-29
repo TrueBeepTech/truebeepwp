@@ -3,6 +3,7 @@
 namespace Truebeep\Admin;
 
 use Truebeep\Traits\ApiHelper;
+use Truebeep\Config\Constants;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,6 +12,7 @@ if (!defined('ABSPATH')) {
 class WooCommerceSettings
 {
     use ApiHelper;
+    
     public function __construct()
     {
         add_filter('woocommerce_settings_tabs_array', [$this, 'add_settings_tab'], 50);
@@ -88,10 +90,12 @@ class WooCommerceSettings
             ],
             [
                 'title' => __('API URL', 'truebeep'),
-                'desc' => __('Enter your Truebeep API URL', 'truebeep'),
+                'desc' => __('Truebeep API URL (read-only)', 'truebeep'),
                 'id' => 'truebeep_api_url',
                 'type' => 'text',
-                'css' => 'min-width:400px;',
+                'default' => Constants::API_URL,
+                'css' => 'min-width:400px; background-color: #f0f0f0; cursor: not-allowed; opacity: 0.6;',
+                'custom_attributes' => array('readonly' => 'readonly', 'disabled' => 'disabled'),
                 'desc_tip' => true,
             ],
             [
@@ -210,11 +214,12 @@ class WooCommerceSettings
 
             [
                 'title' => __('Wallet Base URL', 'truebeep'),
-                'desc' => __('Enter the base URL for your wallet API', 'truebeep'),
+                'desc' => __('Base URL for wallet API (read-only)', 'truebeep'),
                 'id' => 'truebeep_wallet_base_url',
-                'type' => 'text',
-                'css' => 'min-width:400px;',
-                'placeholder' => 'e.g. https://processor.truebeep.com',
+                'type' => 'hidden',
+                'default' => Constants::WALLET_BASE_URL,
+                'css' => 'min-width:400px; background-color: #f0f0f0;',
+                'custom_attributes' => array('readonly' => 'readonly'),
                 'desc_tip' => true,
             ],
 
@@ -355,7 +360,16 @@ class WooCommerceSettings
     {
         global $current_section;
         
-        woocommerce_update_options($this->get_settings($current_section));
+        // Get all settings
+        $settings = $this->get_settings($current_section);
+        
+        // Filter out the read-only fields (API URL and Wallet Base URL)
+        $filtered_settings = array_filter($settings, function($setting) {
+            return !isset($setting['id']) || 
+                   ($setting['id'] !== 'truebeep_api_url' && $setting['id'] !== 'truebeep_wallet_base_url');
+        });
+        
+        woocommerce_update_options($filtered_settings);
     }
 
     public function ajax_save_loyalty()
