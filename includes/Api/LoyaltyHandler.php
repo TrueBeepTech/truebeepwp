@@ -16,7 +16,6 @@ class LoyaltyHandler
      */
     public function __construct()
     {
-        truebeep_log('LoyaltyHandler initialized', 'api_loyalty', ['timestamp' => current_time('mysql')]);
         $this->init_hooks();
     }
 
@@ -27,7 +26,6 @@ class LoyaltyHandler
     {
         // Get the configured order status for awarding points
         $award_status = get_option('truebeep_award_points_status', 'completed');
-        truebeep_log('Initializing loyalty hooks', 'api_loyalty', ['award_status' => $award_status]);
         
         // Add hooks based on the selected status
         // Note: If 'both' is selected, points are only awarded once due to the check in award_loyalty_points()
@@ -64,18 +62,14 @@ class LoyaltyHandler
      */
     public function award_loyalty_points($order_id)
     {
-        truebeep_log('Award loyalty points triggered', 'api_loyalty', ['order_id' => $order_id]);
-        
         $order = wc_get_order($order_id);
         if (!$order) {
-            truebeep_log('Order not found', 'api_loyalty', ['order_id' => $order_id]);
             return;
         }
 
         // Prevent awarding points multiple times
         $points_awarded = $order->get_meta('_truebeep_points_awarded');
         if ($points_awarded === 'yes') {
-            truebeep_log('Points already awarded for order', 'api_loyalty', ['order_id' => $order_id]);
             return;
         }
 
@@ -84,50 +78,24 @@ class LoyaltyHandler
         $points_redeemed_amount = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
         
         if (($has_redeemed_points === 'yes' || $points_redeemed_amount > 0) && !$this->should_earn_on_redeemed_orders()) {
-            truebeep_log('Points not awarded - redeemed order with earning disabled', 'api_loyalty', [
-                'order_id' => $order_id,
-                'points_redeemed' => $points_redeemed_amount
-            ]);
             $order->add_order_note(__('Loyalty points not awarded: Points were redeemed on this order and earning on redeemed orders is disabled.', 'truebeep'));
             return;
         }
 
         $customer_id = $this->get_customer_truebeep_id($order);
         if (!$customer_id) {
-            truebeep_log('No Truebeep customer ID found for order', 'api_loyalty', ['order_id' => $order_id]);
             return;
         }
-        
-        truebeep_log('Customer ID found for order', 'api_loyalty', [
-            'order_id' => $order_id,
-            'customer_id' => $customer_id
-        ]);
 
         $order_total = $order->get_total();
         $user_id = $order->get_user_id();
 
         $points = $this->calculate_loyalty_points($order_total, $user_id);
-        truebeep_log('Points calculated for order', 'api_loyalty', [
-            'order_id' => $order_id,
-            'order_total' => $order_total,
-            'points' => $points,
-            'user_id' => $user_id
-        ]);
-        
         if ($points <= 0) {
-            truebeep_log('No points to award (points <= 0)', 'api_loyalty', ['order_id' => $order_id]);
             return;
         }
 
         $response = $this->update_loyalty_points($customer_id, $points, 'increment', 'woocommerce');
-        truebeep_log('API response for awarding points', 'api_loyalty', [
-            'order_id' => $order_id,
-            'customer_id' => $customer_id,
-            'points' => $points,
-            'success' => !is_wp_error($response) && $response['success'],
-            'response' => is_wp_error($response) ? $response->get_error_message() : $response
-        ]);
-        
         if (!is_wp_error($response) && $response['success']) {
             $order->update_meta_data('_truebeep_points_awarded', 'yes');
             $order->update_meta_data('_truebeep_points_earned', $points);
@@ -139,17 +107,11 @@ class LoyaltyHandler
             }
 
             $order->add_order_note(sprintf(__('Awarded %s loyalty points to customer via Truebeep', 'truebeep'), $points));
-            truebeep_log('Points awarded successfully', 'api_loyalty', [
-                'order_id' => $order_id,
-                'points' => $points
-            ]);
+            truebeep_log('Points awarded: ' . $points . ' points to order #' . $order_id, 'LoyaltyHandler');
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(__('Failed to award loyalty points: %s', 'truebeep'), $error_message));
-            truebeep_log('Failed to award points', 'api_loyalty', [
-                'order_id' => $order_id,
-                'error' => $error_message
-            ]);
+            truebeep_log('Failed to award points to order #' . $order_id, 'LoyaltyHandler', ['error' => $error_message]);
         }
     }
 
@@ -160,11 +122,8 @@ class LoyaltyHandler
      */
     public function revoke_loyalty_points($order_id)
     {
-        truebeep_log('Revoke loyalty points triggered', 'api_loyalty', ['order_id' => $order_id]);
-        
         $order = wc_get_order($order_id);
         if (!$order) {
-            truebeep_log('Order not found for revocation', 'api_loyalty', ['order_id' => $order_id]);
             return;
         }
 
@@ -202,12 +161,6 @@ class LoyaltyHandler
             return;
         }
 
-        truebeep_log('Attempting to revoke earned points', 'api_loyalty', [
-            'order_id' => $order->get_id(),
-            'customer_id' => $customer_id,
-            'points' => $points_earned
-        ]);
-        
         $response = $this->update_loyalty_points($customer_id, $points_earned, 'decrement', 'woocommerce');
         if (!is_wp_error($response) && $response['success']) {
             $order->update_meta_data('_truebeep_points_revoked', 'yes');
@@ -220,17 +173,11 @@ class LoyaltyHandler
             }
 
             $order->add_order_note(sprintf(__('Revoked %s loyalty points from customer via Truebeep', 'truebeep'), $points_earned));
-            truebeep_log('Points revoked successfully', 'api_loyalty', [
-                'order_id' => $order->get_id(),
-                'points' => $points_earned
-            ]);
+            truebeep_log('Points revoked: ' . $points_earned . ' points from order #' . $order->get_id(), 'LoyaltyHandler');
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(__('Failed to revoke loyalty points: %s', 'truebeep'), $error_message));
-            truebeep_log('Failed to revoke points', 'api_loyalty', [
-                'order_id' => $order->get_id(),
-                'error' => $error_message
-            ]);
+            truebeep_log('Failed to revoke points from order #' . $order->get_id(), 'LoyaltyHandler', ['error' => $error_message]);
         }
     }
 
@@ -259,12 +206,6 @@ class LoyaltyHandler
         }
 
         // Return the redeemed points back to customer
-        truebeep_log('Attempting to return redeemed points', 'api_loyalty', [
-            'order_id' => $order->get_id(),
-            'customer_id' => $customer_id,
-            'points' => $points_redeemed
-        ]);
-        
         $response = $this->update_loyalty_points($customer_id, $points_redeemed, 'increment', 'woocommerce_refund');
         
         if (!is_wp_error($response) && $response['success']) {
@@ -300,11 +241,6 @@ class LoyaltyHandler
      */
     public function handle_partial_refund($order_id, $refund_id)
     {
-        truebeep_log('Handling partial refund', 'api_loyalty', [
-            'order_id' => $order_id,
-            'refund_id' => $refund_id
-        ]);
-        
         $order = wc_get_order($order_id);
         $refund = wc_get_order($refund_id);
 
@@ -384,11 +320,6 @@ class LoyaltyHandler
     public function handle_points_redemption($order_id, $posted_data, $order)
     {
         $points_redeemed = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
-        
-        truebeep_log('Handling points redemption at checkout', 'api_loyalty', [
-            'order_id' => $order_id,
-            'points_redeemed' => $points_redeemed
-        ]);
 
         if ($points_redeemed > 0) {
             $order->update_meta_data('_truebeep_points_redeemed', 'yes');
@@ -404,17 +335,11 @@ class LoyaltyHandler
                     }
 
                     $order->add_order_note(sprintf(__('Deducted %s loyalty points via Truebeep API', 'truebeep'), $points_redeemed));
-                    truebeep_log('Points deducted successfully at checkout', 'api_loyalty', [
-                        'order_id' => $order_id,
-                        'points' => $points_redeemed
-                    ]);
+                    truebeep_log('Points redeemed: ' . $points_redeemed . ' points from order #' . $order_id, 'LoyaltyHandler');
                 } else {
                     $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
                     $order->add_order_note(sprintf(__('Failed to deduct loyalty points: %s', 'truebeep'), $error_message));
-                    truebeep_log('Failed to deduct points at checkout', 'api_loyalty', [
-                        'order_id' => $order_id,
-                        'error' => $error_message
-                    ]);
+                    truebeep_log('Failed to redeem points from order #' . $order_id, 'LoyaltyHandler', ['error' => $error_message]);
                 }
             }
         }
@@ -455,11 +380,6 @@ class LoyaltyHandler
             return;
         }
 
-        truebeep_log('Syncing customer points from API', 'api_loyalty', [
-            'customer_id' => $truebeep_customer_id,
-            'user_id' => $user_id
-        ]);
-
         try {
             $customer = $this->get_customer_points($truebeep_customer_id);
             if (empty($customer)) {
@@ -473,13 +393,6 @@ class LoyaltyHandler
             update_user_meta($user_id, '_truebeep_loyalty_points', $customer_points);
             update_user_meta($user_id, '_truebeep_total_earned_points', $total_earned_points);
             update_user_meta($user_id, '_truebeep_total_spent_points', $total_spent_points);
-            
-            truebeep_log('Customer points synced successfully', 'api_loyalty', [
-                'user_id' => $user_id,
-                'points' => $customer_points,
-                'total_earned' => $total_earned_points,
-                'total_spent' => $total_spent_points
-            ]);
 
             $tier_info = $this->get_customer_tier($truebeep_customer_id);
             if ($tier_info['tier_tag']) {
@@ -490,10 +403,7 @@ class LoyaltyHandler
                 delete_user_meta($user_id, '_truebeep_tier_data');
             }
         } catch (\Exception $e) {
-            truebeep_log('Error syncing customer points', 'api_loyalty', [
-                'user_id' => $user_id,
-                'error' => $e->getMessage()
-            ]);
+            // Handle exception if needed
         }
     }
 

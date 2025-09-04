@@ -23,8 +23,6 @@ class PointsRedemption
 
     public function __construct()
     {
-        truebeep_log('PointsRedemption initialized', 'checkout', ['timestamp' => current_time('mysql')]);
-
         // Hook into WooCommerce checkout
         add_action('woocommerce_review_order_before_payment', [$this, 'display_points_redemption_field']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_checkout_scripts']);
@@ -57,13 +55,6 @@ class PointsRedemption
             $user_id = get_current_user_id();
             $this->user_points = $this->get_user_points($user_id);
             $this->user_tier = $this->get_user_tier($user_id);
-            
-            truebeep_log('Checkout settings initialized', 'checkout', [
-                'user_id' => $user_id,
-                'user_points' => $this->user_points,
-                'redemption_method' => $this->redemption_method,
-                'tier' => $this->user_tier ? $this->user_tier['name'] : 'none'
-            ]);
         }
     }
 
@@ -199,35 +190,20 @@ class PointsRedemption
         check_ajax_referer('truebeep_checkout_nonce', 'nonce');
 
         if (!is_user_logged_in()) {
-            truebeep_log('Points redemption attempted without login', 'checkout');
             wp_send_json_error(['message' => __('Please log in to redeem points.', 'truebeep')]);
         }
         
         // Rate limiting - max 5 attempts per minute
         if (RateLimiter::is_rate_limited('apply_points', RateLimiter::get_identifier(), 5, 60)) {
-            truebeep_log('Rate limit exceeded for points redemption', 'checkout', [
-                'user_id' => get_current_user_id()
-            ]);
             wp_send_json_error(['message' => __('Too many attempts. Please try again later.', 'truebeep')]);
         }
 
         $user_id = get_current_user_id();
 
-        truebeep_log('Applying points discount', 'checkout', [
-            'user_id' => $user_id,
-            'method' => $this->redemption_method,
-            'available_points' => $this->user_points
-        ]);
-
         if ($this->redemption_method === 'dynamic_coupon') {
             $points = isset($_POST['points']) ? intval($_POST['points']) : 0;
 
             if ($points <= 0 || $points > $this->user_points) {
-                truebeep_log('Invalid points amount attempted', 'checkout', [
-                    'user_id' => $user_id,
-                    'attempted_points' => $points,
-                    'available_points' => $this->user_points
-                ]);
                 wp_send_json_error(['message' => __('Invalid points amount.', 'truebeep')]);
             }
 
@@ -269,11 +245,7 @@ class PointsRedemption
         $points_used = WC()->session->get('truebeep_points_redeemed');
         $discount_amount = WC()->session->get('truebeep_discount_amount');
         
-        truebeep_log('Points discount applied successfully', 'checkout', [
-            'user_id' => $user_id,
-            'points_used' => $points_used,
-            'discount_amount' => $discount_amount
-        ]);
+        truebeep_log('Points applied: ' . $points_used . ' points for $' . number_format($discount_amount, 2) . ' discount', 'PointsRedemption', ['user_id' => $user_id]);
 
         wp_send_json_success([
             'message' => __('Points applied successfully!', 'truebeep'),
@@ -286,16 +258,6 @@ class PointsRedemption
     public function ajax_remove_points_discount()
     {
         check_ajax_referer('truebeep_checkout_nonce', 'nonce');
-
-        $user_id = get_current_user_id();
-        $points_removed = WC()->session->get('truebeep_points_redeemed');
-        $discount_removed = WC()->session->get('truebeep_discount_amount');
-        
-        truebeep_log('Removing points discount', 'checkout', [
-            'user_id' => $user_id,
-            'points_removed' => $points_removed,
-            'discount_removed' => $discount_removed
-        ]);
 
         // Clear session data
         WC()->session->set('truebeep_points_redeemed', null);
@@ -352,10 +314,6 @@ class PointsRedemption
         $discount_amount = WC()->session->get('truebeep_discount_amount');
 
         if ($points_redeemed && $discount_amount > 0) {
-            truebeep_log('Applying points discount to cart', 'checkout', [
-                'points' => $points_redeemed,
-                'discount' => $discount_amount
-            ]);
             $label = sprintf(__('Loyalty Points Redemption (-%d points)', 'truebeep'), $points_redeemed);
 
             if (WC()->session->get('truebeep_coupon_used')) {
@@ -372,11 +330,6 @@ class PointsRedemption
         $discount_amount = WC()->session->get('truebeep_discount_amount');
 
         if ($points_redeemed && $discount_amount > 0) {
-            truebeep_log('Saving points redemption to order', 'checkout', [
-                'order_id' => $order->get_id(),
-                'points_redeemed' => $points_redeemed,
-                'discount_amount' => $discount_amount
-            ]);
             $order->update_meta_data('_truebeep_points_redeemed_amount', $points_redeemed);
             $order->update_meta_data('_truebeep_discount_amount', $discount_amount);
 
@@ -394,8 +347,6 @@ class PointsRedemption
             WC()->session->set('truebeep_points_redeemed', null);
             WC()->session->set('truebeep_discount_amount', null);
             WC()->session->set('truebeep_coupon_used', null);
-            
-            truebeep_log('Points redemption saved to order', 'checkout', ['order_id' => $order->get_id()]);
         }
     }
 

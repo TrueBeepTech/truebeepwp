@@ -34,8 +34,6 @@ class SyncManager
      */
     public function __construct()
     {
-        truebeep_log('SyncManager initialized', 'sync_manager', ['timestamp' => current_time('mysql')]);
-        
         $this->syncer = new CustomerSyncer();
         
         CustomerSyncProcessor::init();
@@ -83,10 +81,7 @@ class SyncManager
      */
     public function start_sync()
     {
-        truebeep_log('Start sync requested', 'sync_manager', ['is_running' => $this->is_sync_running()]);
-        
         if ($this->is_sync_running()) {
-            truebeep_log('Sync already running - aborting', 'sync_manager');
             return [
                 'success' => false,
                 'message' => __('Sync is already running', 'truebeep')
@@ -101,13 +96,10 @@ class SyncManager
         
         $customer_ids = $this->syncer->get_customers_to_sync();
         
-        truebeep_log('Customers found for sync', 'sync_manager', ['count' => count($customer_ids)]);
-        
         if (empty($customer_ids)) {
             update_option('truebeep_sync_status', 'completed');
             delete_option('truebeep_sync_lock');
             
-            truebeep_log('No customers to sync - exiting', 'sync_manager');
             return [
                 'success' => false,
                 'message' => __('No customers to sync', 'truebeep')
@@ -123,12 +115,6 @@ class SyncManager
         ]);
 
         $batches = array_chunk($customer_ids, CustomerSyncProcessor::BATCH_SIZE);
-        
-        truebeep_log('Scheduling sync batches', 'sync_manager', [
-            'total_customers' => count($customer_ids),
-            'batch_size' => CustomerSyncProcessor::BATCH_SIZE,
-            'total_batches' => count($batches)
-        ]);
         
         $this->processor->schedule_sync($batches);
         
@@ -146,7 +132,7 @@ class SyncManager
             'batches' => count($batches)
         ];
         
-        truebeep_log('Sync started successfully', 'sync_manager', $result);
+        truebeep_log('Customer sync started: ' . count($customer_ids) . ' customers in ' . count($batches) . ' batches', 'SyncManager');
         return $result;
     }
 
@@ -177,11 +163,11 @@ class SyncManager
         if ($status === 'running') {
             // Auto-complete if no customers remaining to sync
             if ($statistics['remaining'] === 0) {
-                truebeep_log('Auto-completing sync - no customers remaining', 'sync_manager', $statistics);
                 $this->processor->clear_scheduled_actions();
                 update_option('truebeep_sync_status', 'completed');
                 update_option('truebeep_sync_completed_at', current_time('mysql'));
                 delete_option('truebeep_sync_lock');
+                truebeep_log('Customer sync completed', 'SyncManager');
                 $status = 'completed';
             }
             // Also check if no pending actions and should be completed
@@ -232,17 +218,12 @@ class SyncManager
      */
     public function cancel_sync()
     {
-        truebeep_log('Cancelling sync', 'sync_manager', [
-            'current_status' => get_option('truebeep_sync_status'),
-            'progress' => get_option('truebeep_sync_progress')
-        ]);
-        
         $this->processor->clear_scheduled_actions();
         
         update_option('truebeep_sync_status', 'cancelled');
         delete_option('truebeep_sync_lock');
         
-        truebeep_log('Sync cancelled successfully', 'sync_manager');
+        truebeep_log('Customer sync cancelled', 'SyncManager');
         return true;
     }
 
@@ -255,8 +236,6 @@ class SyncManager
      */
     public function reset_sync()
     {
-        truebeep_log('Resetting all sync data', 'sync_manager');
-        
         $this->cancel_sync();
         
         delete_option('truebeep_sync_status');
@@ -268,7 +247,6 @@ class SyncManager
         delete_option('truebeep_sync_last_update');
         delete_option('truebeep_sync_rate_limit');
         
-        truebeep_log('Sync data reset complete', 'sync_manager');
         return true;
     }
 
@@ -285,11 +263,9 @@ class SyncManager
         check_ajax_referer('truebeep_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            truebeep_log('AJAX start sync - permission denied', 'sync_manager', ['user_id' => get_current_user_id()]);
             wp_send_json_error(__('Permission denied', 'truebeep'));
         }
 
-        truebeep_log('AJAX start sync requested', 'sync_manager', ['user_id' => get_current_user_id()]);
         $result = $this->start_sync();
         
         if ($result['success']) {
@@ -330,11 +306,9 @@ class SyncManager
         check_ajax_referer('truebeep_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            truebeep_log('AJAX cancel sync - permission denied', 'sync_manager', ['user_id' => get_current_user_id()]);
             wp_send_json_error(__('Permission denied', 'truebeep'));
         }
 
-        truebeep_log('AJAX cancel sync requested', 'sync_manager', ['user_id' => get_current_user_id()]);
         $this->cancel_sync();
         wp_send_json_success(__('Sync cancelled', 'truebeep'));
     }
@@ -351,11 +325,9 @@ class SyncManager
         check_ajax_referer('truebeep_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            truebeep_log('AJAX reset sync - permission denied', 'sync_manager', ['user_id' => get_current_user_id()]);
             wp_send_json_error(__('Permission denied', 'truebeep'));
         }
 
-        truebeep_log('AJAX reset sync requested', 'sync_manager', ['user_id' => get_current_user_id()]);
         $this->reset_sync();
         wp_send_json_success(__('Sync data reset', 'truebeep'));
     }

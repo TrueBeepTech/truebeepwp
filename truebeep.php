@@ -4,7 +4,7 @@
  * Plugin Name:       Truebeep: Smart Wallet Loyalty
  * Plugin URI:        https://truebeep.com
  * Description:       Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
- * Version:           2.0.6
+ * Version:           2.0.7
  * Author:            Truebeep
  * Author URI:        https://truebeep.com
  * License:           GPL v2 or later
@@ -28,7 +28,7 @@ final class Truebeep
      * 
      * @var string
      */
-    const version = '2.0.6';
+    const version = '2.0.7';
 
     /**
      * contractor
@@ -350,32 +350,39 @@ function truebeep()
 
 /**
  * Global logger function for debugging and tracking changes
+ * Uses a single log file for all Truebeep operations
  *
  * @param string $message The log message
- * @param string $source The source/context of the log (e.g., 'api', 'sync', 'loyalty')
+ * @param string $class_name The class name where log is called from
  * @param array $data Optional data to include with the log
  * @return void
  */
-function truebeep_log($message, $source, $data = [])
+function truebeep_log($message, $class_name, $data = [])
 {
     if (!function_exists('wc_get_logger')) {
         return; // WooCommerce not available
     }
     
     $logger = wc_get_logger();
-    $context = ['source' => 'truebeep_' . $source];
     
+    // Format the log entry with class name and timestamp
+    $formatted_message = sprintf(
+        '[%s] [%s] %s',
+        current_time('Y-m-d H:i:s'),
+        $class_name,
+        $message
+    );
+    
+    // Add data if provided
     if (!empty($data)) {
-        // Convert objects to arrays and ensure data is serializable
-        $data = json_decode(json_encode($data), true);
-        $context['data'] = $data;
+        $data_string = is_array($data) ? json_encode($data) : (string) $data;
+        $formatted_message .= ' | Data: ' . $data_string;
     }
     
-    // Add timestamp and memory usage for better debugging
-    $context['timestamp'] = current_time('mysql');
-    $context['memory'] = round(memory_get_usage() / 1048576, 2) . ' MB';
+    // Use a single source identifier for all Truebeep logs
+    $context = ['source' => 'truebeep'];
     
-    $logger->info($message, $context);
+    $logger->info($formatted_message, $context);
 }
 
 truebeep();

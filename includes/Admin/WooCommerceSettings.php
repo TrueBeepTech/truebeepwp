@@ -94,6 +94,7 @@ class WooCommerceSettings
                 'id' => 'truebeep_api_url',
                 'type' => 'text',
                 'default' => Constants::API_URL,
+                'value' => Constants::API_URL,
                 'css' => 'min-width:400px; background-color: #f0f0f0; cursor: not-allowed; opacity: 0.6;',
                 'custom_attributes' => array('readonly' => 'readonly', 'disabled' => 'disabled'),
                 'desc_tip' => true,
@@ -445,6 +446,8 @@ class WooCommerceSettings
         }
 
         update_option('truebeep_coupons', $sanitized_coupons);
+        
+        truebeep_log('Coupons saved via AJAX', 'WooCommerceSettings', ['count' => count($sanitized_coupons)]);
 
         wp_send_json_success(['message' => __('Coupons saved successfully!', 'truebeep')]);
     }
@@ -472,6 +475,7 @@ class WooCommerceSettings
             
             if (!is_wp_error($response) && $response['success']) {
                 update_option('truebeep_connection_status', 'connected');
+                truebeep_log('API Connection established', 'WooCommerceSettings');
                 wp_send_json_success([
                     'message' => __('Connected successfully!', 'truebeep'),
                     'status' => 'connected'
