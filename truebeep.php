@@ -348,4 +348,34 @@ function truebeep()
     return Truebeep::init();
 }
 
+/**
+ * Global logger function for debugging and tracking changes
+ *
+ * @param string $message The log message
+ * @param string $source The source/context of the log (e.g., 'api', 'sync', 'loyalty')
+ * @param array $data Optional data to include with the log
+ * @return void
+ */
+function truebeep_log($message, $source, $data = [])
+{
+    if (!function_exists('wc_get_logger')) {
+        return; // WooCommerce not available
+    }
+    
+    $logger = wc_get_logger();
+    $context = ['source' => 'truebeep_' . $source];
+    
+    if (!empty($data)) {
+        // Convert objects to arrays and ensure data is serializable
+        $data = json_decode(json_encode($data), true);
+        $context['data'] = $data;
+    }
+    
+    // Add timestamp and memory usage for better debugging
+    $context['timestamp'] = current_time('mysql');
+    $context['memory'] = round(memory_get_usage() / 1048576, 2) . ' MB';
+    
+    $logger->info($message, $context);
+}
+
 truebeep();

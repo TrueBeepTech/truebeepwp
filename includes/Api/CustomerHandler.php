@@ -19,6 +19,7 @@ class CustomerHandler
      */
     public function __construct()
     {
+        truebeep_log('CustomerHandler initialized', 'api_customer', ['timestamp' => current_time('mysql')]);
         $this->init_hooks();
     }
 
@@ -48,6 +49,7 @@ class CustomerHandler
      */
     public function handle_user_registration($user_id)
     {
+        truebeep_log('User registration triggered', 'api_customer', ['user_id' => $user_id]);
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
@@ -60,6 +62,10 @@ class CustomerHandler
      */
     public function handle_woocommerce_customer_registration($customer_id, $new_customer_data, $password_generated)
     {
+        truebeep_log('WooCommerce customer registration triggered', 'api_customer', [
+            'customer_id' => $customer_id,
+            'password_generated' => $password_generated
+        ]);
         $this->create_or_update_truebeep_customer($customer_id, 'WordPress');
     }
 
@@ -72,6 +78,10 @@ class CustomerHandler
     public function handle_woocommerce_new_customer($customer_id, $customer_data = [])
     {
         $truebeep_id = get_user_meta($customer_id, '_truebeep_customer_id', true);
+        truebeep_log('WooCommerce new customer hook', 'api_customer', [
+            'customer_id' => $customer_id,
+            'has_truebeep_id' => !empty($truebeep_id)
+        ]);
         if (empty($truebeep_id)) {
             $this->create_or_update_truebeep_customer($customer_id, 'WordPress');
         }
@@ -85,6 +95,7 @@ class CustomerHandler
      */
     public function handle_user_profile_update($user_id, $old_user_data)
     {
+        truebeep_log('User profile update triggered', 'api_customer', ['user_id' => $user_id]);
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
@@ -109,6 +120,10 @@ class CustomerHandler
     {
         // Check if this is a guest order
         if (!$order->get_user_id()) {
+            truebeep_log('Guest checkout detected', 'api_customer', [
+                'order_id' => $order_id,
+                'email' => $order->get_billing_email()
+            ]);
             $customer_data = [
                 'firstName' => $order->get_billing_first_name(),
                 'lastName' => $order->get_billing_last_name(),
@@ -170,10 +185,18 @@ class CustomerHandler
 
                 // Log success
                 $this->log_api_activity('Guest customer created in Truebeep', $response['data']['id']);
+                truebeep_log('Guest customer created successfully', 'api_customer', [
+                    'order_id' => $order_id,
+                    'customer_id' => $response['data']['id']
+                ]);
             } else {
                 // Log error
                 $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
                 $this->log_api_activity('Failed to create guest customer in Truebeep', $error_message, 'error');
+                truebeep_log('Failed to create guest customer', 'api_customer', [
+                    'order_id' => $order_id,
+                    'error' => $error_message
+                ]);
             }
         }
     }
@@ -188,8 +211,15 @@ class CustomerHandler
     {
         $user = get_userdata($user_id);
         if (!$user) {
+            truebeep_log('User not found for sync', 'api_customer', ['user_id' => $user_id]);
             return;
         }
+        
+        truebeep_log('Creating/updating Truebeep customer', 'api_customer', [
+            'user_id' => $user_id,
+            'email' => $user->user_email,
+            'source' => $source
+        ]);
 
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
         $customer_data = [
@@ -260,7 +290,14 @@ class CustomerHandler
             $customer_data['metadata'] = $metadata;
         }
 
-        $response = !empty($truebeep_customer_id)
+        $is_update = !empty($truebeep_customer_id);
+        truebeep_log('API call for customer', 'api_customer', [
+            'user_id' => $user_id,
+            'action' => $is_update ? 'update' : 'create',
+            'truebeep_id' => $truebeep_customer_id ?: 'new'
+        ]);
+        
+        $response = $is_update
             ? $this->update_truebeep_customer($truebeep_customer_id, $customer_data)
             : $this->create_truebeep_customer($customer_data);
 
@@ -271,12 +308,26 @@ class CustomerHandler
                 update_user_meta($user_id, '_truebeep_sync_status', 'synced');
                 update_user_meta($user_id, '_truebeep_last_sync', current_time('mysql'));
                 $this->log_api_activity("User created in Truebeep", $user_id);
+                truebeep_log('Customer sync successful', 'api_customer', [
+                    'user_id' => $user_id,
+                    'truebeep_id' => $response_data['id'],
+                    'action' => 'create'
+                ]);
+            } else {
+                truebeep_log('Customer update successful', 'api_customer', [
+                    'user_id' => $user_id,
+                    'truebeep_id' => $truebeep_customer_id
+                ]);
             }
         } else {
             update_user_meta($user_id, '_truebeep_sync_status', 'error');
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             update_user_meta($user_id, '_truebeep_sync_error', $error_message);
             $this->log_api_activity("Failed to create or update user in Truebeep", $error_message, 'error');
+            truebeep_log('Customer sync failed', 'api_customer', [
+                'user_id' => $user_id,
+                'error' => $error_message
+            ]);
         }
     }
 
@@ -289,6 +340,7 @@ class CustomerHandler
     public function handle_checkout_user_update($user_id, $data)
     {
         // Sync user data after checkout updates their billing/shipping information
+        truebeep_log('Checkout user update triggered', 'api_customer', ['user_id' => $user_id]);
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
     
@@ -301,6 +353,10 @@ class CustomerHandler
     public function handle_address_update($user_id, $address_type)
     {
         // Sync user data after they update their address in My Account
+        truebeep_log('Address update triggered', 'api_customer', [
+            'user_id' => $user_id,
+            'address_type' => $address_type
+        ]);
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
     }
 
@@ -311,6 +367,7 @@ class CustomerHandler
      */
     public function handle_user_deletion($user_id)
     {
+        truebeep_log('User deletion triggered', 'api_customer', ['user_id' => $user_id]);
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
 
         if (!empty($truebeep_customer_id)) {
@@ -318,9 +375,18 @@ class CustomerHandler
 
             if (!is_wp_error($response) && $response['success']) {
                 $this->log_api_activity('User deleted from Truebeep', $user_id);
+                truebeep_log('Customer deleted successfully', 'api_customer', [
+                    'user_id' => $user_id,
+                    'truebeep_id' => $truebeep_customer_id
+                ]);
             } else {
                 $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
                 $this->log_api_activity('Failed to delete user from Truebeep', $error_message, 'error');
+                truebeep_log('Customer deletion failed', 'api_customer', [
+                    'user_id' => $user_id,
+                    'truebeep_id' => $truebeep_customer_id,
+                    'error' => $error_message
+                ]);
             }
         }
     }
@@ -392,6 +458,7 @@ class CustomerHandler
         }
 
         $user_id = intval($_POST['user_id']);
+        truebeep_log('Manual user sync triggered via AJAX', 'api_customer', ['user_id' => $user_id]);
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
 
         $sync_status = get_user_meta($user_id, '_truebeep_sync_status', true);
@@ -416,12 +483,14 @@ class CustomerHandler
         }
 
         $user_id = intval($_POST['user_id']);
+        truebeep_log('Remove sync triggered via AJAX', 'api_customer', ['user_id' => $user_id]);
 
         delete_user_meta($user_id, '_truebeep_customer_id');
         delete_user_meta($user_id, '_truebeep_sync_status');
         delete_user_meta($user_id, '_truebeep_last_sync');
         delete_user_meta($user_id, '_truebeep_sync_error');
-
+        
+        truebeep_log('Sync removed successfully', 'api_customer', ['user_id' => $user_id]);
         wp_send_json_success(['message' => __('Truebeep link removed', 'truebeep')]);
     }
 }

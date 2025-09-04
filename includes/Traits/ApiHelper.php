@@ -47,10 +47,22 @@ trait ApiHelper
         $api_key = $this->get_api_key();
 
         if (empty($api_url) || empty($api_key)) {
+            truebeep_log('API request failed - missing credentials', 'api_helper', [
+                'endpoint' => $endpoint,
+                'has_url' => !empty($api_url),
+                'has_key' => !empty($api_key)
+            ]);
             return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep'));
         }
 
         $url = rtrim($api_url, '/') . '/' . ltrim($endpoint, '/');
+        
+        truebeep_log('Making API request', 'api_helper', [
+            'endpoint' => $endpoint,
+            'method' => $method,
+            'url' => $url,
+            'has_data' => !empty($data)
+        ]);
 
         $headers = array_merge([
             'Authorization' => 'Bearer ' . $api_key,
@@ -70,6 +82,11 @@ trait ApiHelper
 
         $response = wp_remote_request($url, $args);
         if (is_wp_error($response)) {
+            truebeep_log('API request error', 'api_helper', [
+                'endpoint' => $endpoint,
+                'error' => $response->get_error_message(),
+                'error_code' => $response->get_error_code()
+            ]);
             return $response;
         }
 
@@ -78,15 +95,28 @@ trait ApiHelper
         $response_data = json_decode($response_body, true);
 
         if ($response_code >= 200 && $response_code < 300) {
+            truebeep_log('API request successful', 'api_helper', [
+                'endpoint' => $endpoint,
+                'method' => $method,
+                'response_code' => $response_code
+            ]);
             return [
                 'success' => true,
                 'data' => $response_data,
                 'code' => $response_code,
             ];
         } else {
+            $error_message = $response_data['message'] ?? __('API request failed', 'truebeep');
+            truebeep_log('API request failed', 'api_helper', [
+                'endpoint' => $endpoint,
+                'method' => $method,
+                'response_code' => $response_code,
+                'error' => $error_message,
+                'response_data' => $response_data
+            ]);
             return [
                 'success' => false,
-                'error' => $response_data['message'] ?? __('API request failed', 'truebeep'),
+                'error' => $error_message,
                 'data' => $response_data,
                 'code' => $response_code,
             ];
@@ -102,6 +132,10 @@ trait ApiHelper
 
         foreach ($required_fields as $field) {
             if (empty($customer_data[$field])) {
+                truebeep_log('Create customer failed - missing field', 'api_helper', [
+                    'missing_field' => $field,
+                    'provided_fields' => array_keys($customer_data)
+                ]);
                 return new \WP_Error('missing_field', sprintf(__('Required field %s is missing', 'truebeep'), $field));
             }
         }
@@ -151,6 +185,12 @@ trait ApiHelper
             $formatted_data['zipCode'] = sanitize_text_field($customer_data['zipCode']);
         }
 
+        truebeep_log('Creating customer', 'api_helper', [
+            'email' => $formatted_data['email'] ?? 'not provided',
+            'has_phone' => !empty($formatted_data['phone']),
+            'has_location' => !empty($formatted_data['city']) || !empty($formatted_data['country'])
+        ]);
+        
         return $this->make_api_request('customer', 'POST', $formatted_data);
     }
 
@@ -160,8 +200,13 @@ trait ApiHelper
     public function create_truebeep_customers_bulk($customers_data)
     {
         if (empty($customers_data) || !is_array($customers_data)) {
+            truebeep_log('Bulk create failed - invalid data', 'api_helper');
             return new \WP_Error('invalid_data', __('Invalid customer data array', 'truebeep'));
         }
+        
+        truebeep_log('Creating customers in bulk', 'api_helper', [
+            'count' => count($customers_data)
+        ]);
 
         $formatted_customers = [];
         
@@ -364,10 +409,12 @@ trait ApiHelper
     public function update_loyalty_points($customer_id, $points, $type = 'increment', $channel = 'woocommerce')
     {
         if (empty($customer_id)) {
+            truebeep_log('Update loyalty points failed - missing customer ID', 'api_helper');
             return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep'));
         }
 
         if (!in_array($type, ['increment', 'decrement'])) {
+            truebeep_log('Update loyalty points failed - invalid type', 'api_helper', ['type' => $type]);
             return new \WP_Error('invalid_type', __('Type must be either increment or decrement', 'truebeep'));
         }
 
@@ -376,6 +423,13 @@ trait ApiHelper
             'type' => $type,
             'channel' => $channel
         ];
+        
+        truebeep_log('Updating loyalty points', 'api_helper', [
+            'customer_id' => $customer_id,
+            'points' => $points,
+            'type' => $type,
+            'channel' => $channel
+        ]);
 
         return $this->make_api_request('customer/' . $customer_id . '/loyalty', 'POST', $payload);
     }
@@ -442,7 +496,13 @@ trait ApiHelper
     {
         $default_earning_value = floatval(get_option('truebeep_earning_value', 1));
         if (!$user_id) {
-            return $order_total * $default_earning_value;
+            $points = $order_total * $default_earning_value;
+            truebeep_log('Points calculated without user', 'api_helper', [
+                'order_total' => $order_total,
+                'earning_value' => $default_earning_value,
+                'points' => $points
+            ]);
+            return $points;
         }
 
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
@@ -453,10 +513,25 @@ trait ApiHelper
         $tier_info = $this->get_customer_tier($truebeep_customer_id);
         if ($tier_info['tier_tag'] && $tier_info['full_tier']) {
             $tier_earning_value = floatval($tier_info['full_tier']['order_to_points']);
-            return $order_total * $tier_earning_value;
+            $points = $order_total * $tier_earning_value;
+            truebeep_log('Points calculated with tier multiplier', 'api_helper', [
+                'user_id' => $user_id,
+                'order_total' => $order_total,
+                'tier_name' => $tier_info['tier_name'],
+                'tier_earning_value' => $tier_earning_value,
+                'points' => $points
+            ]);
+            return $points;
         }
 
-        return $order_total * $default_earning_value;
+        $points = $order_total * $default_earning_value;
+        truebeep_log('Points calculated with default value', 'api_helper', [
+            'user_id' => $user_id,
+            'order_total' => $order_total,
+            'earning_value' => $default_earning_value,
+            'points' => $points
+        ]);
+        return $points;
     }
 
     /**
