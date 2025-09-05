@@ -107,6 +107,9 @@ class LoyaltyPanel
         }
 
         $user_id = get_current_user_id();
+        $user = wp_get_current_user();
+        $user_name = $user->display_name ?: $user->user_login;
+
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
         if (!$truebeep_customer_id) {
             wp_send_json_error(['message' => __('No customer ID found', 'truebeep')]);
@@ -123,7 +126,8 @@ class LoyaltyPanel
             'total_earned' => isset($customer_data['totalEarnedPoints']) ? intval($customer_data['totalEarnedPoints']) : 0,
             'total_spent' => isset($customer_data['totalSpentPoints']) ? intval($customer_data['totalSpentPoints']) : 0,
             'tier' => $tier_info['tier_name'] ?: __('Bronze', 'truebeep'),
-            'tier_data' => $tier_info['full_tier']
+            'tier_data' => $tier_info['full_tier'],
+            'user_name' => $user_name
         ];
 
         wp_send_json_success($response);

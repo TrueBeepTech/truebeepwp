@@ -1,342 +1,312 @@
 /* Truebeep Loyalty Panel Styles */
 
 .truebeep-loyalty-panel {
-    position: fixed;
-    z-index: 999999;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  position: fixed;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
 /* Position variants */
 .truebeep-loyalty-panel.bottom-right {
-    bottom: 20px;
-    right: 20px;
+  bottom: 20px;
+  right: 20px;
 }
 
 .truebeep-loyalty-panel.bottom-left {
-    bottom: 20px;
-    left: 20px;
+  bottom: 20px;
+  left: 20px;
 }
 
 .truebeep-loyalty-panel.top-right {
-    top: 20px;
-    right: 20px;
+  top: 20px;
+  right: 20px;
 }
 
 .truebeep-loyalty-panel.top-left {
-    top: 20px;
-    left: 20px;
+  top: 20px;
+  left: 20px;
 }
 
 /* Toggle button */
 .panel-toggle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
+  padding: 16px 32px;
+  background: linear-gradient(rgb(77, 132, 255), rgb(51, 48, 253));
+  color: white;
+  border: none;
+  line-height: 1;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: rgba(77, 132, 255, 0.3) 0px 4px 15px;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0px);
 }
 
 .panel-toggle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
 }
 
 .panel-toggle svg {
-    width: 28px;
-    height: 28px;
-    color: white;
+  width: 28px;
+  height: 28px;
+  color: white;
 }
 
 .points-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff6b6b;
-    color: white;
-    border-radius: 12px;
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: bold;
-    min-width: 24px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 24px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Panel content */
 .panel-content {
-    position: absolute;
-    bottom: 80px;
-    right: 0;
-    width: 280px;
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
-    overflow: hidden;
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 320px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .truebeep-loyalty-panel.bottom-left .panel-content {
-    right: auto;
-    left: 0;
+  right: auto;
+  left: 0;
 }
 
 .truebeep-loyalty-panel.top-right .panel-content,
 .truebeep-loyalty-panel.top-left .panel-content {
-    bottom: auto;
-    top: 80px;
+  bottom: auto;
+  top: 80px;
 }
 
 .truebeep-loyalty-panel.active .panel-content {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 /* Panel header */
 .panel-header {
-    padding: 12px 16px 0;
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
+  padding: 12px 16px 0;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
 }
 
 .panel-close {
-    background: none;
-    border: none;
-    color: #999;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 .panel-close:hover {
-    opacity: 0.6;
+  opacity: 0.6;
 }
 
 /* Panel body */
 .panel-body {
-    padding: 8px 20px 20px;
+  padding: 8px 20px 20px;
 }
 
 /* Welcome Message */
 .welcome-message {
-    font-size: 16px;
-    color: #333333;
-    margin-bottom: 16px;
-    line-height: 1.4;
+  font-size: 16px;
+  color: #333333;
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 
 .user-name {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 /* Points Display */
 .points-display {
-    margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .points-number {
-    font-size: 32px;
-    font-weight: bold;
-    color: #4A90E2;
-    line-height: 1;
-    margin-right: 8px;
+  color: transparent;
+  background: linear-gradient(to left, #4d84ff, #3330fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 26px;
+  margin-right: 4px;
+  font-weight: 600;
 }
 
 .points-label {
-    font-size: 16px;
-    color: #666666;
-    font-weight: 500;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 400;
 }
 
 /* Tier Badge */
 .tier-badge {
-    margin-bottom: 20px;
+  margin-bottom: 42px;
 }
 
 .tier-label {
-    background: #333333;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 12px;
-    text-transform: uppercase;
-    display: inline-block;
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #fff;
+  background: #333;
+  border-radius: 12px;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 /* Wallet Description */
 .wallet-description {
-    color: #666666;
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 16px;
-    margin-top: 0;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 24px 0 16px 0;
+  font-size: 13px;
 }
 
 /* Wallet Buttons */
 .wallet-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  gap: 12px;
 }
 
-.wallet-btn {
-    display: flex;
-    align-items: center;
-    background: #000000;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    padding: 8px 12px;
-    transition: all 0.2s;
-    min-height: 40px;
+.wallet-btn img {
+  max-width: 100%;
+  height: auto;
 }
 
-.wallet-btn:hover {
-    background: #333333;
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.wallet-btn.google-wallet {
-    background: #4285F4;
-}
-
-.wallet-btn.google-wallet:hover {
-    background: #3367d6;
-    color: white;
-}
-
-.wallet-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.wallet-icon svg {
-    width: 16px;
-    height: 16px;
-}
-
-.wallet-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-}
 
 .add-to-text {
-    font-size: 11px;
-    opacity: 0.8;
-    margin-bottom: 1px;
+  font-size: 11px;
+  opacity: 0.8;
+  margin-bottom: 1px;
 }
 
 .wallet-name {
-    font-size: 13px;
-    font-weight: 600;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* Panel footer */
 .panel-footer {
-    padding: 16px 20px;
-    background: #f8f9fa;
-    text-align: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  text-align: center;
 }
 
 .view-history-link {
-    color: #667eea;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: color 0.2s;
+  color: #667eea;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .view-history-link:hover {
-    color: #764ba2;
-    text-decoration: underline;
+  color: #764ba2;
+  text-decoration: underline;
 }
 
 /* Loading state */
 .panel-loading {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.95);
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
 .truebeep-loyalty-panel.loading .panel-loading {
-    display: flex;
+  display: flex;
 }
 
 .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mobile responsiveness */
 @media (max-width: 480px) {
-    .truebeep-loyalty-panel {
-        bottom: 10px !important;
-        right: 10px !important;
-        left: 10px !important;
-    }
-    
-    .panel-content {
-        width: calc(100vw - 20px);
-        right: 0;
-        left: 0;
-    }
-    
-    .panel-toggle {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .panel-toggle svg {
-        width: 24px;
-        height: 24px;
-    }
-    
-    .wallet-buttons {
-        grid-template-columns: 1fr;
-    }
+  .truebeep-loyalty-panel {
+    bottom: 10px !important;
+    right: 10px !important;
+    left: 10px !important;
+  }
+
+  .panel-content {
+    width: calc(100vw - 20px);
+    right: 0;
+    left: 0;
+  }
+
+  .panel-toggle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .panel-toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wallet-buttons {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Hide panel toggle on certain pages */
 body.woocommerce-checkout .truebeep-loyalty-panel,
 body.woocommerce-cart .truebeep-loyalty-panel {
-    display: none;
+  display: none;
 }
