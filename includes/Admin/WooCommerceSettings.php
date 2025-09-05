@@ -126,14 +126,14 @@ class WooCommerceSettings
                 'id' => 'truebeep_loyalty_section'
             ],
             [
-                'title' => __('Ways to Redeem', 'truebeep'),
-                'desc' => __('Select how customers can redeem their points', 'truebeep'),
+                'title' => __('Redemption Method', 'truebeep'),
+                'desc' => __('Choose how customers will convert their points into discounts.', 'truebeep'),
                 'id' => 'truebeep_redeem_method',
                 'type' => 'radio',
                 'default' => 'dynamic_coupon',
                 'options' => [
-                    'dynamic_coupon' => __('Dynamic Coupon', 'truebeep'),
-                    'coupon' => __('Coupon', 'truebeep')
+                    'dynamic_coupon' => __('Flexible Redemption (Customers can redeem any amount of points for instant discounts.))', 'truebeep'),
+                    'coupon' => __('Fixed Rewards (Customers choose from preset point-to-discount combinations.))', 'truebeep')
                 ],
                 'desc_tip' => true,
             ],
@@ -142,8 +142,8 @@ class WooCommerceSettings
                 'id' => 'truebeep_coupons_settings'
             ],
             [
-                'title' => __('Earning Value', 'truebeep'),
-                'desc' => __('Order Amount to Points Conversion rate (for customers with no tier)', 'truebeep'),
+                'title' => __('Point Earning Rate', 'truebeep'),
+                'desc' => __('How many points customers earn for each $1 spent.', 'truebeep'),
                 'id' => 'truebeep_earning_value',
                 'type' => 'number',
                 'custom_attributes' => ['step' => '0.01', 'min' => '0'],
@@ -152,8 +152,8 @@ class WooCommerceSettings
                 'desc_tip' => true,
             ],
             [
-                'title' => __('Redeeming Value', 'truebeep'),
-                'desc' => __('How many points equal $1 (for customers with no tier)', 'truebeep'),
+                'title' => __('Point Value', 'truebeep'),
+                'desc' => __('The $ value of each point when customers redeem them.', 'truebeep'),
                 'id' => 'truebeep_redeeming_value',
                 'type' => 'number',
                 'custom_attributes' => ['step' => '0.01', 'min' => '0'],
@@ -162,8 +162,8 @@ class WooCommerceSettings
                 'desc_tip' => true,
             ],
             [
-                'title' => __('Earn Points on Redeemed Orders', 'truebeep'),
-                'desc' => __('Allow customers to earn points on orders where points were redeemed', 'truebeep'),
+                'title' => __('Points on Discounted Orders', 'truebeep'),
+                'desc' => __('Allow customers to earn new points even when using points for discounts. Great for encouraging repeat purchases!', 'truebeep'),
                 'id' => 'truebeep_earn_on_redeemed',
                 'type' => 'checkbox',
                 'default' => 'no',

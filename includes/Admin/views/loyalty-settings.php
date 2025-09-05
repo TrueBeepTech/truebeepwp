@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Loyalty settings view
  * 
@@ -15,6 +16,7 @@ if (!defined('ABSPATH')) {
         <tr valign="top">
             <th scope="row" class="titledesc">
                 <label><?php _e('Tiers', 'truebeep'); ?></label>
+                <p style="font-weight: normal; text-size:12px; color: #646970"><?php _e('Create membership levels with different earning rates and benefits. Customers automatically upgrade as they earn more points.', 'truebeep'); ?></p>
             </th>
             <td class="forminp">
                 <div id="truebeep-tiers-container">
@@ -64,7 +66,7 @@ if (!defined('ABSPATH')) {
             <input type="hidden" id="edit-tier-index" />
             <table class="form-table">
                 <tr>
-                    <th><label for="edit-tier-name"><?php _e('Tier Name', 'truebeep'); ?></label></th>
+                    <th><label for="edit-tier-name"><?php _e('Tier Name (e.g. "Bronze", "Silver", "Gold")', 'truebeep'); ?></label></th>
                     <td><input type="text" id="edit-tier-name" class="regular-text" /></td>
                 </tr>
                 <tr>
@@ -76,7 +78,7 @@ if (!defined('ABSPATH')) {
                     <td><input type="number" id="edit-tier-points-amount" class="regular-text" step="0.01" min="0" /></td>
                 </tr>
                 <tr>
-                    <th><label for="edit-tier-threshold"><?php _e('Upgrade Threshold Points', 'truebeep'); ?></label></th>
+                    <th><label for="edit-tier-threshold"><?php _e('Points to Reach This Tier', 'truebeep'); ?></label></th>
                     <td><input type="number" id="edit-tier-threshold" class="regular-text" min="0" /></td>
                 </tr>
             </table>
