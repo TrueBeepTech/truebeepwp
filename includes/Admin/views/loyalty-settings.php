@@ -32,7 +32,7 @@ if (!defined('ABSPATH')) {
                         </thead>
                         <tbody id="truebeep-tiers-list">
                             <?php foreach ($tiers as $index => $tier) : ?>
-                                <tr class="tier-row" data-index="<?php echo $index; ?>">
+                                <tr class="tier-row" data-index="<?php echo esc_attr($index); ?>">
                                     <td><?php echo esc_html($tier['name']); ?></td>
                                     <td><?php echo esc_html($tier['order_to_points'] ?? '1'); ?></td>
                                     <td><?php echo esc_html($tier['points_to_amount'] ?? '1'); ?></td>

@@ -454,15 +454,15 @@ class LoyaltyHandler
         $points_redeemed = $order->get_meta('_truebeep_points_redeemed_amount');
 
         if ($points_earned || $points_redeemed) {
-            echo '<h2>' . __('Loyalty Points', 'truebeep') . '</h2>';
+            echo '<h2>' . esc_html__('Loyalty Points', 'truebeep') . '</h2>';
             echo '<table class="woocommerce-table woocommerce-table--loyalty-points">';
 
             if ($points_earned) {
                 echo '<tr>';
-                echo '<th>' . __('Points Earned:', 'truebeep') . '</th>';
-                echo '<td>' . $points_earned;
+                echo '<th>' . esc_html__('Points Earned:', 'truebeep') . '</th>';
+                echo '<td>' . esc_html($points_earned);
                 if ($points_revoked === 'yes') {
-                    echo ' <span style="color: red;">(' . __('Revoked', 'truebeep') . ')</span>';
+                    echo ' <span style="color: red;">(' . esc_html__('Revoked', 'truebeep') . ')</span>';
                 }
                 echo '</td>';
                 echo '</tr>';
@@ -470,8 +470,8 @@ class LoyaltyHandler
 
             if ($points_redeemed) {
                 echo '<tr>';
-                echo '<th>' . __('Points Redeemed:', 'truebeep') . '</th>';
-                echo '<td>' . $points_redeemed . '</td>';
+                echo '<th>' . esc_html__('Points Redeemed:', 'truebeep') . '</th>';
+                echo '<td>' . esc_html($points_redeemed) . '</td>';
                 echo '</tr>';
             }
 
@@ -495,24 +495,24 @@ class LoyaltyHandler
         if ($points_earned || $points_redeemed) {
 ?>
             <div class="truebeep-loyalty-points-info" style="margin-top: 20px;">
-                <h3><?php _e('Truebeep Loyalty Points', 'truebeep'); ?></h3>
+                <h3><?php esc_html_e('Truebeep Loyalty Points', 'truebeep'); ?></h3>
                 <table style="width: 100%; border-collapse: collapse;">
                     <?php if ($points_earned): ?>
                     <tr>
-                        <td style="padding: 5px 0;"><strong><?php _e('Points Earned:', 'truebeep'); ?></strong></td>
+                        <td style="padding: 5px 0;"><strong><?php esc_html_e('Points Earned:', 'truebeep'); ?></strong></td>
                         <td style="padding: 5px 0;">
                             <?php echo number_format($points_earned); ?>
                             <?php if ($points_awarded === 'yes'): ?>
-                                <span style="color: green; font-size: 12px;">(<?php _e('Awarded', 'truebeep'); ?>)</span>
+                                <span style="color: green; font-size: 12px;">(<?php esc_html_e('Awarded', 'truebeep'); ?>)</span>
                             <?php endif; ?>
                             <?php if ($points_revoked === 'yes'): ?>
-                                <span style="color: red; font-size: 12px;">(<?php _e('Revoked', 'truebeep'); ?>)</span>
+                                <span style="color: red; font-size: 12px;">(<?php esc_html_e('Revoked', 'truebeep'); ?>)</span>
                             <?php endif; ?>
                             <?php if ($points_refunded > 0): ?>
                                 <span style="color: orange; font-size: 12px;">
                                     (<?php 
                                     /* translators: %s: number of points deducted */
-                                    printf(__('%s points deducted for refunds', 'truebeep'), number_format($points_refunded)); 
+                                    printf(esc_html__('%s points deducted for refunds', 'truebeep'), esc_html(number_format($points_refunded))); 
                                     ?>)
                                 </span>
                             <?php endif; ?>
@@ -522,16 +522,16 @@ class LoyaltyHandler
 
                     <?php if ($points_redeemed): ?>
                     <tr>
-                        <td style="padding: 5px 0;"><strong><?php _e('Points Redeemed:', 'truebeep'); ?></strong></td>
+                        <td style="padding: 5px 0;"><strong><?php esc_html_e('Points Redeemed:', 'truebeep'); ?></strong></td>
                         <td style="padding: 5px 0;">
                             <?php echo number_format($points_redeemed); ?>
                             <?php if ($points_returned === 'yes'): ?>
-                                <span style="color: green; font-size: 12px;">(<?php _e('Fully Returned', 'truebeep'); ?>)</span>
+                                <span style="color: green; font-size: 12px;">(<?php esc_html_e('Fully Returned', 'truebeep'); ?>)</span>
                             <?php elseif ($points_partial_returned > 0): ?>
                                 <span style="color: orange; font-size: 12px;">
                                     (<?php 
                                     /* translators: %s: number of points returned */
-                                    printf(__('%s points returned', 'truebeep'), number_format($points_partial_returned)); 
+                                    printf(esc_html__('%s points returned', 'truebeep'), esc_html(number_format($points_partial_returned))); 
                                     ?>)
                                 </span>
                             <?php endif; ?>

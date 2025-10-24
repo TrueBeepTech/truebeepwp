@@ -1,12 +1,16 @@
-# Truebeep: Smart Wallet Loyalty
-
-
-[![WordPress Plugin](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
-[![WooCommerce](https://img.shields.io/badge/WooCommerce-4.0%2B-purple.svg)](https://woocommerce.com/)
-[![PHP Version](https://img.shields.io/badge/PHP-7.2%2B-8892BF.svg)](https://php.net/)
-[![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+=== Truebeep: Smart Wallet Loyalty ===
+Contributors: truebeep
+Tags: loyalty, points, wallet, woocommerce, rewards
+Requires at least: 5.0
+Tested up to: 6.8
+Requires PHP: 7.2
+Stable tag: 2.0.8
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
+
+== Description ==
 
 ## 🎯 Overview
 
@@ -65,9 +69,7 @@ Truebeep offers a comprehensive loyalty and marketing platform designed to enhan
 - **Bulk Actions**: Process multiple point adjustments efficiently
 - **Detailed Logging**: Complete audit trail of all point transactions
 
-## 🚀 Quick Start
-
-### Installation
+== Installation ==
 
 1. Upload the plugin to `/wp-content/plugins/truebeep/`
 2. Activate through the WordPress Plugins menu
@@ -76,16 +78,14 @@ Truebeep offers a comprehensive loyalty and marketing platform designed to enhan
 5. Configure loyalty settings
 6. Start rewarding customers!
 
-### Basic Configuration
+== Frequently Asked Questions ==
 
-### Connect TrueBeep to Shopify
-
-To connect TrueBeep to your wp store, add the API URL and API Key in the TrueBeep settings:
+= How do I configure the API settings? =
 
 1. Use `https://api.truebeep.com/v1` as the API URL
 2. Enter your API Key generated from the TrueBeep dashboard
 
-### Add Wallet Pass
+= How do I add a wallet pass? =
 
 To add a wallet pass for your customers, navigate to the TrueBeep dashboard and follow these steps:
 
@@ -197,9 +197,9 @@ $this->update_loyalty_points($customer_id, $points, 'increment', 'reason');
 - 📖 Docs: [Full Documentation](DOCUMENTATION.md)
 
 
-## 🔄 Changelog
+== Changelog ==
 
-### Version 1.0.0 (2025)
+= 2.0.8 =
 - ✅ Initial release
 - ✅ Points earning and redemption system
 - ✅ Tier-based rewards structure

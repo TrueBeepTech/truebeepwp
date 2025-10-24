@@ -34,7 +34,7 @@ $sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
             <?php if ($last_sync): ?>
                 <p class="description"><?php 
                 /* translators: %s: last sync date/time */
-                printf(__('Last sync: %s', 'truebeep'), $last_sync); 
+                printf(esc_html__('Last sync: %s', 'truebeep'), esc_html($last_sync)); 
                 ?></p>
             <?php endif; ?>
         </td>
@@ -42,11 +42,11 @@ $sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
     <tr>
         <th></th>
         <td>
-            <button type="button" class="button" id="truebeep-sync-user" data-user-id="<?php echo $user->ID; ?>">
+            <button type="button" class="button" id="truebeep-sync-user" data-user-id="<?php echo esc_attr($user->ID); ?>">
                 <?php esc_html_e('Sync with Truebeep', 'truebeep'); ?>
             </button>
             <?php if (!empty($truebeep_customer_id)): ?>
-                <button type="button" class="button" id="truebeep-remove-sync" data-user-id="<?php echo $user->ID; ?>">
+                <button type="button" class="button" id="truebeep-remove-sync" data-user-id="<?php echo esc_attr($user->ID); ?>">
                     <?php esc_html_e('Remove Truebeep Link', 'truebeep'); ?>
                 </button>
             <?php endif; ?>
@@ -65,7 +65,7 @@ $sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
             $.post(ajaxurl, {
                 action: 'truebeep_sync_user',
                 user_id: userId,
-                nonce: '<?php echo wp_create_nonce('truebeep_sync_user'); ?>'
+                nonce: '<?php echo esc_js(wp_create_nonce('truebeep_sync_user')); ?>'
             }, function(response) {
                 if (response.success) {
                     location.reload();
@@ -89,7 +89,7 @@ $sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
             $.post(ajaxurl, {
                 action: 'truebeep_remove_sync',
                 user_id: userId,
-                nonce: '<?php echo wp_create_nonce('truebeep_remove_sync'); ?>'
+                nonce: '<?php echo esc_js(wp_create_nonce('truebeep_remove_sync')); ?>'
             }, function(response) {
                 location.reload();
             });

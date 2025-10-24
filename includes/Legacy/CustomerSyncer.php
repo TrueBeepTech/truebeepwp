@@ -80,7 +80,7 @@ class CustomerSyncer
         $response = $this->create_truebeep_customers_bulk($customers_to_sync);
         
         if (is_wp_error($response)) {
-            error_log('Truebeep Bulk Sync Error: ' . $response->get_error_message());
+            truebeep_log('Bulk Sync Error: ' . $response->get_error_message(), 'CustomerSyncer');
             foreach ($user_id_map as $user_id) {
                 $result['failed']++;
                 $result['errors'][$user_id] = $response->get_error_message();
@@ -90,7 +90,7 @@ class CustomerSyncer
         }
 
         if (!$response['success']) {
-            error_log('Truebeep Bulk Sync Failed: ' . ($response['error'] ?? 'Unknown error'));
+            truebeep_log('Bulk Sync Failed: ' . ($response['error'] ?? 'Unknown error'), 'CustomerSyncer');
             foreach ($user_id_map as $user_id) {
                 $result['failed']++;
                 $result['errors'][$user_id] = $response['error'] ?? 'Failed to sync customer';
@@ -161,7 +161,7 @@ class CustomerSyncer
             } else {
                 $result['failed']++;
                 $result['errors'][$user_id] = 'No customer ID in response';
-                error_log('No customer ID found for user ' . $user_id . ' in response: ' . json_encode($customer));
+                truebeep_log('No customer ID found for user ' . $user_id . ' in response', 'CustomerSyncer', ['response' => $customer]);
             }
         }
 
@@ -291,22 +291,48 @@ class CustomerSyncer
      */
     public function get_customers_to_sync()
     {
-        global $wpdb;
-
-        $query = "
-            SELECT u.ID 
-            FROM {$wpdb->users} u
-            LEFT JOIN {$wpdb->usermeta} tb ON u.ID = tb.user_id AND tb.meta_key = '_truebeep_customer_id'
-            WHERE tb.meta_value IS NULL OR tb.meta_value = '' OR tb.meta_value = '0'
-            ORDER BY u.ID ASC
-        ";
-
-        $user_ids = $wpdb->get_col($query);
+        // Try to get from cache first
+        $cache_key = 'truebeep_customers_to_sync';
+        $cached_result = wp_cache_get($cache_key, 'truebeep_sync');
+        
+        if ($cached_result !== false) {
+            return $cached_result;
+        }
+        
+        // Get users without valid Truebeep customer ID using WordPress functions
+        $users_without_truebeep = get_users([
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key'     => '_truebeep_customer_id',
+                    'compare' => 'NOT EXISTS'
+                ],
+                [
+                    'key'     => '_truebeep_customer_id',
+                    'value'   => '',
+                    'compare' => '='
+                ],
+                [
+                    'key'     => '_truebeep_customer_id',
+                    'value'   => '0',
+                    'compare' => '='
+                ]
+            ],
+            'fields' => 'ID',
+            'orderby' => 'ID',
+            'order' => 'ASC'
+        ]);
+        
+        $user_ids = is_array($users_without_truebeep) ? $users_without_truebeep : [];
         $order_customer_ids = $this->get_order_customer_ids();
         
         $all_customer_ids = array_unique(array_merge($user_ids, $order_customer_ids));
+        $result = array_values($all_customer_ids);
         
-        return array_values($all_customer_ids);
+        // Cache for 5 minutes since this data changes frequently during sync
+        wp_cache_set($cache_key, $result, 'truebeep_sync', 300);
+        
+        return $result;
     }
 
     /**
@@ -319,21 +345,47 @@ class CustomerSyncer
      */
     private function get_order_customer_ids()
     {
-        global $wpdb;
-
-        $query = "
-            SELECT DISTINCT pm.meta_value as customer_id
-            FROM {$wpdb->posts} p
-            INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-            LEFT JOIN {$wpdb->usermeta} tb 
-                ON pm.meta_value = tb.user_id AND tb.meta_key = '_truebeep_customer_id'
-            WHERE p.post_type = 'shop_order'
-            AND pm.meta_key = '_customer_user'
-            AND pm.meta_value > 0
-            AND (tb.meta_value IS NULL OR tb.meta_value = '' OR tb.meta_value = '0')
-        ";
-
-        return $wpdb->get_col($query);
+        // Try to get from cache first
+        $cache_key = 'truebeep_order_customer_ids';
+        $cached_result = wp_cache_get($cache_key, 'truebeep_sync');
+        
+        if ($cached_result !== false) {
+            return $cached_result;
+        }
+        
+        // Get customer IDs from orders using WordPress functions
+        $orders = get_posts([
+            'post_type' => 'shop_order',
+            'post_status' => 'any',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'meta_query' => [
+                [
+                    'key' => '_customer_user',
+                    'value' => 0,
+                    'compare' => '>'
+                ]
+            ]
+        ]);
+        
+        $customer_ids = [];
+        foreach ($orders as $order_id) {
+            $customer_id = get_post_meta($order_id, '_customer_user', true);
+            if ($customer_id && $customer_id > 0) {
+                // Check if customer doesn't have Truebeep ID
+                $truebeep_id = get_user_meta($customer_id, '_truebeep_customer_id', true);
+                if (empty($truebeep_id) || $truebeep_id === '0') {
+                    $customer_ids[] = $customer_id;
+                }
+            }
+        }
+        
+        $result = array_unique($customer_ids);
+        
+        // Cache for 10 minutes since order data is relatively stable
+        wp_cache_set($cache_key, $result, 'truebeep_sync', 600);
+        
+        return $result;
     }
 
     /**
@@ -410,5 +462,19 @@ class CustomerSyncer
         }
 
         return $progress;
+    }
+    
+    /**
+     * Clear sync-related caches
+     * 
+     * Clears all cached database query results to ensure fresh data
+     * is retrieved after sync operations or user changes.
+     * 
+     * @return void
+     */
+    public function clear_sync_caches()
+    {
+        wp_cache_delete('truebeep_customers_to_sync', 'truebeep_sync');
+        wp_cache_delete('truebeep_order_customer_ids', 'truebeep_sync');
     }
 }

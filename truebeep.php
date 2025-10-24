@@ -47,7 +47,7 @@ final class Truebeep
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_plugin_action_links']);
 
         // Initialize GitHub updater
-        $this->init_updater();
+        // WordPress.org handles updates automatically
     }
 
     /**
@@ -89,11 +89,8 @@ final class Truebeep
      */
     public function load_textdomain()
     {
-        load_plugin_textdomain(
-            'truebeep',
-            false,
-            dirname(plugin_basename(__FILE__)) . '/languages'
-        );
+        // WordPress.org automatically loads translations for hosted plugins
+        // No manual loading required for plugins hosted on WordPress.org
     }
 
     /**
@@ -121,11 +118,10 @@ final class Truebeep
     {
         // Check if WooCommerce is active when activating the plugin
         if (!$this->is_woocommerce_active()) {
-            // Load text domain for activation error
-            load_plugin_textdomain('truebeep', false, dirname(plugin_basename(__FILE__)) . '/languages');
+            // WordPress.org handles translations automatically
 
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die(__('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'));
+            wp_die(esc_html__('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'));
         }
 
         $installer = new Truebeep\Installer();
@@ -248,7 +244,7 @@ final class Truebeep
     {
 ?>
         <div class="error">
-            <p><?php _e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
+            <p><?php esc_html_e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
         </div>
 <?php
     }
@@ -306,36 +302,6 @@ final class Truebeep
         return admin_url('tools.php?page=truebeep-diagnostics');
     }
 
-    /**
-     * Initialize GitHub updater using the modular update system
-     *
-     * @return void
-     */
-    private function init_updater()
-    {
-        // Try new modular config first, fallback to legacy config
-        $config_file = TRUEBEEP_PATH . '/Update/update-config.php';
-        if (!file_exists($config_file)) {
-            $config_file = TRUEBEEP_PATH . '/github-config.php'; // Legacy fallback
-        }
-        
-        if (!file_exists($config_file)) {
-            return; // Skip updater if no config file exists
-        }
-
-        // Initialize the modular update manager
-        $update_manager = \Truebeep\Update\UpdateManager::from_config_file(
-            TRUEBEEP_FILE,
-            $config_file,
-            [
-                'text_domain' => 'truebeep',
-                'cache_prefix' => 'truebeep'
-            ]
-        );
-        
-        // Store reference for potential future use
-        $this->update_manager = $update_manager;
-    }
 }
 
 /**

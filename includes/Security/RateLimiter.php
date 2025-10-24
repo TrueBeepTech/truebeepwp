@@ -75,7 +75,7 @@ class RateLimiter
         
         foreach ($ip_keys as $key) {
             if (!empty($_SERVER[$key])) {
-                $ip = filter_var($_SERVER[$key], FILTER_VALIDATE_IP);
+                $ip = filter_var(sanitize_text_field(wp_unslash($_SERVER[$key])), FILTER_VALIDATE_IP);
                 if ($ip !== false) {
                     return $ip;
                 }

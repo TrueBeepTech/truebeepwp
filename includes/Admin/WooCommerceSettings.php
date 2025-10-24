@@ -383,7 +383,7 @@ class WooCommerceSettings
 
         // Save loyalty fields
         if (isset($_POST['redeem_method'])) {
-            update_option('truebeep_redeem_method', sanitize_text_field($_POST['redeem_method']));
+            update_option('truebeep_redeem_method', sanitize_text_field(wp_unslash($_POST['redeem_method'])));
         }
         if (isset($_POST['earning_value'])) {
             update_option('truebeep_earning_value', floatval($_POST['earning_value']));
@@ -392,33 +392,37 @@ class WooCommerceSettings
             update_option('truebeep_redeeming_value', floatval($_POST['redeeming_value']));
         }
         if (isset($_POST['earn_on_redeemed'])) {
-            update_option('truebeep_earn_on_redeemed', sanitize_text_field($_POST['earn_on_redeemed']) === 'true' ? 'yes' : 'no');
+            update_option('truebeep_earn_on_redeemed', sanitize_text_field(wp_unslash($_POST['earn_on_redeemed'])) === 'true' ? 'yes' : 'no');
         }
 
         // Save tiers
-        $tiers = isset($_POST['tiers']) ? $_POST['tiers'] : [];
         $sanitized_tiers = [];
-
-        foreach ($tiers as $tier) {
-            $sanitized_tiers[] = [
-                'name' => sanitize_text_field($tier['name']),
-                'order_to_points' => floatval($tier['order_to_points']),
-                'points_to_amount' => floatval($tier['points_to_amount']),
-                'threshold' => intval($tier['threshold'])
-            ];
+        if (isset($_POST['tiers']) && is_array($_POST['tiers'])) {
+            $tiers_input = map_deep(wp_unslash($_POST['tiers']), 'sanitize_text_field');
+            foreach ($tiers_input as $tier) {
+                if (!is_array($tier)) continue;
+                $sanitized_tiers[] = [
+                    'name' => sanitize_text_field($tier['name'] ?? ''),
+                    'order_to_points' => floatval($tier['order_to_points'] ?? 1),
+                    'points_to_amount' => floatval($tier['points_to_amount'] ?? 1),
+                    'threshold' => intval($tier['threshold'] ?? 0)
+                ];
+            }
         }
 
         update_option('truebeep_tiers', $sanitized_tiers);
 
         // Save coupons
-        $coupons = isset($_POST['coupons']) ? $_POST['coupons'] : [];
         $sanitized_coupons = [];
-
-        foreach ($coupons as $coupon) {
-            $sanitized_coupons[] = [
-                'name' => sanitize_text_field($coupon['name']),
-                'value' => floatval($coupon['value'])
-            ];
+        if (isset($_POST['coupons']) && is_array($_POST['coupons'])) {
+            $coupons_input = map_deep(wp_unslash($_POST['coupons']), 'sanitize_text_field');
+            foreach ($coupons_input as $coupon) {
+                if (!is_array($coupon)) continue;
+                $sanitized_coupons[] = [
+                    'name' => sanitize_text_field($coupon['name'] ?? ''),
+                    'value' => floatval($coupon['value'] ?? 0)
+                ];
+            }
         }
 
         update_option('truebeep_coupons', $sanitized_coupons);
@@ -435,14 +439,16 @@ class WooCommerceSettings
         }
 
         // Save coupons only
-        $coupons = isset($_POST['coupons']) ? $_POST['coupons'] : [];
         $sanitized_coupons = [];
-
-        foreach ($coupons as $coupon) {
-            $sanitized_coupons[] = [
-                'name' => sanitize_text_field($coupon['name']),
-                'value' => floatval($coupon['value'])
-            ];
+        if (isset($_POST['coupons']) && is_array($_POST['coupons'])) {
+            $coupons_input = map_deep(wp_unslash($_POST['coupons']), 'sanitize_text_field');
+            foreach ($coupons_input as $coupon) {
+                if (!is_array($coupon)) continue;
+                $sanitized_coupons[] = [
+                    'name' => sanitize_text_field($coupon['name'] ?? ''),
+                    'value' => floatval($coupon['value'] ?? 0)
+                ];
+            }
         }
 
         update_option('truebeep_coupons', $sanitized_coupons);
@@ -463,7 +469,7 @@ class WooCommerceSettings
             wp_send_json_error(['message' => __('You do not have permission to perform this action.', 'truebeep')]);
         }
         
-        $action = isset($_POST['connection_action']) ? sanitize_text_field($_POST['connection_action']) : '';
+        $action = isset($_POST['connection_action']) ? sanitize_text_field(wp_unslash($_POST['connection_action'])) : '';
         
         if ($action === 'connect') {
             // Send connect status to TrueBeep
@@ -517,7 +523,8 @@ class WooCommerceSettings
             return;
         }
 
-        if (isset($_GET['tab']) && $_GET['tab'] === 'truebeep') {
+        $current_tab = WC_Admin_Settings::get_current_tab();
+        if ($current_tab === 'truebeep') {
             wp_enqueue_script(
                 'truebeep-woocommerce-settings',
                 TRUEBEEP_URL . '/assets/js/admin/woocommerce-settings.js',

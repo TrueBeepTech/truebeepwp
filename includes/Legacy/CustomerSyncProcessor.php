@@ -182,7 +182,7 @@ class CustomerSyncProcessor
             if ($result['success']) {
                 $this->update_progress($result);
             } else {
-                error_log('Truebeep Sync Error: ' . json_encode($result));
+                truebeep_log('Sync Error in batch processing', 'CustomerSyncProcessor', $result);
                 
                 $progress = get_option('truebeep_sync_progress', []);
                 $progress['failed'] += count($batch);
@@ -190,7 +190,7 @@ class CustomerSyncProcessor
                 update_option('truebeep_sync_progress', $progress);
             }
         } catch (\Exception $e) {
-            error_log('Truebeep Sync Exception: ' . $e->getMessage());
+            truebeep_log('Sync Exception: ' . $e->getMessage(), 'CustomerSyncProcessor');
             
             $progress = get_option('truebeep_sync_progress', []);
             $progress['failed'] += count($batch);
@@ -228,7 +228,7 @@ class CustomerSyncProcessor
                 $customer_ids = $syncer->get_customers_to_sync();
                 $batches = array_chunk($customer_ids, self::BATCH_SIZE);
                 
-                error_log('Truebeep Sync: Rescheduling ' . count($customer_ids) . ' remaining customers in ' . count($batches) . ' batches');
+                truebeep_log('Rescheduling sync', 'CustomerSyncProcessor', ['customers' => count($customer_ids), 'batches' => count($batches)]);
                 
                 foreach ($batches as $index => $batch) {
                     $scheduled_time = time() + ($index * self::RATE_LIMIT_INTERVAL);
