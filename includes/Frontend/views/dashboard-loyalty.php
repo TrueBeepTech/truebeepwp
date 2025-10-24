@@ -33,7 +33,7 @@ if (!defined('ABSPATH')) {
             <p class="tier-status">
                 <?php 
                 /* translators: %s: Tier name */
-                printf(esc_html__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>'); 
+                echo wp_kses_post(sprintf(__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>')); 
                 ?>
             </p>
             <?php endif; ?>

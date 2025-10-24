@@ -74,12 +74,12 @@ class PointsRedemption
             <div class="points-balance">
                 <p><?php 
                 /* translators: %d: number of available points */
-                printf(esc_html__('Available Points: <strong>%d</strong>', 'truebeep'), esc_html($this->user_points)); 
+                printf(wp_kses_post(__('Available Points: <strong>%d</strong>', 'truebeep')), esc_html($this->user_points)); 
                 ?></p>
                 <?php if ($this->user_tier): ?>
                     <p><?php 
                     /* translators: %s: tier name */
-                    printf(esc_html__('Your Tier: <strong>%s</strong>', 'truebeep'), esc_html($this->user_tier['name'])); 
+                    printf(wp_kses_post(__('Your Tier: <strong>%s</strong>', 'truebeep')), esc_html($this->user_tier['name'])); 
                     ?></p>
                 <?php endif; ?>
             </div>

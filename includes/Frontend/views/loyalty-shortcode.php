@@ -51,7 +51,7 @@ $container_classes = [
             <p class="tier-status">
                 <?php 
                 /* translators: %s: tier name */
-                printf(esc_html__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>'); 
+                echo wp_kses_post(sprintf(__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>')); 
                 ?>
             </p>
             <?php endif; ?>

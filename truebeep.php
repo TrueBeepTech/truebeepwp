@@ -121,7 +121,7 @@ final class Truebeep
             // WordPress.org handles translations automatically
 
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die(esc_html__('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'));
+            wp_die('Truebeep requires WooCommerce to be installed and activated.');
         }
 
         $installer = new Truebeep\Installer();
@@ -242,6 +242,10 @@ final class Truebeep
      */
     public function woocommerce_missing_notice()
     {
+        // Only show notice after init to avoid translation loading issues
+        if (!did_action('init')) {
+            return;
+        }
 ?>
         <div class="error">
             <p><?php esc_html_e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
@@ -257,6 +261,11 @@ final class Truebeep
      */
     public function add_plugin_action_links($links)
     {
+        // Skip translation if called too early (before init hook)
+        if (!did_action('init')) {
+            return $links;
+        }
+        
         $settings_url = $this->get_settings_url();
         
         // Allow customization of documentation and support URLs

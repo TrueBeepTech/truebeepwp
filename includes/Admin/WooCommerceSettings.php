@@ -523,7 +523,9 @@ class WooCommerceSettings
             return;
         }
 
-        $current_tab = WC_Admin_Settings::get_current_tab();
+        // Get current tab safely without nonce verification (read-only check for script loading)
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for conditional script loading
+        $current_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : '';
         if ($current_tab === 'truebeep') {
             wp_enqueue_script(
                 'truebeep-woocommerce-settings',
