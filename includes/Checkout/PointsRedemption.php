@@ -72,9 +72,15 @@ class PointsRedemption
             <h3><?php _e('Redeem Loyalty Points', 'truebeep'); ?></h3>
 
             <div class="points-balance">
-                <p><?php printf(__('Available Points: <strong>%d</strong>', 'truebeep'), $this->user_points); ?></p>
+                <p><?php 
+                /* translators: %d: number of available points */
+                printf(__('Available Points: <strong>%d</strong>', 'truebeep'), $this->user_points); 
+                ?></p>
                 <?php if ($this->user_tier): ?>
-                    <p><?php printf(__('Your Tier: <strong>%s</strong>', 'truebeep'), $this->user_tier['name']); ?></p>
+                    <p><?php 
+                    /* translators: %s: tier name */
+                    printf(__('Your Tier: <strong>%s</strong>', 'truebeep'), $this->user_tier['name']); 
+                    ?></p>
                 <?php endif; ?>
             </div>
 
@@ -103,7 +109,10 @@ class PointsRedemption
                     </div>
                     <div class="points-message" id="points-message"></div>
                     <p class="max-discount-info">
-                        <?php printf(__('Maximum discount available: $%s', 'truebeep'), number_format($max_discount, 2)); ?>
+                        <?php 
+                        /* translators: %s: maximum discount amount */
+                        printf(__('Maximum discount available: $%s', 'truebeep'), number_format($max_discount, 2)); 
+                        ?>
                     </p>
                 </div>
             <?php else: // Predefined coupons 
@@ -122,6 +131,7 @@ class PointsRedemption
                                 <?php echo !$is_available ? 'disabled' : ''; ?>>
                                 <?php
                                 echo esc_html($coupon['name']) . ' - ' .
+                                    /* translators: %d: number of points required */
                                     sprintf(__('%d points', 'truebeep'), $points_required);
                                 if (!$is_available) {
                                     echo ' ' . __('(Insufficient points)', 'truebeep');
@@ -293,6 +303,7 @@ class PointsRedemption
         if ($discount > $cart_total) {
             $max_points = $this->calculate_points_from_discount($cart_total);
             wp_send_json_error([
+                /* translators: %d: maximum number of points that can be used */
                 'message' => sprintf(__('Maximum points you can use: %d', 'truebeep'), $max_points),
                 'max_points' => $max_points
             ]);
@@ -314,6 +325,7 @@ class PointsRedemption
         $discount_amount = WC()->session->get('truebeep_discount_amount');
 
         if ($points_redeemed && $discount_amount > 0) {
+            /* translators: %d: number of points redeemed */
             $label = sprintf(__('Loyalty Points Redemption (-%d points)', 'truebeep'), $points_redeemed);
 
             if (WC()->session->get('truebeep_coupon_used')) {
@@ -338,7 +350,8 @@ class PointsRedemption
             }
 
             $order->add_order_note(sprintf(
-                __('Customer redeemed %d loyalty points for a discount of %s', 'truebeep'),
+                /* translators: %1$d: number of points redeemed, %2$s: discount amount */
+                __('Customer redeemed %1$d loyalty points for a discount of %2$s', 'truebeep'),
                 $points_redeemed,
                 wc_price($discount_amount)
             ));

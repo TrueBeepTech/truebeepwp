@@ -138,15 +138,19 @@ class GitHubUpdater {
      * Maybe clear cache based on user actions
      */
     public function maybe_clear_cache() {
-        // Clear cache if force-check is requested
+        // Clear cache if force-check is requested with proper nonce
         if (isset($_GET['force-check']) && $_GET['force-check'] == 1) {
-            $this->clear_all_caches();
+            if (isset($_GET['_wpnonce']) && wp_verify_nonce($_GET['_wpnonce'], 'force_check_update') && current_user_can('update_plugins')) {
+                $this->clear_all_caches();
+            }
         }
         
-        // Clear cache on plugins page
+        // Clear cache on plugins page with proper nonce
         global $pagenow;
         if ($pagenow === 'plugins.php' && isset($_GET['force-check'])) {
-            $this->clear_all_caches();
+            if (isset($_GET['_wpnonce']) && wp_verify_nonce($_GET['_wpnonce'], 'force_check_update') && current_user_can('update_plugins')) {
+                $this->clear_all_caches();
+            }
         }
     }
     
@@ -185,7 +189,7 @@ class GitHubUpdater {
                 $this->cache_prefix . '_check_update'
             );
             
-            $links[] = '<a href="' . esc_url($check_url) . '">' . __('Check for update', $this->text_domain) . '</a>';
+            $links[] = '<a href="' . esc_url($check_url) . '">' . __('Check for update', 'truebeep') . '</a>';
         }
         
         return $links;
@@ -221,7 +225,8 @@ class GitHubUpdater {
         if (isset($_GET[$this->cache_prefix . '_update_checked'])) {
             add_action('admin_notices', function() {
                 echo '<div class="notice notice-success is-dismissible">';
-                echo '<p>' . sprintf(__('Update check completed for %s plugin.', $this->text_domain), $this->plugin_data['Name']) . '</p>';
+                /* translators: %s: Plugin name */
+                echo '<p>' . sprintf(esc_html__('Update check completed for %s plugin.', 'truebeep'), esc_html($this->plugin_data['Name'])) . '</p>';
                 echo '</div>';
             });
         }

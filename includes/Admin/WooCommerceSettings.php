@@ -55,7 +55,7 @@ class WooCommerceSettings
         echo '<ul class="subsubsub">';
         $array_keys = array_keys($sections);
         foreach ($sections as $id => $label) {
-            echo '<li><a href="' . admin_url('admin.php?page=wc-settings&tab=truebeep&section=' . sanitize_title($id)) . '" class="' . ($current_section == $id ? 'current' : '') . '">' . $label . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
+            echo '<li><a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep&section=' . sanitize_title($id))) . '" class="' . esc_attr($current_section == $id ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
         }
         echo '</ul><br class="clear" />';
     }
@@ -292,34 +292,34 @@ class WooCommerceSettings
             ?>
             <tr valign="top" id="coupon-settings-section" style="display:none;">
                 <th scope="row" class="titledesc">
-                    <label><?php _e('Coupons', 'truebeep'); ?></label>
+                    <label><?php esc_html_e('Coupons', 'truebeep'); ?></label>
                 </th>
                 <td class="forminp">
                     <div id="truebeep-coupons-container">
                         <table class="wp-list-table widefat fixed striped" id="truebeep-coupons-table">
                             <thead>
                                 <tr>
-                                    <th><?php _e('Coupon Name', 'truebeep'); ?></th>
-                                    <th><?php _e('Value', 'truebeep'); ?></th>
-                                    <th><?php _e('Actions', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Coupon Name', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Value', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Actions', 'truebeep'); ?></th>
                                 </tr>
                             </thead>
                             <tbody id="truebeep-coupons-list">
                                 <?php foreach ($coupons as $index => $coupon) : ?>
-                                    <tr class="coupon-row" data-index="<?php echo $index; ?>">
+                                    <tr class="coupon-row" data-index="<?php echo esc_attr($index); ?>">
                                         <td><?php echo esc_html($coupon['name']); ?></td>
                                         <td>$<?php echo esc_html($coupon['value']); ?></td>
                                         <td>
-                                            <button type="button" class="button edit-coupon" data-coupon='<?php echo json_encode($coupon); ?>' data-index="<?php echo $index; ?>"><?php _e('Edit', 'truebeep'); ?></button>
-                                            <button type="button" class="button remove-coupon" data-index="<?php echo $index; ?>"><?php _e('Remove', 'truebeep'); ?></button>
+                                            <button type="button" class="button edit-coupon" data-coupon='<?php echo esc_attr(json_encode($coupon)); ?>' data-index="<?php echo esc_attr($index); ?>"><?php esc_html_e('Edit', 'truebeep'); ?></button>
+                                            <button type="button" class="button remove-coupon" data-index="<?php echo esc_attr($index); ?>"><?php esc_html_e('Remove', 'truebeep'); ?></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
                         <p>
-                            <button type="button" class="button button-secondary" id="add-coupon-button"><?php _e('Add New Coupon', 'truebeep'); ?></button>
-                            <button type="button" class="button button-primary" id="save-coupons-button"><?php _e('Save Coupons', 'truebeep'); ?></button>
+                            <button type="button" class="button button-secondary" id="add-coupon-button"><?php esc_html_e('Add New Coupon', 'truebeep'); ?></button>
+                            <button type="button" class="button button-primary" id="save-coupons-button"><?php esc_html_e('Save Coupons', 'truebeep'); ?></button>
                         </p>
                     </div>
                 </td>
@@ -378,7 +378,7 @@ class WooCommerceSettings
         check_ajax_referer('truebeep_save_loyalty', 'nonce');
 
         if (!current_user_can('manage_woocommerce')) {
-            wp_die(__('You do not have permission to perform this action.', 'truebeep'));
+            wp_die(esc_html__('You do not have permission to perform this action.', 'truebeep'));
         }
 
         // Save loyalty fields
@@ -392,7 +392,7 @@ class WooCommerceSettings
             update_option('truebeep_redeeming_value', floatval($_POST['redeeming_value']));
         }
         if (isset($_POST['earn_on_redeemed'])) {
-            update_option('truebeep_earn_on_redeemed', $_POST['earn_on_redeemed'] === 'true' ? 'yes' : 'no');
+            update_option('truebeep_earn_on_redeemed', sanitize_text_field($_POST['earn_on_redeemed']) === 'true' ? 'yes' : 'no');
         }
 
         // Save tiers
@@ -431,7 +431,7 @@ class WooCommerceSettings
         check_ajax_referer('truebeep_save_coupons', 'nonce');
 
         if (!current_user_can('manage_woocommerce')) {
-            wp_die(__('You do not have permission to perform this action.', 'truebeep'));
+            wp_die(esc_html__('You do not have permission to perform this action.', 'truebeep'));
         }
 
         // Save coupons only

@@ -63,7 +63,11 @@ class InteractionHandler
             $order->add_order_note(__('Order interaction successfully sent to Truebeep', 'truebeep'));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-            $order->add_order_note(sprintf(__('Failed to send order interaction to Truebeep: %s', 'truebeep'), $error_message));
+            $order->add_order_note(sprintf(
+                /* translators: %s: error message */
+                __('Failed to send order interaction to Truebeep: %s', 'truebeep'), 
+                $error_message
+            ));
         }
     }
 
@@ -126,7 +130,11 @@ class InteractionHandler
             $order->add_order_note(__('Refund interaction successfully sent to Truebeep', 'truebeep'));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-            $order->add_order_note(sprintf(__('Failed to send refund interaction to Truebeep: %s', 'truebeep'), $error_message));
+            $order->add_order_note(sprintf(
+                /* translators: %s: error message */
+                __('Failed to send refund interaction to Truebeep: %s', 'truebeep'), 
+                $error_message
+            ));
         }
     }
 
@@ -173,12 +181,17 @@ class InteractionHandler
             $order->save();
             
             $order->add_order_note(sprintf(
+                /* translators: %s: refund ID */
                 __('Partial refund interaction sent to Truebeep (Refund #%s)', 'truebeep'),
                 $refund_id
             ));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-            $order->add_order_note(sprintf(__('Failed to send partial refund interaction to Truebeep: %s', 'truebeep'), $error_message));
+            $order->add_order_note(sprintf(
+                /* translators: %s: error message */
+                __('Failed to send partial refund interaction to Truebeep: %s', 'truebeep'), 
+                $error_message
+            ));
         }
     }
 

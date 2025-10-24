@@ -83,7 +83,7 @@ class LoyaltyPanel
         include __DIR__ . '/views/loyalty-panel.php';
         $panel_html = ob_get_clean();
 
-        echo $panel_html;
+        echo wp_kses_post($panel_html);
     }
 
 

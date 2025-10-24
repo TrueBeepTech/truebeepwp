@@ -110,6 +110,7 @@ trait ApiHelper
 
         foreach ($required_fields as $field) {
             if (empty($customer_data[$field])) {
+                /* translators: %s: field name */
                 return new \WP_Error('missing_field', sprintf(__('Required field %s is missing', 'truebeep'), $field));
             }
         }

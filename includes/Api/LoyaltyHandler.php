@@ -106,11 +106,19 @@ class LoyaltyHandler
                 $this->sync_customer_points_from_api($customer_id, $user_id);
             }
 
-            $order->add_order_note(sprintf(__('Awarded %s loyalty points to customer via Truebeep', 'truebeep'), $points));
+            $order->add_order_note(sprintf(
+                /* translators: %s: number of points awarded */
+                __('Awarded %s loyalty points to customer via Truebeep', 'truebeep'), 
+                $points
+            ));
             truebeep_log('Points awarded: ' . $points . ' points to order #' . $order_id, 'LoyaltyHandler');
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-            $order->add_order_note(sprintf(__('Failed to award loyalty points: %s', 'truebeep'), $error_message));
+            $order->add_order_note(sprintf(
+                /* translators: %s: error message */
+                __('Failed to award loyalty points: %s', 'truebeep'), 
+                $error_message
+            ));
             truebeep_log('Failed to award points to order #' . $order_id, 'LoyaltyHandler', ['error' => $error_message]);
         }
     }
@@ -172,11 +180,19 @@ class LoyaltyHandler
                 $this->sync_customer_points_from_api($customer_id, $user_id);
             }
 
-            $order->add_order_note(sprintf(__('Revoked %s loyalty points from customer via Truebeep', 'truebeep'), $points_earned));
+            $order->add_order_note(sprintf(
+                /* translators: %s: number of points revoked */
+                __('Revoked %s loyalty points from customer via Truebeep', 'truebeep'), 
+                $points_earned
+            ));
             truebeep_log('Points revoked: ' . $points_earned . ' points from order #' . $order->get_id(), 'LoyaltyHandler');
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-            $order->add_order_note(sprintf(__('Failed to revoke loyalty points: %s', 'truebeep'), $error_message));
+            $order->add_order_note(sprintf(
+                /* translators: %s: error message */
+                __('Failed to revoke loyalty points: %s', 'truebeep'), 
+                $error_message
+            ));
             truebeep_log('Failed to revoke points from order #' . $order->get_id(), 'LoyaltyHandler', ['error' => $error_message]);
         }
     }
@@ -221,12 +237,14 @@ class LoyaltyHandler
             }
 
             $order->add_order_note(sprintf(
+                /* translators: %s: number of points returned */
                 __('Returned %s redeemed loyalty points to customer via Truebeep', 'truebeep'), 
                 $points_redeemed
             ));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
+                /* translators: %s: error message */
                 __('Failed to return redeemed loyalty points: %s', 'truebeep'), 
                 $error_message
             ));
@@ -269,7 +287,11 @@ class LoyaltyHandler
                     $order->update_meta_data('_truebeep_points_refunded', $total_refunded_points);
                     $order->save();
 
-                    $order->add_order_note(sprintf(__('Deducted %s loyalty points due to partial refund', 'truebeep'), $points_to_deduct));
+                    $order->add_order_note(sprintf(
+                        /* translators: %s: number of points deducted */
+                        __('Deducted %s loyalty points due to partial refund', 'truebeep'), 
+                        $points_to_deduct
+                    ));
                 }
             }
         }
@@ -293,13 +315,18 @@ class LoyaltyHandler
                     $order->save();
 
                     $order->add_order_note(sprintf(
-                        __('Returned %s redeemed loyalty points due to partial refund (%.1f%% of order)', 'truebeep'), 
+                        /* translators: %1$s: number of points returned, %2$.1f: refund percentage */
+                        __('Returned %1$s redeemed loyalty points due to partial refund (%2$.1f%% of order)', 'truebeep'), 
                         $points_to_return,
                         $refund_percentage * 100
                     ));
                 } else {
                     $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-                    $order->add_order_note(sprintf(__('Failed to return redeemed points for partial refund: %s', 'truebeep'), $error_message));
+                    $order->add_order_note(sprintf(
+                        /* translators: %s: error message */
+                        __('Failed to return redeemed points for partial refund: %s', 'truebeep'), 
+                        $error_message
+                    ));
                 }
             }
         }
@@ -334,11 +361,19 @@ class LoyaltyHandler
                         $this->sync_customer_points_from_api($customer_id, $user_id);
                     }
 
-                    $order->add_order_note(sprintf(__('Deducted %s loyalty points via Truebeep API', 'truebeep'), $points_redeemed));
+                    $order->add_order_note(sprintf(
+                        /* translators: %s: number of points deducted */
+                        __('Deducted %s loyalty points via Truebeep API', 'truebeep'), 
+                        $points_redeemed
+                    ));
                     truebeep_log('Points redeemed: ' . $points_redeemed . ' points from order #' . $order_id, 'LoyaltyHandler');
                 } else {
                     $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
-                    $order->add_order_note(sprintf(__('Failed to deduct loyalty points: %s', 'truebeep'), $error_message));
+                    $order->add_order_note(sprintf(
+                        /* translators: %s: error message */
+                        __('Failed to deduct loyalty points: %s', 'truebeep'), 
+                        $error_message
+                    ));
                     truebeep_log('Failed to redeem points from order #' . $order_id, 'LoyaltyHandler', ['error' => $error_message]);
                 }
             }
@@ -475,7 +510,10 @@ class LoyaltyHandler
                             <?php endif; ?>
                             <?php if ($points_refunded > 0): ?>
                                 <span style="color: orange; font-size: 12px;">
-                                    (<?php printf(__('%s points deducted for refunds', 'truebeep'), number_format($points_refunded)); ?>)
+                                    (<?php 
+                                    /* translators: %s: number of points deducted */
+                                    printf(__('%s points deducted for refunds', 'truebeep'), number_format($points_refunded)); 
+                                    ?>)
                                 </span>
                             <?php endif; ?>
                         </td>
@@ -491,7 +529,10 @@ class LoyaltyHandler
                                 <span style="color: green; font-size: 12px;">(<?php _e('Fully Returned', 'truebeep'); ?>)</span>
                             <?php elseif ($points_partial_returned > 0): ?>
                                 <span style="color: orange; font-size: 12px;">
-                                    (<?php printf(__('%s points returned', 'truebeep'), number_format($points_partial_returned)); ?>)
+                                    (<?php 
+                                    /* translators: %s: number of points returned */
+                                    printf(__('%s points returned', 'truebeep'), number_format($points_partial_returned)); 
+                                    ?>)
                                 </span>
                             <?php endif; ?>
                         </td>

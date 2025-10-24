@@ -324,7 +324,8 @@ class CustomerSyncProcessor
         
         $subject = __('Truebeep Customer Sync Completed', 'truebeep');
         $message = sprintf(
-            __("The Truebeep customer sync has been completed.\n\nResults:\n- Total Processed: %d\n- Successful: %d\n- Failed: %d\n- Skipped: %d\n\nYou can view the full report in your WordPress admin panel.", 'truebeep'),
+            /* translators: %1$d: total processed, %2$d: successful, %3$d: failed, %4$d: skipped */
+            __("The Truebeep customer sync has been completed.\n\nResults:\n- Total Processed: %1\$d\n- Successful: %2\$d\n- Failed: %3\$d\n- Skipped: %4\$d\n\nYou can view the full report in your WordPress admin panel.", 'truebeep'),
             $progress['processed'] ?? 0,
             $progress['successful'] ?? 0,
             $progress['failed'] ?? 0,

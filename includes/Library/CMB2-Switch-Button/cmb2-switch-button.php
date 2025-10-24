@@ -40,11 +40,11 @@ if (!class_exists('CMB2_Switch_Button')) {
 			}
 
 			echo '<label class="cmb2-switch">
-				    <input type="checkbox" name="' . esc_attr($args['name']) . '" id="' . esc_attr($args['id']) . '" value="' . esc_attr($active_value) . '" data-inactive-value="' . esc_attr($inactive_value) . '" ' . $args['checked'] . ' />
+				    <input type="checkbox" name="' . esc_attr($args['name']) . '" id="' . esc_attr($args['id']) . '" value="' . esc_attr($active_value) . '" data-inactive-value="' . esc_attr($inactive_value) . '" ' . esc_attr($args['checked']) . ' />
 				    <span class="cmb2-slider round"></span>
 			      </label>';
 
-			$field_type_object->_desc(true, true);
+			echo wp_kses_post($field_type_object->_desc(true, true));
 		}
 
 		public function admin_head()
@@ -114,11 +114,11 @@ if (!class_exists('CMB2_Switch_Button')) {
 				}
 
 				input:checked+.cmb2-slider {
-					background-color: <?php echo $toggle_color ?>;
+					background-color: <?php echo esc_attr($toggle_color) ?>;
 				}
 
 				input:focus+.cmb2-slider {
-					box-shadow: 0 0 1px <?php echo $toggle_color ?>;
+					box-shadow: 0 0 1px <?php echo esc_attr($toggle_color) ?>;
 				}
 
 				input:checked+.cmb2-slider:before {

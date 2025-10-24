@@ -180,7 +180,7 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'action=truebeep_test_github_connection&_wpnonce=' + '<?php echo wp_create_nonce('truebeep_diagnostics'); ?>'
+                body: 'action=truebeep_test_github_connection&_wpnonce=' + '<?php echo esc_js(wp_create_nonce('truebeep_diagnostics')); ?>'
             })
             .then(response => response.json())
             .then(data => {
