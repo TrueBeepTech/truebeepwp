@@ -1,6 +1,6 @@
 === Truebeep: Smart Wallet Loyalty ===
 Contributors: truebeep
-Tags: loyalty, points, rewards, woocommerce, wallet, customer-retention, digital-wallet, marketing, apple-wallet, google-wallet
+Tags: loyalty, points, rewards, woocommerce, wallet
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.2
