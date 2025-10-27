@@ -39,7 +39,6 @@ final class Truebeep
 
         register_activation_hook(__FILE__, [$this, 'activate']);
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-        add_action('init', [$this, 'load_textdomain']);
         add_action('init', [$this, 'register_early_hooks'], 1); // Register hooks early
         add_action('plugins_loaded', [$this, 'init_plugin']);
         
@@ -79,16 +78,6 @@ final class Truebeep
         define('TRUEBEEP_ELEMENTOR', TRUEBEEP_DIR_PATH . 'includes/Elementor/');
     }
 
-    /**
-     * Load plugin text domain
-     *
-     * @return void
-     */
-    public function load_textdomain()
-    {
-        // WordPress.org automatically loads translations for hosted plugins
-        // No manual loading required for plugins hosted on WordPress.org
-    }
 
     /**
      * Register hooks that need to be available early
