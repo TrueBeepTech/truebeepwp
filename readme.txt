@@ -8,25 +8,25 @@ Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Reward customers with points they can track and redeem via digital wallets. Boost retention with tier-based loyalty programs for WooCommerce.
+Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
 
 == Description ==
 
-Truebeep is a comprehensive loyalty and rewards platform designed to enhance customer retention and drive repeat purchases for WooCommerce stores. Create versatile loyalty programs that allow customers to earn points on purchases and redeem them seamlessly at checkout.
+Truebeep is an all-in-one loyalty and marketing solution that helps WooCommerce stores reward customers and encourage repeat purchases. Set up flexible loyalty programs where shoppers earn points on purchases and redeem them instantly at checkout. With support for Apple Wallet and Google Wallet, customers can easily track and use their rewards from their phones. Branded wallet passes and push notifications create a smooth and engaging experience.
 
 = Key Features =
+
+* **Earn & Redeem Points**: Collect points with each order, use them for discounts.
+* **Digital Wallets**: Sync rewards to Google & Apple Wallets for easy access.
+* **Marketing Suite**: Automate campaigns, personalize offers, and track insights.
+
+= Additional Features =
 
 **Points & Rewards System**
 * Earn points on every purchase with configurable rates
 * Flexible redemption options at checkout
 * Automatic point adjustments for refunds and cancellations
 * Real-time point balance updates
-
-**Digital Wallet Integration**
-* Apple Wallet and Google Wallet support
-* One-click wallet card addition
-* Mobile-optimized experience
-* Push notifications for point updates
 
 **Tier-Based Loyalty**
 * Create unlimited customer tiers
