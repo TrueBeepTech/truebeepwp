@@ -1,0 +1,250 @@
+=== Truebeep: Smart Wallet Loyalty ===
+Contributors: truebeep
+Tags: loyalty, points, rewards, woocommerce, wallet, customer-retention, digital-wallet, marketing, apple-wallet, google-wallet
+Requires at least: 5.0
+Tested up to: 6.8
+Requires PHP: 7.2
+Stable tag: 2.0.8
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Reward customers with points they can track and redeem via digital wallets. Boost retention with tier-based loyalty programs for WooCommerce.
+
+== Description ==
+
+Truebeep is a comprehensive loyalty and rewards platform designed to enhance customer retention and drive repeat purchases for WooCommerce stores. Create versatile loyalty programs that allow customers to earn points on purchases and redeem them seamlessly at checkout.
+
+= Key Features =
+
+**Points & Rewards System**
+* Earn points on every purchase with configurable rates
+* Flexible redemption options at checkout
+* Automatic point adjustments for refunds and cancellations
+* Real-time point balance updates
+
+**Digital Wallet Integration**
+* Apple Wallet and Google Wallet support
+* One-click wallet card addition
+* Mobile-optimized experience
+* Push notifications for point updates
+
+**Tier-Based Loyalty**
+* Create unlimited customer tiers
+* Progressive benefits and multipliers
+* Automatic tier advancement
+* VIP recognition and exclusive perks
+
+**Customer Experience**
+* Floating loyalty panel showing point balance
+* Dedicated My Account dashboard integration
+* Responsive design for all devices
+* Instant notifications for point earnings
+
+**Flexible Redemption Options**
+* Dynamic coupons - customers choose exact points to redeem
+* Predefined coupons - fixed redemption values ($5, $10, $25)
+* Real-time discount calculations
+* Customizable redemption rates
+
+**Admin Features**
+* Comprehensive WooCommerce integration
+* Order management with point details
+* Bulk customer synchronization
+* Detailed transaction logging
+* Performance monitoring dashboard
+
+= How It Works =
+
+1. **Customers Shop** - Earn points with every purchase based on your configured rates
+2. **Track Progress** - View points and tier status in real-time via account dashboard
+3. **Redeem Rewards** - Apply points for instant discounts at checkout
+4. **Level Up** - Unlock better benefits as customers reach new tiers
+
+= Requirements =
+
+* WordPress 5.0 or higher
+* WooCommerce 4.0 or higher
+* PHP 7.2 or higher
+* SSL Certificate (recommended)
+* Truebeep API account (sign up at truebeep.com)
+
+= API Integration =
+
+Truebeep uses secure API integration to synchronize customer data and manage loyalty points. The plugin communicates with Truebeep's servers to:
+* Sync customer information
+* Update point balances
+* Manage tier assignments
+* Generate wallet passes
+
+All data transmission is encrypted and follows industry security standards.
+
+= Privacy & Data =
+
+This plugin processes the following customer data:
+* Email addresses
+* Names
+* Order history
+* Point balances
+* Tier information
+
+Data is transmitted securely to Truebeep servers for loyalty program management. For complete privacy information, please visit truebeep.com/privacy.
+
+== Installation ==
+
+= Automatic Installation =
+
+1. Go to Plugins > Add New in your WordPress admin
+2. Search for "Truebeep"
+3. Click "Install Now" and then "Activate"
+4. Navigate to WooCommerce > Settings > Truebeep
+5. Enter your API credentials from your Truebeep dashboard
+6. Configure your loyalty program settings
+
+= Manual Installation =
+
+1. Download the plugin zip file
+2. Upload to `/wp-content/plugins/` directory
+3. Extract the zip file
+4. Activate the plugin through the Plugins menu
+5. Go to WooCommerce > Settings > Truebeep for configuration
+
+= Configuration =
+
+After activation:
+1. Navigate to WooCommerce > Settings > Truebeep
+2. Enter your API URL: `https://api.truebeep.com/v1`
+3. Enter your API Key from the Truebeep dashboard
+4. Configure point earning rates
+5. Set up customer tiers
+6. Choose redemption options
+7. Save settings
+
+== Frequently Asked Questions ==
+
+= How do I get API credentials? =
+
+Sign up for a Truebeep account at truebeep.com. Your API credentials will be available in your dashboard under Settings > API.
+
+= How do I configure the API settings? =
+
+1. Use `https://api.truebeep.com/v1` as the API URL
+2. Enter your API Key generated from the Truebeep dashboard
+3. Save settings and test the connection
+
+= How do I add wallet passes? =
+
+To add wallet passes for your customers:
+1. Log in to your Truebeep dashboard
+2. Navigate to the Wallet Pass section
+3. Create or select a wallet pass template
+4. Copy the wallet pass ID
+5. Paste it into the Wallet Template ID field in WooCommerce > Settings > Truebeep
+
+= Can customers use points with other discounts? =
+
+Yes, the plugin is compatible with WooCommerce coupons and other discount methods. You can configure whether points can be combined with other offers in the settings.
+
+= How are points calculated? =
+
+Points are calculated based on the order total after discounts (excluding shipping and taxes). You can set different earning rates for different customer tiers.
+
+= What happens to points when an order is refunded? =
+
+Points are automatically revoked when an order is refunded or cancelled. The customer's point balance is adjusted accordingly.
+
+= Is there a minimum order value for earning points? =
+
+You can configure minimum order values in the plugin settings. Orders below this threshold won't earn points.
+
+= Can I manually adjust customer points? =
+
+Yes, administrators can manually adjust customer points through the WordPress admin panel under Users or through the Truebeep dashboard.
+
+= Do points expire? =
+
+Point expiration can be configured in your Truebeep dashboard settings. You can set expiration periods or choose to have points never expire.
+
+= How do I sync existing customers? =
+
+Go to Users > Sync to Truebeep in your WordPress admin. Click "Start Sync" to begin synchronizing all existing customers with the Truebeep platform.
+
+== Screenshots ==
+
+1. WooCommerce settings page for Truebeep configuration
+2. Customer loyalty dashboard in My Account area
+3. Floating loyalty panel showing point balance
+4. Checkout page with point redemption options
+5. Admin order view with loyalty point information
+6. Customer sync interface for bulk operations
+7. Wallet pass integration example
+8. Tier configuration settings
+
+== Changelog ==
+
+= 2.0.8 =
+* Improved WordPress.org compatibility
+* Enhanced plugin documentation
+* Updated readme format for better clarity
+* Minor bug fixes and stability improvements
+
+= 2.0.7 =
+* Added customer sync system improvements with better error handling
+* Enhanced rate limiting for API calls
+* Improved Action Scheduler integration
+* Added automatic retry for failed sync operations
+* Loyalty tier configuration improvements
+
+= 2.0.6 =
+* Fixed checkout redemption issues
+* Improved API error handling
+* Enhanced mobile responsiveness
+* Updated translation strings
+
+= 2.0.5 =
+* Added bulk customer synchronization
+* Improved performance for large stores
+* Fixed point calculation edge cases
+* Enhanced security measures
+
+= 2.0.4 =
+* Compatibility updates for WooCommerce 8.0
+* Added support for HPOS (High Performance Order Storage)
+* Improved wallet pass generation
+* Fixed timezone handling issues
+
+= 2.0.3 =
+* Added tier multiplier support
+* Enhanced admin UI
+* Fixed compatibility with third-party checkout plugins
+* Improved API response caching
+
+= 2.0.2 =
+* Initial public release on WordPress.org
+* Core loyalty functionality
+* WooCommerce integration
+* Digital wallet support
+
+== Upgrade Notice ==
+
+= 2.0.8 =
+This version improves WordPress.org compatibility and documentation. Update recommended for all users.
+
+= 2.0.7 =
+Important update with customer sync improvements and better error handling. Recommended for stores with large customer bases.
+
+= 2.0.6 =
+Fixes checkout issues and improves mobile experience. Update recommended.
+
+== Additional Information ==
+
+= Support =
+
+For support, please visit our documentation at truebeep.com/docs or contact our support team.
+
+= Contributing =
+
+We welcome contributions and suggestions. Please visit our GitHub repository or contact us through our website.
+
+= Credits =
+
+Truebeep is developed and maintained by the Truebeep team. Special thanks to the WordPress and WooCommerce communities for their continued support.
