@@ -12,7 +12,6 @@
   "minimum-stability": "dev",
   "require": {
     "nesbot/carbon": "2.x-dev",
-    "cmb2/cmb2": "dev-master",
     "johnbillion/extended-cpts": "dev-develop",
     "woocommerce/action-scheduler": "^3.8"
   },
@@ -24,9 +23,7 @@
       "Truebeep\\": "includes/"
     },
     "files": [
-      "vendor/cmb2/cmb2/init.php",
-      "includes/functions.php",
-      "includes/Library/CMB2_Tags/cmb2-field-type-tags.php"
+      "includes/functions.php"
     ]
   }
 }
