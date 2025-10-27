@@ -42,6 +42,7 @@ class ConnectionHelper
         if (!is_wp_error($response) && $response['success']) {
             return [
                 'success' => true,
+                /* translators: %s: connection status */
                 'message' => sprintf(__('Connection status updated to %s', 'truebeep'), $status)
             ];
         }

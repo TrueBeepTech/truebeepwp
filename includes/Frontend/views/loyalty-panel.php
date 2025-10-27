@@ -6,7 +6,7 @@
 
     <div class="panel-content">
         <div class="panel-header">
-            <button class="panel-close" aria-label="<?php _e('Close panel', 'truebeep'); ?>">
+            <button class="panel-close" aria-label="<?php esc_attr_e('Close panel', 'truebeep'); ?>">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
@@ -16,13 +16,13 @@
         <div class="panel-body">
             <!-- Welcome Message -->
             <div class="welcome-message">
-                <?php _e('Welcome back, ', 'truebeep'); ?><span class="user-name"></span><?php _e('!', 'truebeep'); ?>
+                <?php esc_html_e('Welcome back, ', 'truebeep'); ?><span class="user-name"></span><?php esc_html_e('!', 'truebeep'); ?>
             </div>
 
             <!-- Points Display -->
             <div class="points-display">
                 <span class="points-number">--</span>
-                <span class="points-label"><?php _e('Point', 'truebeep'); ?></span>
+                <span class="points-label"><?php esc_html_e('Point', 'truebeep'); ?></span>
             </div>
 
             <!-- Tier Badge -->
@@ -32,7 +32,7 @@
 
             <!-- Wallet Description -->
             <p class="wallet-description">
-                <?php _e('Download wallet card for easy access to your rewards and points', 'truebeep'); ?>
+                <?php esc_html_e('Download wallet card for easy access to your rewards and points', 'truebeep'); ?>
             </p>
 
             <!-- Wallet Buttons -->

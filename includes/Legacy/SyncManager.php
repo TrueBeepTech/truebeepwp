@@ -124,7 +124,8 @@ class SyncManager
         $result = [
             'success' => true,
             'message' => sprintf(
-                __('Sync started. Processing %d customers in %d batches.', 'truebeep'),
+                /* translators: %1$d: number of customers, %2$d: number of batches */
+                __('Sync started. Processing %1$d customers in %2$d batches.', 'truebeep'),
                 count($customer_ids),
                 count($batches)
             ),
@@ -359,7 +360,8 @@ class SyncManager
             
             // Add summary
             $log['summary'] = sprintf(
-                __('%d processed (%d successful, %d failed, %d skipped)', 'truebeep'),
+                /* translators: %1$d: total processed, %2$d: successful, %3$d: failed, %4$d: skipped */
+                __('%1$d processed (%2$d successful, %3$d failed, %4$d skipped)', 'truebeep'),
                 count($log['processed'] ?? []),
                 $log['successful'] ?? 0,
                 $log['failed'] ?? 0,

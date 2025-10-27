@@ -21,7 +21,8 @@ if (!defined('ABSPATH')) {
             <p class="welcome-content-text">
                 <?php 
                 printf(
-                    __('Hello %s, you have %s loyalty points', 'truebeep'),
+                    /* translators: %1$s: User name, %2$s: Points count */
+                    esc_html__('Hello %1$s, you have %2$s loyalty points', 'truebeep'),
                     '<strong>' . esc_html($user_name) . '</strong>',
                     '<span class="points-count">' . number_format($points) . '</span>'
                 );
@@ -30,7 +31,10 @@ if (!defined('ABSPATH')) {
             
             <?php if ($tier_name && $tier_name !== 'bronze'): ?>
             <p class="tier-status">
-                <?php printf(__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>'); ?>
+                <?php 
+                /* translators: %s: Tier name */
+                echo wp_kses_post(sprintf(__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>')); 
+                ?>
             </p>
             <?php endif; ?>
         </div>
@@ -40,7 +44,7 @@ if (!defined('ABSPATH')) {
 
     <?php if ($apple_wallet_url || $google_wallet_url): ?>
     <div class="loyalty-wallet-section">
-        <p><?php _e('Download wallet card for easy access to your rewards and points', 'truebeep'); ?></p>
+        <p><?php esc_html_e('Download wallet card for easy access to your rewards and points', 'truebeep'); ?></p>
         
         <div class="wallet-buttons-dashboard">
             <?php if ($apple_wallet_url): ?>

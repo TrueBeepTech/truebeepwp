@@ -69,18 +69,24 @@ class PointsRedemption
 
 ?>
         <div id="truebeep-points-redemption" class="truebeep-checkout-section">
-            <h3><?php _e('Redeem Loyalty Points', 'truebeep'); ?></h3>
+            <h3><?php esc_html_e('Redeem Loyalty Points', 'truebeep'); ?></h3>
 
             <div class="points-balance">
-                <p><?php printf(__('Available Points: <strong>%d</strong>', 'truebeep'), $this->user_points); ?></p>
+                <p><?php 
+                /* translators: %d: number of available points */
+                printf(wp_kses_post(__('Available Points: <strong>%d</strong>', 'truebeep')), esc_html($this->user_points)); 
+                ?></p>
                 <?php if ($this->user_tier): ?>
-                    <p><?php printf(__('Your Tier: <strong>%s</strong>', 'truebeep'), $this->user_tier['name']); ?></p>
+                    <p><?php 
+                    /* translators: %s: tier name */
+                    printf(wp_kses_post(__('Your Tier: <strong>%s</strong>', 'truebeep')), esc_html($this->user_tier['name'])); 
+                    ?></p>
                 <?php endif; ?>
             </div>
 
             <?php if ($this->redemption_method === 'dynamic_coupon'): ?>
                 <div class="dynamic-coupon-redemption">
-                    <label for="points-to-redeem"><?php _e('Points to Redeem:', 'truebeep'); ?></label>
+                    <label for="points-to-redeem"><?php esc_html_e('Points to Redeem:', 'truebeep'); ?></label>
                     <div class="points-input-wrapper">
                         <input type="number"
                             id="points-to-redeem"
@@ -88,30 +94,33 @@ class PointsRedemption
                             min="0"
                             max="<?php echo esc_attr($this->user_points); ?>"
                             step="1"
-                            placeholder="<?php _e('Enter points', 'truebeep'); ?>" />
+                            placeholder="<?php esc_attr_e('Enter points', 'truebeep'); ?>" />
                         <span class="points-value-preview" data-rate="<?php echo esc_attr($this->get_redemption_rate()); ?>">
                             = $<span id="discount-preview">0.00</span>
                         </span>
                     </div>
                     <div class="points-controls">
                         <button type="button" class="button apply-points-btn" id="apply-points">
-                            <?php _e('Apply Points', 'truebeep'); ?>
+                            <?php esc_html_e('Apply Points', 'truebeep'); ?>
                         </button>
                         <button type="button" class="button remove-points-btn" id="remove-points" style="display:none;">
-                            <?php _e('Remove Points', 'truebeep'); ?>
+                            <?php esc_html_e('Remove Points', 'truebeep'); ?>
                         </button>
                     </div>
                     <div class="points-message" id="points-message"></div>
                     <p class="max-discount-info">
-                        <?php printf(__('Maximum discount available: $%s', 'truebeep'), number_format($max_discount, 2)); ?>
+                        <?php 
+                        /* translators: %s: maximum discount amount */
+                        printf(esc_html__('Maximum discount available: $%s', 'truebeep'), esc_html(number_format($max_discount, 2))); 
+                        ?>
                     </p>
                 </div>
             <?php else: // Predefined coupons 
             ?>
                 <div class="coupon-redemption">
-                    <label for="coupon-select"><?php _e('Select Coupon:', 'truebeep'); ?></label>
+                    <label for="coupon-select"><?php esc_html_e('Select Coupon:', 'truebeep'); ?></label>
                     <select id="coupon-select" name="selected_coupon">
-                        <option value=""><?php _e('-- Select a coupon --', 'truebeep'); ?></option>
+                        <option value=""><?php esc_html_e('-- Select a coupon --', 'truebeep'); ?></option>
                         <?php foreach ($this->coupons as $index => $coupon):
                             $points_required = $this->calculate_points_for_coupon($coupon['value']);
                             $is_available = $this->user_points >= $points_required;
@@ -122,9 +131,10 @@ class PointsRedemption
                                 <?php echo !$is_available ? 'disabled' : ''; ?>>
                                 <?php
                                 echo esc_html($coupon['name']) . ' - ' .
-                                    sprintf(__('%d points', 'truebeep'), $points_required);
+                                    /* translators: %d: number of points required */
+                                    sprintf(esc_html__('%d points', 'truebeep'), esc_html($points_required));
                                 if (!$is_available) {
-                                    echo ' ' . __('(Insufficient points)', 'truebeep');
+                                    echo ' ' . esc_html__('(Insufficient points)', 'truebeep');
                                 }
                                 ?>
                             </option>
@@ -132,10 +142,10 @@ class PointsRedemption
                     </select>
                     <div class="points-controls">
                         <button type="button" class="button apply-coupon-btn" id="apply-coupon">
-                            <?php _e('Apply Coupon', 'truebeep'); ?>
+                            <?php esc_html_e('Apply Coupon', 'truebeep'); ?>
                         </button>
                         <button type="button" class="button remove-coupon-btn" id="remove-coupon" style="display:none;">
-                            <?php _e('Remove Coupon', 'truebeep'); ?>
+                            <?php esc_html_e('Remove Coupon', 'truebeep'); ?>
                         </button>
                     </div>
                     <div class="coupon-message" id="coupon-message"></div>
@@ -293,6 +303,7 @@ class PointsRedemption
         if ($discount > $cart_total) {
             $max_points = $this->calculate_points_from_discount($cart_total);
             wp_send_json_error([
+                /* translators: %d: maximum number of points that can be used */
                 'message' => sprintf(__('Maximum points you can use: %d', 'truebeep'), $max_points),
                 'max_points' => $max_points
             ]);
@@ -314,6 +325,7 @@ class PointsRedemption
         $discount_amount = WC()->session->get('truebeep_discount_amount');
 
         if ($points_redeemed && $discount_amount > 0) {
+            /* translators: %d: number of points redeemed */
             $label = sprintf(__('Loyalty Points Redemption (-%d points)', 'truebeep'), $points_redeemed);
 
             if (WC()->session->get('truebeep_coupon_used')) {
@@ -338,7 +350,8 @@ class PointsRedemption
             }
 
             $order->add_order_note(sprintf(
-                __('Customer redeemed %d loyalty points for a discount of %s', 'truebeep'),
+                /* translators: %1$d: number of points redeemed, %2$s: discount amount */
+                __('Customer redeemed %1$d loyalty points for a discount of %2$s', 'truebeep'),
                 $points_redeemed,
                 wc_price($discount_amount)
             ));

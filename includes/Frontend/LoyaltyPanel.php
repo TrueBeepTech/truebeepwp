@@ -83,7 +83,7 @@ class LoyaltyPanel
         include __DIR__ . '/views/loyalty-panel.php';
         $panel_html = ob_get_clean();
 
-        echo $panel_html;
+        echo wp_kses_post($panel_html);
     }
 
 
@@ -93,7 +93,7 @@ class LoyaltyPanel
     public function ajax_get_loyalty_data()
     {
         // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'truebeep_panel_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'truebeep_panel_nonce')) {
             wp_send_json_error(['message' => __('Security check failed', 'truebeep')]);
         }
 

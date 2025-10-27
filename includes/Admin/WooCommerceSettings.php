@@ -55,7 +55,7 @@ class WooCommerceSettings
         echo '<ul class="subsubsub">';
         $array_keys = array_keys($sections);
         foreach ($sections as $id => $label) {
-            echo '<li><a href="' . admin_url('admin.php?page=wc-settings&tab=truebeep&section=' . sanitize_title($id)) . '" class="' . ($current_section == $id ? 'current' : '') . '">' . $label . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
+            echo '<li><a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep&section=' . sanitize_title($id))) . '" class="' . esc_attr($current_section == $id ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
         }
         echo '</ul><br class="clear" />';
     }
@@ -292,34 +292,34 @@ class WooCommerceSettings
             ?>
             <tr valign="top" id="coupon-settings-section" style="display:none;">
                 <th scope="row" class="titledesc">
-                    <label><?php _e('Coupons', 'truebeep'); ?></label>
+                    <label><?php esc_html_e('Coupons', 'truebeep'); ?></label>
                 </th>
                 <td class="forminp">
                     <div id="truebeep-coupons-container">
                         <table class="wp-list-table widefat fixed striped" id="truebeep-coupons-table">
                             <thead>
                                 <tr>
-                                    <th><?php _e('Coupon Name', 'truebeep'); ?></th>
-                                    <th><?php _e('Value', 'truebeep'); ?></th>
-                                    <th><?php _e('Actions', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Coupon Name', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Value', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Actions', 'truebeep'); ?></th>
                                 </tr>
                             </thead>
                             <tbody id="truebeep-coupons-list">
                                 <?php foreach ($coupons as $index => $coupon) : ?>
-                                    <tr class="coupon-row" data-index="<?php echo $index; ?>">
+                                    <tr class="coupon-row" data-index="<?php echo esc_attr($index); ?>">
                                         <td><?php echo esc_html($coupon['name']); ?></td>
                                         <td>$<?php echo esc_html($coupon['value']); ?></td>
                                         <td>
-                                            <button type="button" class="button edit-coupon" data-coupon='<?php echo json_encode($coupon); ?>' data-index="<?php echo $index; ?>"><?php _e('Edit', 'truebeep'); ?></button>
-                                            <button type="button" class="button remove-coupon" data-index="<?php echo $index; ?>"><?php _e('Remove', 'truebeep'); ?></button>
+                                            <button type="button" class="button edit-coupon" data-coupon='<?php echo esc_attr(json_encode($coupon)); ?>' data-index="<?php echo esc_attr($index); ?>"><?php esc_html_e('Edit', 'truebeep'); ?></button>
+                                            <button type="button" class="button remove-coupon" data-index="<?php echo esc_attr($index); ?>"><?php esc_html_e('Remove', 'truebeep'); ?></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
                         <p>
-                            <button type="button" class="button button-secondary" id="add-coupon-button"><?php _e('Add New Coupon', 'truebeep'); ?></button>
-                            <button type="button" class="button button-primary" id="save-coupons-button"><?php _e('Save Coupons', 'truebeep'); ?></button>
+                            <button type="button" class="button button-secondary" id="add-coupon-button"><?php esc_html_e('Add New Coupon', 'truebeep'); ?></button>
+                            <button type="button" class="button button-primary" id="save-coupons-button"><?php esc_html_e('Save Coupons', 'truebeep'); ?></button>
                         </p>
                     </div>
                 </td>
@@ -378,12 +378,12 @@ class WooCommerceSettings
         check_ajax_referer('truebeep_save_loyalty', 'nonce');
 
         if (!current_user_can('manage_woocommerce')) {
-            wp_die(__('You do not have permission to perform this action.', 'truebeep'));
+            wp_die(esc_html__('You do not have permission to perform this action.', 'truebeep'));
         }
 
         // Save loyalty fields
         if (isset($_POST['redeem_method'])) {
-            update_option('truebeep_redeem_method', sanitize_text_field($_POST['redeem_method']));
+            update_option('truebeep_redeem_method', sanitize_text_field(wp_unslash($_POST['redeem_method'])));
         }
         if (isset($_POST['earning_value'])) {
             update_option('truebeep_earning_value', floatval($_POST['earning_value']));
@@ -392,33 +392,37 @@ class WooCommerceSettings
             update_option('truebeep_redeeming_value', floatval($_POST['redeeming_value']));
         }
         if (isset($_POST['earn_on_redeemed'])) {
-            update_option('truebeep_earn_on_redeemed', $_POST['earn_on_redeemed'] === 'true' ? 'yes' : 'no');
+            update_option('truebeep_earn_on_redeemed', sanitize_text_field(wp_unslash($_POST['earn_on_redeemed'])) === 'true' ? 'yes' : 'no');
         }
 
         // Save tiers
-        $tiers = isset($_POST['tiers']) ? $_POST['tiers'] : [];
         $sanitized_tiers = [];
-
-        foreach ($tiers as $tier) {
-            $sanitized_tiers[] = [
-                'name' => sanitize_text_field($tier['name']),
-                'order_to_points' => floatval($tier['order_to_points']),
-                'points_to_amount' => floatval($tier['points_to_amount']),
-                'threshold' => intval($tier['threshold'])
-            ];
+        if (isset($_POST['tiers']) && is_array($_POST['tiers'])) {
+            $tiers_input = map_deep(wp_unslash($_POST['tiers']), 'sanitize_text_field');
+            foreach ($tiers_input as $tier) {
+                if (!is_array($tier)) continue;
+                $sanitized_tiers[] = [
+                    'name' => sanitize_text_field($tier['name'] ?? ''),
+                    'order_to_points' => floatval($tier['order_to_points'] ?? 1),
+                    'points_to_amount' => floatval($tier['points_to_amount'] ?? 1),
+                    'threshold' => intval($tier['threshold'] ?? 0)
+                ];
+            }
         }
 
         update_option('truebeep_tiers', $sanitized_tiers);
 
         // Save coupons
-        $coupons = isset($_POST['coupons']) ? $_POST['coupons'] : [];
         $sanitized_coupons = [];
-
-        foreach ($coupons as $coupon) {
-            $sanitized_coupons[] = [
-                'name' => sanitize_text_field($coupon['name']),
-                'value' => floatval($coupon['value'])
-            ];
+        if (isset($_POST['coupons']) && is_array($_POST['coupons'])) {
+            $coupons_input = map_deep(wp_unslash($_POST['coupons']), 'sanitize_text_field');
+            foreach ($coupons_input as $coupon) {
+                if (!is_array($coupon)) continue;
+                $sanitized_coupons[] = [
+                    'name' => sanitize_text_field($coupon['name'] ?? ''),
+                    'value' => floatval($coupon['value'] ?? 0)
+                ];
+            }
         }
 
         update_option('truebeep_coupons', $sanitized_coupons);
@@ -431,18 +435,20 @@ class WooCommerceSettings
         check_ajax_referer('truebeep_save_coupons', 'nonce');
 
         if (!current_user_can('manage_woocommerce')) {
-            wp_die(__('You do not have permission to perform this action.', 'truebeep'));
+            wp_die(esc_html__('You do not have permission to perform this action.', 'truebeep'));
         }
 
         // Save coupons only
-        $coupons = isset($_POST['coupons']) ? $_POST['coupons'] : [];
         $sanitized_coupons = [];
-
-        foreach ($coupons as $coupon) {
-            $sanitized_coupons[] = [
-                'name' => sanitize_text_field($coupon['name']),
-                'value' => floatval($coupon['value'])
-            ];
+        if (isset($_POST['coupons']) && is_array($_POST['coupons'])) {
+            $coupons_input = map_deep(wp_unslash($_POST['coupons']), 'sanitize_text_field');
+            foreach ($coupons_input as $coupon) {
+                if (!is_array($coupon)) continue;
+                $sanitized_coupons[] = [
+                    'name' => sanitize_text_field($coupon['name'] ?? ''),
+                    'value' => floatval($coupon['value'] ?? 0)
+                ];
+            }
         }
 
         update_option('truebeep_coupons', $sanitized_coupons);
@@ -463,7 +469,7 @@ class WooCommerceSettings
             wp_send_json_error(['message' => __('You do not have permission to perform this action.', 'truebeep')]);
         }
         
-        $action = isset($_POST['connection_action']) ? sanitize_text_field($_POST['connection_action']) : '';
+        $action = isset($_POST['connection_action']) ? sanitize_text_field(wp_unslash($_POST['connection_action'])) : '';
         
         if ($action === 'connect') {
             // Send connect status to TrueBeep
@@ -517,7 +523,10 @@ class WooCommerceSettings
             return;
         }
 
-        if (isset($_GET['tab']) && $_GET['tab'] === 'truebeep') {
+        // Get current tab safely without nonce verification (read-only check for script loading)
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for conditional script loading
+        $current_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : '';
+        if ($current_tab === 'truebeep') {
             wp_enqueue_script(
                 'truebeep-woocommerce-settings',
                 TRUEBEEP_URL . '/assets/js/admin/woocommerce-settings.js',

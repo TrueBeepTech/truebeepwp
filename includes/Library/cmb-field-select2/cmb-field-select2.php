@@ -32,12 +32,12 @@ class PW_CMB2_Field_Select2 {
 			$field_type_object->type = new \CMB2_Type_Select( $field_type_object );
 		}
 
-		echo $field_type_object->select( array(
+		echo wp_kses_post($field_type_object->select( array(
 			'class'            => 'pw_select2 pw_select',
 			'desc'             => $field_type_object->_desc( true ),
 			'options'          => '<option></option>' . $field_type_object->concat_items(),
 			'data-placeholder' => $field->args( 'attributes', 'placeholder' ) ? $field->args( 'attributes', 'placeholder' ) : $field->args( 'description' ),
-		) );
+		) ));
 	}
 
 	/**
@@ -62,7 +62,7 @@ class PW_CMB2_Field_Select2 {
 		) );
 
 		$attrs = $field_type_object->concat_attrs( $a, array( 'desc', 'options' ) );
-		echo sprintf( '<select%s>%s</select>%s', $attrs, $a['options'], $a['desc'] );
+		echo wp_kses_post(sprintf( '<select%s>%s</select>%s', $attrs, $a['options'], $a['desc'] ));
 	}
 
 	/**

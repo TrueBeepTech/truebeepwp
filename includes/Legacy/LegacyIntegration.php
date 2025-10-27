@@ -58,11 +58,12 @@ class LegacyIntegration
             echo '<div class="notice notice-info">';
             echo '<p>';
             printf(
-                __('Truebeep customer sync is running in the background. %d of %d customers processed.', 'truebeep'),
-                $processed,
-                $total
+                /* translators: %1$d: processed customers, %2$d: total customers */
+                esc_html__('Truebeep customer sync is running in the background. %1$d of %2$d customers processed.', 'truebeep'),
+                intval($processed),
+                intval($total)
             );
-            echo ' <a href="' . admin_url('users.php?page=truebeep-sync') . '">' . __('View Progress', 'truebeep') . '</a>';
+            echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-sync')) . '">' . esc_html__('View Progress', 'truebeep') . '</a>';
             echo '</p>';
             echo '</div>';
         }
@@ -75,10 +76,11 @@ class LegacyIntegration
                 echo '<div class="notice notice-success is-dismissible">';
                 echo '<p>';
                 printf(
-                    __('Truebeep customer sync completed successfully! %d customers were synchronized.', 'truebeep'),
-                    $successful
+                    /* translators: %d: number of successfully synchronized customers */
+                    esc_html__('Truebeep customer sync completed successfully! %d customers were synchronized.', 'truebeep'),
+                    intval($successful)
                 );
-                echo ' <a href="' . admin_url('users.php?page=truebeep-sync') . '">' . __('View Details', 'truebeep') . '</a>';
+                echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-sync')) . '">' . esc_html__('View Details', 'truebeep') . '</a>';
                 echo '</p>';
                 echo '</div>';
             }
@@ -105,52 +107,52 @@ class LegacyIntegration
             <thead>
                 <tr>
                     <th colspan="3" data-export-label="Truebeep Sync">
-                        <h2><?php _e('Truebeep Customer Sync', 'truebeep'); ?></h2>
+                        <h2><?php esc_html_e('Truebeep Customer Sync', 'truebeep'); ?></h2>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td data-export-label="Sync Status"><?php _e('Sync Status', 'truebeep'); ?>:</td>
+                    <td data-export-label="Sync Status"><?php esc_html_e('Sync Status', 'truebeep'); ?>:</td>
                     <td class="help">&nbsp;</td>
-                    <td><?php echo ucfirst(str_replace('_', ' ', $sync_status)); ?></td>
+                    <td><?php echo esc_html(ucfirst(str_replace('_', ' ', $sync_status))); ?></td>
                 </tr>
                 <tr>
-                    <td data-export-label="Total Customers"><?php _e('Total Customers', 'truebeep'); ?>:</td>
+                    <td data-export-label="Total Customers"><?php esc_html_e('Total Customers', 'truebeep'); ?>:</td>
                     <td class="help">&nbsp;</td>
-                    <td><?php echo number_format($stats['total']); ?></td>
+                    <td><?php echo esc_html(number_format($stats['total'])); ?></td>
                 </tr>
                 <tr>
-                    <td data-export-label="Customers Remaining"><?php _e('Customers Remaining', 'truebeep'); ?>:</td>
+                    <td data-export-label="Customers Remaining"><?php esc_html_e('Customers Remaining', 'truebeep'); ?>:</td>
                     <td class="help">&nbsp;</td>
-                    <td><?php echo number_format($stats['remaining']); ?></td>
+                    <td><?php echo esc_html(number_format($stats['remaining'])); ?></td>
                 </tr>
                 <tr>
-                    <td data-export-label="Sync Progress"><?php _e('Sync Progress', 'truebeep'); ?>:</td>
+                    <td data-export-label="Sync Progress"><?php esc_html_e('Sync Progress', 'truebeep'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td>
                         <?php 
-                        echo sprintf(
+                        echo esc_html(sprintf(
                             '%s / %s (%s%%)', 
                             number_format($progress['processed'] ?? 0),
                             number_format($stats['total']),
-                            $stats['percentage']
-                        ); 
+                            esc_html($stats['percentage'])
+                        )); 
                         ?>
                     </td>
                 </tr>
                 <?php if (!empty($progress['successful'])): ?>
                 <tr>
-                    <td data-export-label="Successful Syncs"><?php _e('Successful Syncs', 'truebeep'); ?>:</td>
+                    <td data-export-label="Successful Syncs"><?php esc_html_e('Successful Syncs', 'truebeep'); ?>:</td>
                     <td class="help">&nbsp;</td>
-                    <td><?php echo number_format($progress['successful']); ?></td>
+                    <td><?php echo esc_html(number_format($progress['successful'])); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if (!empty($progress['failed'])): ?>
                 <tr>
-                    <td data-export-label="Failed Syncs"><?php _e('Failed Syncs', 'truebeep'); ?>:</td>
+                    <td data-export-label="Failed Syncs"><?php esc_html_e('Failed Syncs', 'truebeep'); ?>:</td>
                     <td class="help">&nbsp;</td>
-                    <td><?php echo number_format($progress['failed']); ?></td>
+                    <td><?php echo esc_html(number_format($progress['failed'])); ?></td>
                 </tr>
                 <?php endif; ?>
             </tbody>

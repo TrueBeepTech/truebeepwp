@@ -114,24 +114,24 @@ class SyncSettings
         <div class="wrap truebeep-sync-wrap">
             <h1 class="wp-heading-inline">
                 <span class="dashicons dashicons-update" style="font-size: 30px; width: 30px; height: 30px; margin-right: 10px;"></span>
-                <?php _e('Sync Customers to Truebeep', 'truebeep'); ?>
+                <?php esc_html_e('Sync Customers to Truebeep', 'truebeep'); ?>
             </h1>
             
             <?php if (!get_option('truebeep_api_url') || !get_option('truebeep_api_key')): ?>
                 <div class="notice notice-error">
-                    <p><?php _e('Please configure Truebeep API settings first.', 'truebeep'); ?></p>
-                    <p><a href="<?php echo admin_url('admin.php?page=wc-settings&tab=truebeep'); ?>" class="button button-primary"><?php _e('Configure Settings', 'truebeep'); ?></a></p>
+                    <p><?php esc_html_e('Please configure Truebeep API settings first.', 'truebeep'); ?></p>
+                    <p><a href="<?php echo esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep')); ?>" class="button button-primary"><?php esc_html_e('Configure Settings', 'truebeep'); ?></a></p>
                 </div>
                 <?php return; ?>
             <?php endif; ?>
             
             <!-- Full Width Status Card -->
             <div class="card sync-status-card">
-                <h2 class="title"><?php _e('Sync Status', 'truebeep'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Sync Status', 'truebeep'); ?></h2>
                 <div class="card-body">
                     <div class="sync-status-indicator">
                         <span class="status-badge status-<?php echo esc_attr($status['status']); ?>">
-                            <?php echo $this->get_status_label($status['status']); ?>
+                            <?php echo esc_html($this->get_status_label($status['status'])); ?>
                         </span>
                         <?php if ($status['status'] === 'processing'): ?>
                             <span class="spinner is-active" style="margin: 0 10px; float: none;"></span>
@@ -146,45 +146,54 @@ class SyncSettings
                                 <div class="progress-fill<?php echo $isCompleted ? ' completed' : ''; ?>" style="width: <?php echo esc_attr($stats['percentage'] ?? 0); ?>%"></div>
                             </div>
                             <div class="progress-text">
-                                <?php printf(
-                                    __('%d of %d customers synced (%s%%)', 'truebeep'),
-                                    $progress['processed'] ?? 0,
-                                    $progress['total'] ?? 0,
-                                    number_format($stats['percentage'] ?? 0, 1)
-                                ); ?>
+                                <?php 
+                                printf(
+                                    /* translators: %1$d: processed customers, %2$d: total customers, %3$s: percentage */
+                                    esc_html__('%1$d of %2$d customers synced (%3$s%%)', 'truebeep'),
+                                    intval($progress['processed'] ?? 0),
+                                    intval($progress['total'] ?? 0),
+                                    esc_html(number_format($stats['percentage'] ?? 0, 1))
+                                ); 
+                                ?>
                             </div>
                         </div>
                         
                         <div class="sync-stats-grid">
                             <div class="stat-item">
-                                <span class="stat-label"><?php _e('Successful', 'truebeep'); ?></span>
-                                <span class="stat-value success"><?php echo number_format($progress['successful'] ?? 0); ?></span>
+                                <span class="stat-label"><?php esc_html_e('Successful', 'truebeep'); ?></span>
+                                <span class="stat-value success"><?php echo esc_html(number_format($progress['successful'] ?? 0)); ?></span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label"><?php _e('Failed', 'truebeep'); ?></span>
-                                <span class="stat-value error"><?php echo number_format($progress['failed'] ?? 0); ?></span>
+                                <span class="stat-label"><?php esc_html_e('Failed', 'truebeep'); ?></span>
+                                <span class="stat-value error"><?php echo esc_html(number_format($progress['failed'] ?? 0)); ?></span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label"><?php _e('Skipped', 'truebeep'); ?></span>
-                                <span class="stat-value warning"><?php echo number_format($progress['skipped'] ?? 0); ?></span>
+                                <span class="stat-label"><?php esc_html_e('Skipped', 'truebeep'); ?></span>
+                                <span class="stat-value warning"><?php echo esc_html(number_format($progress['skipped'] ?? 0)); ?></span>
                             </div>
                         </div>
                         
                         <?php if (isset($status['rate_limit']) && !empty($status['rate_limit'])): ?>
                             <div class="rate-limit-info">
                                 <p class="description">
-                                    <?php printf(
-                                        __('Processing %d customers per batch, with %d second intervals between batches.', 'truebeep'),
-                                        $status['rate_limit']['batch_size'] ?? 20,
-                                        $status['rate_limit']['interval'] ?? 60
-                                    ); ?>
+                                    <?php 
+                                    printf(
+                                        /* translators: %1$d: batch size, %2$d: interval in seconds */
+                                        esc_html__('Processing %1$d customers per batch, with %2$d second intervals between batches.', 'truebeep'),
+                                        intval($status['rate_limit']['batch_size'] ?? 20),
+                                        intval($status['rate_limit']['interval'] ?? 60)
+                                    ); 
+                                    ?>
                                 </p>
                                 <?php if (isset($status['estimated_time_remaining']) && $status['estimated_time_remaining'] > 0): ?>
                                     <p class="description">
-                                        <?php printf(
-                                            __('Estimated time remaining: %s', 'truebeep'),
-                                            human_time_diff(time(), time() + $status['estimated_time_remaining'])
-                                        ); ?>
+                                        <?php 
+                                        printf(
+                                            /* translators: %s: human-readable time difference */
+                                            esc_html__('Estimated time remaining: %s', 'truebeep'),
+                                            esc_html(human_time_diff(time(), time() + $status['estimated_time_remaining']))
+                                        ); 
+                                        ?>
                                     </p>
                                 <?php endif; ?>
                             </div>
@@ -197,48 +206,51 @@ class SyncSettings
             <div class="truebeep-sync-container">
                 <!-- Controls Card -->
                 <div class="card">
-                    <h2 class="title"><?php _e('Sync Controls', 'truebeep'); ?></h2>
+                    <h2 class="title"><?php esc_html_e('Sync Controls', 'truebeep'); ?></h2>
                     <div class="card-body">
                         <div class="sync-controls">
                             <?php if ($status['status'] === 'idle' || $status['status'] === 'completed' || $status['status'] === 'cancelled'): ?>
                                 <?php if ($stats['remaining'] > 0): ?>
                                     <div class="notice notice-info inline">
                                         <p>
-                                            <?php printf(
-                                                __('There are %s customers ready to sync. Estimated time: %s minutes.', 'truebeep'),
-                                                '<strong>' . number_format($stats['remaining']) . '</strong>',
-                                                '<strong>' . ceil($stats['remaining'] / CustomerSyncProcessor::BATCH_SIZE) . '</strong>'
-                                            ); ?>
+                                            <?php 
+                                            printf(
+                                                /* translators: %1$s: number of customers, %2$s: estimated time in minutes */
+                                                esc_html__('There are %1$s customers ready to sync. Estimated time: %2$s minutes.', 'truebeep'),
+                                                '<strong>' . esc_html(number_format($stats['remaining'])) . '</strong>',
+                                                '<strong>' . esc_html(ceil($stats['remaining'] / CustomerSyncProcessor::BATCH_SIZE)) . '</strong>'
+                                            ); 
+                                            ?>
                                         </p>
                                     </div>
                                 <?php else: ?>
                                     <div class="notice notice-success inline">
-                                        <p><?php _e('All customers are synchronized!', 'truebeep'); ?></p>
+                                        <p><?php esc_html_e('All customers are synchronized!', 'truebeep'); ?></p>
                                     </div>
                                 <?php endif; ?>
                                 
                                 <p class="sync-actions">
                                     <button type="button" class="button button-primary button-hero" id="start-sync" <?php echo $stats['remaining'] === 0 ? 'disabled' : ''; ?>>
                                         <span class="dashicons dashicons-update"></span>
-                                        <?php _e('Start Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Start Sync', 'truebeep'); ?>
                                     </button>
                                 </p>
                             <?php elseif ($status['status'] === 'processing' || $status['status'] === 'running'): ?>
                                 <p class="sync-actions">
                                     <button type="button" class="button button-secondary button-hero" id="cancel-sync">
                                         <span class="dashicons dashicons-no"></span>
-                                        <?php _e('Cancel Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Cancel Sync', 'truebeep'); ?>
                                     </button>
                                 </p>
                             <?php elseif ($status['status'] === 'paused'): ?>
                                 <p class="sync-actions">
                                     <button type="button" class="button button-primary button-hero" id="resume-sync">
                                         <span class="dashicons dashicons-controls-play"></span>
-                                        <?php _e('Resume Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Resume Sync', 'truebeep'); ?>
                                     </button>
                                     <button type="button" class="button button-secondary button-hero" id="cancel-sync">
                                         <span class="dashicons dashicons-no"></span>
-                                        <?php _e('Cancel Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Cancel Sync', 'truebeep'); ?>
                                     </button>
                                 </p>
                             <?php endif; ?>
@@ -247,7 +259,7 @@ class SyncSettings
                                 <hr style="margin: 20px 0;">
                                 <p>
                                     <button type="button" class="button button-link-delete" id="reset-sync">
-                                        <?php _e('Reset Sync Data', 'truebeep'); ?>
+                                        <?php esc_html_e('Reset Sync Data', 'truebeep'); ?>
                                     </button>
                                 </p>
                             <?php endif; ?>
@@ -257,32 +269,32 @@ class SyncSettings
                 
                 <!-- Statistics Card -->
                 <div class="card">
-                    <h2 class="title"><?php _e('Sync Statistics', 'truebeep'); ?></h2>
+                    <h2 class="title"><?php esc_html_e('Sync Statistics', 'truebeep'); ?></h2>
                     <div class="card-body">
                         <table class="wp-list-table widefat fixed striped">
                             <tbody>
                                 <tr>
-                                    <th><?php _e('Total Customers', 'truebeep'); ?></th>
-                                    <td><strong><?php echo number_format(($stats['total'] ?? 0) + ($stats['remaining'] ?? 0)); ?></strong></td>
+                                    <th><?php esc_html_e('Total Customers', 'truebeep'); ?></th>
+                                    <td><strong><?php echo esc_html(number_format(($stats['total'] ?? 0) + ($stats['remaining'] ?? 0))); ?></strong></td>
                                 </tr>
                                 <tr>
-                                    <th><?php _e('Already Synced', 'truebeep'); ?></th>
-                                    <td><strong><?php echo number_format($stats['total'] ?? 0); ?></strong></td>
+                                    <th><?php esc_html_e('Already Synced', 'truebeep'); ?></th>
+                                    <td><strong><?php echo esc_html(number_format($stats['total'] ?? 0)); ?></strong></td>
                                 </tr>
                                 <tr>
-                                    <th><?php _e('Remaining to Sync', 'truebeep'); ?></th>
-                                    <td><strong><?php echo number_format($stats['remaining'] ?? 0); ?></strong></td>
+                                    <th><?php esc_html_e('Remaining to Sync', 'truebeep'); ?></th>
+                                    <td><strong><?php echo esc_html(number_format($stats['remaining'] ?? 0)); ?></strong></td>
                                 </tr>
                                 <?php if ($status['started_at']): ?>
                                 <tr>
-                                    <th><?php _e('Started At', 'truebeep'); ?></th>
-                                    <td><?php echo wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($status['started_at'])); ?></td>
+                                    <th><?php esc_html_e('Started At', 'truebeep'); ?></th>
+                                    <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($status['started_at']))); ?></td>
                                 </tr>
                                 <?php endif; ?>
                                 <?php if ($status['completed_at']): ?>
                                 <tr>
-                                    <th><?php _e('Completed At', 'truebeep'); ?></th>
-                                    <td><?php echo wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($status['completed_at'])); ?></td>
+                                    <th><?php esc_html_e('Completed At', 'truebeep'); ?></th>
+                                    <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($status['completed_at']))); ?></td>
                                 </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -295,7 +307,7 @@ class SyncSettings
             <?php $logs = $this->sync_manager->get_sync_logs(20); ?>
             <?php if (!empty($logs)): ?>
             <div class="card sync-log-card">
-                <h2 class="title"><?php _e('Sync Activity Log', 'truebeep'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Sync Activity Log', 'truebeep'); ?></h2>
                 <div class="card-body">
                     <div class="sync-log-container">
                         <?php foreach ($logs as $log): ?>
@@ -308,11 +320,14 @@ class SyncSettings
                                 <?php if (!empty($log['errors'])): ?>
                                     <div class="log-details">
                                         <div class="log-errors">
-                                            <strong><?php _e('Errors:', 'truebeep'); ?></strong>
+                                            <strong><?php esc_html_e('Errors:', 'truebeep'); ?></strong>
                                             <ul class="error-list">
                                                 <?php foreach ($log['errors'] as $user_id => $error): ?>
                                                     <li class="error-item">
-                                                        <span class="error-user"><?php printf(__('User ID %s:', 'truebeep'), $user_id); ?></span>
+                                                        <span class="error-user"><?php 
+                                                        /* translators: %s: user ID */
+                                                        printf(esc_html__('User ID %s:', 'truebeep'), esc_html($user_id)); 
+                                                        ?></span>
                                                         <span class="error-message"><?php echo esc_html($error); ?></span>
                                                     </li>
                                                 <?php endforeach; ?>
@@ -323,7 +338,10 @@ class SyncSettings
                                 
                                 <?php if (($log['successful'] ?? 0) > 0): ?>
                                     <div class="log-success">
-                                        <span class="success-count"><?php printf(__('%d customers synced successfully', 'truebeep'), $log['successful']); ?></span>
+                                        <span class="success-count"><?php 
+                                        /* translators: %d: number of successfully synced customers */
+                                        printf(esc_html__('%d customers synced successfully', 'truebeep'), intval($log['successful'])); 
+                                        ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -332,7 +350,7 @@ class SyncSettings
                     
                     <?php if (count($logs) >= 20): ?>
                         <div class="log-footer">
-                            <p class="log-note"><?php _e('Showing latest 20 log entries. Logs are automatically cleaned after 100 entries.', 'truebeep'); ?></p>
+                            <p class="log-note"><?php esc_html_e('Showing latest 20 log entries. Logs are automatically cleaned after 100 entries.', 'truebeep'); ?></p>
                         </div>
                     <?php endif; ?>
                 </div>

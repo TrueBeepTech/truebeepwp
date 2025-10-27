@@ -343,7 +343,7 @@ class CustomerHandler
     private function log_api_activity($message, $data = null, $level = 'info')
     {
         if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('[Truebeep API] [' . $level . '] ' . $message . ($data ? ' - Data: ' . print_r($data, true) : ''));
+            truebeep_log($message, 'CustomerHandler-' . $level, $data);
         }
 
         // Store in option for admin display
@@ -380,7 +380,7 @@ class CustomerHandler
         if (empty($api_url) || empty($api_key)) {
 ?>
             <div class="notice notice-warning">
-                <p><?php _e('Truebeep API credentials are not configured. Please configure them in WooCommerce > Settings > Truebeep.', 'truebeep'); ?></p>
+                <p><?php esc_html_e('Truebeep API credentials are not configured. Please configure them in WooCommerce > Settings > Truebeep.', 'truebeep'); ?></p>
             </div>
 <?php
         }
@@ -397,7 +397,7 @@ class CustomerHandler
             wp_send_json_error(['message' => __('Permission denied', 'truebeep')]);
         }
 
-        $user_id = intval($_POST['user_id']);
+        $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
         $this->create_or_update_truebeep_customer($user_id, 'WordPress');
 
         $sync_status = get_user_meta($user_id, '_truebeep_sync_status', true);
@@ -421,7 +421,7 @@ class CustomerHandler
             wp_send_json_error(['message' => __('Permission denied', 'truebeep')]);
         }
 
-        $user_id = intval($_POST['user_id']);
+        $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
 
         delete_user_meta($user_id, '_truebeep_customer_id');
         delete_user_meta($user_id, '_truebeep_sync_status');

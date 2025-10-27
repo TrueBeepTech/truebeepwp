@@ -18,12 +18,10 @@
   },
   "autoload": {
     "classmap": [
-      "includes",
-      "Update"
+      "includes"
     ],
     "psr-4": {
-      "Truebeep\\": "includes/",
-      "Truebeep\\Update\\": "Update/"
+      "Truebeep\\": "includes/"
     },
     "files": [
       "vendor/cmb2/cmb2/init.php",

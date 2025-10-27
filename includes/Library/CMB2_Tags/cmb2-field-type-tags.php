@@ -9,15 +9,15 @@ define('CMB_TAGS_VERSION', '1.0.0');
 function cmb_tags_render($field, $value, $object_id, $object_type, $field_type)
 {
 	cmb_tags_enqueue(); ?>
-	<?php echo $field_type->textarea(array(
+	<?php echo wp_kses_post($field_type->textarea(array(
 		'desc' => '',
 		'class' => 'show-if-no-js',
-	)); ?>
+	))); ?>
 	<div class="ajaxtag hide-if-no-js">
 		<input type="text" name="" class="new form-input-tip" size="16" autocomplete="off" value="" />
-		<input type="button" class="button" value="<?php esc_attr_e('Add'); ?>" tabindex="3" />
+		<input type="button" class="button" value="<?php esc_attr_e('Add', 'truebeep'); ?>" tabindex="3" />
 	</div>
-	<?php echo $field_type->_desc(true); ?>
+	<?php echo wp_kses_post($field_type->_desc(true)); ?>
 	<div class="tagchecklist hide-if-no-js"></div>
 <?php
 }

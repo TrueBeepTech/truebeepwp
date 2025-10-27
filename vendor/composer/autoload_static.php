@@ -20,7 +20,6 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
-            'Truebeep\\Update\\' => 16,
             'Truebeep\\' => 9,
         ),
         'S' => 
@@ -50,10 +49,6 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
     );
 
     public static $prefixDirsPsr4 = array (
-        'Truebeep\\Update\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/Update',
-        ),
         'Truebeep\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
@@ -117,7 +112,6 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Truebeep\\Assets' => __DIR__ . '/../..' . '/includes/Assets.php',
         'Truebeep\\Checkout\\PointsRedemption' => __DIR__ . '/../..' . '/includes/Checkout/PointsRedemption.php',
         'Truebeep\\Config\\Constants' => __DIR__ . '/../..' . '/includes/Config/Constants.php',
-        'Truebeep\\Elementor\\HelloWorld' => __DIR__ . '/../..' . '/includes/Elementor/HelloWorld.php',
         'Truebeep\\Frontend' => __DIR__ . '/../..' . '/includes/Frontend.php',
         'Truebeep\\Frontend\\LoyaltyPanel' => __DIR__ . '/../..' . '/includes/Frontend/LoyaltyPanel.php',
         'Truebeep\\Frontend\\MyAccountLoyalty' => __DIR__ . '/../..' . '/includes/Frontend/MyAccountLoyalty.php',
@@ -128,12 +122,9 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Truebeep\\Legacy\\LegacyIntegration' => __DIR__ . '/../..' . '/includes/Legacy/LegacyIntegration.php',
         'Truebeep\\Legacy\\SyncManager' => __DIR__ . '/../..' . '/includes/Legacy/SyncManager.php',
         'Truebeep\\Legacy\\SyncSettings' => __DIR__ . '/../..' . '/includes/Legacy/SyncSettings.php',
-        'Truebeep\\LoadElementor' => __DIR__ . '/../..' . '/includes/Elementor.php',
         'Truebeep\\Loyalty\\PointsManager' => __DIR__ . '/../..' . '/includes/Loyalty/PointsManager.php',
         'Truebeep\\Security\\RateLimiter' => __DIR__ . '/../..' . '/includes/Security/RateLimiter.php',
         'Truebeep\\Traits\\ApiHelper' => __DIR__ . '/../..' . '/includes/Traits/ApiHelper.php',
-        'Truebeep\\Update\\GitHubUpdater' => __DIR__ . '/../..' . '/Update/GitHubUpdater.php',
-        'Truebeep\\Update\\UpdateManager' => __DIR__ . '/../..' . '/Update/UpdateManager.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
