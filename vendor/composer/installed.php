@@ -3,11 +3,11 @@
         'name' => 'truebeep/truebeep',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'ef7fde0c16b5352e4f538c2206f778a888a60c4f',
+        'reference' => '51dc01a01b131ae8a213a234ecde28e0543d721c',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'carbonphp/carbon-doctrine-types' => array(
@@ -19,15 +19,6 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'dev_requirement' => false,
-        ),
-        'cmb2/cmb2' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '2847828b5cce1b48d09427ee13e6f7c752704468',
-            'type' => 'wordpress-plugin',
-            'install_path' => __DIR__ . '/../cmb2/cmb2',
-            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'johnbillion/args' => array(
@@ -106,7 +97,7 @@
         'symfony/translation' => array(
             'pretty_version' => '6.4.x-dev',
             'version' => '6.4.9999999.9999999-dev',
-            'reference' => '300b72643e89de0734d99a9e3f8494a3ef6936e1',
+            'reference' => 'c8559fe25c7ee7aa9d28f228903a46db008156a4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
@@ -132,7 +123,7 @@
         'truebeep/truebeep' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ef7fde0c16b5352e4f538c2206f778a888a60c4f',
+            'reference' => '51dc01a01b131ae8a213a234ecde28e0543d721c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

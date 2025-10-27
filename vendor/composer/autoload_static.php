@@ -12,9 +12,7 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'ac773ca18bc86f9208de2ed8068423eb' => __DIR__ . '/..' . '/johnbillion/extended-cpts/functions.php',
-        '5d36904c3056a272bd5c7c7d755158b6' => __DIR__ . '/..' . '/cmb2/cmb2/init.php',
         'aa2a5c50718b7c61724d7fd4806e813e' => __DIR__ . '/../..' . '/includes/functions.php',
-        'cda66d424ed9731b4c89e15707b9f7d1' => __DIR__ . '/../..' . '/includes/Library/CMB2_Tags/cmb2-field-type-tags.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -95,12 +93,9 @@ class ComposerStaticInit6258747de661a6539ca600c1c62c1a02
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
-        'ShazaboManager\\Library\\CMB2\\CMB2_Switch_Button' => __DIR__ . '/../..' . '/includes/Library/CMB2-Switch-Button/cmb2-switch-button.php',
-        'ShazaboManager\\Library\\CMB2\\PW_CMB2_Field_Select2' => __DIR__ . '/../..' . '/includes/Library/cmb-field-select2/cmb-field-select2.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Truebeep\\API' => __DIR__ . '/../..' . '/includes/API.php',
         'Truebeep\\Admin' => __DIR__ . '/../..' . '/includes/Admin.php',
-        'Truebeep\\Admin\\CMB2' => __DIR__ . '/../..' . '/includes/Admin/CMB2.php',
         'Truebeep\\Admin\\ConnectionHelper' => __DIR__ . '/../..' . '/includes/Admin/ConnectionHelper.php',
         'Truebeep\\Admin\\NetworkDiagnostics' => __DIR__ . '/../..' . '/includes/Admin/NetworkDiagnostics.php',
         'Truebeep\\Admin\\UserHandler' => __DIR__ . '/../..' . '/includes/Admin/UserHandler.php',
