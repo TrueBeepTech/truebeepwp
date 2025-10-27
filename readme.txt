@@ -179,62 +179,6 @@ Go to Users > Sync to Truebeep in your WordPress admin. Click "Start Sync" to be
 7. Wallet pass integration example
 8. Tier configuration settings
 
-== Changelog ==
-
-= 2.0.8 =
-* Improved WordPress.org compatibility
-* Enhanced plugin documentation
-* Updated readme format for better clarity
-* Minor bug fixes and stability improvements
-
-= 2.0.7 =
-* Added customer sync system improvements with better error handling
-* Enhanced rate limiting for API calls
-* Improved Action Scheduler integration
-* Added automatic retry for failed sync operations
-* Loyalty tier configuration improvements
-
-= 2.0.6 =
-* Fixed checkout redemption issues
-* Improved API error handling
-* Enhanced mobile responsiveness
-* Updated translation strings
-
-= 2.0.5 =
-* Added bulk customer synchronization
-* Improved performance for large stores
-* Fixed point calculation edge cases
-* Enhanced security measures
-
-= 2.0.4 =
-* Compatibility updates for WooCommerce 8.0
-* Added support for HPOS (High Performance Order Storage)
-* Improved wallet pass generation
-* Fixed timezone handling issues
-
-= 2.0.3 =
-* Added tier multiplier support
-* Enhanced admin UI
-* Fixed compatibility with third-party checkout plugins
-* Improved API response caching
-
-= 2.0.2 =
-* Initial public release on WordPress.org
-* Core loyalty functionality
-* WooCommerce integration
-* Digital wallet support
-
-== Upgrade Notice ==
-
-= 2.0.8 =
-This version improves WordPress.org compatibility and documentation. Update recommended for all users.
-
-= 2.0.7 =
-Important update with customer sync improvements and better error handling. Recommended for stores with large customer bases.
-
-= 2.0.6 =
-Fixes checkout issues and improves mobile experience. Update recommended.
-
 == Additional Information ==
 
 = Support =
