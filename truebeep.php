@@ -45,9 +45,6 @@ final class Truebeep
         
         // Add plugin action links
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_plugin_action_links']);
-
-        // Initialize GitHub updater
-        // WordPress.org handles updates automatically
     }
 
     /**
@@ -150,7 +147,6 @@ final class Truebeep
         wp_clear_scheduled_hook($hook_name);
         
         // Clear update caches
-        delete_transient('truebeep_github_release_' . md5('TruebeepTech' . 'TruebeepWp'));
         delete_site_transient('update_plugins');
     }
     

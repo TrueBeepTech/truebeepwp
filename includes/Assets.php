@@ -83,14 +83,6 @@ class Assets
      */
     public function register_admin_assets($hook)
     {
-        // Enqueue on plugins page
-        if ($hook === 'plugins.php') {
-            wp_enqueue_style(
-                'truebeep-admin-updater',
-                TRUEBEEP_ASSETS . '/css/admin-updater.css',
-                [],
-                filemtime(TRUEBEEP_PATH . '/assets/css/admin-updater.css')
-            );
-        }
+        // Admin assets can be added here if needed
     }
 }
