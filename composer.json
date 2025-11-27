@@ -9,11 +9,9 @@
       "email": "admin@truebeep.com"
     }
   ],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "require": {
-    "nesbot/carbon": "2.x-dev",
-    "johnbillion/extended-cpts": "dev-develop",
-    "woocommerce/action-scheduler": "^3.8"
+    "woocommerce/action-scheduler": "^3.9"
   },
   "autoload": {
     "classmap": [
