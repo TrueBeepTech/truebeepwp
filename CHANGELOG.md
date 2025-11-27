@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-01-XX
+
+### Fixed
+- Fixed naming collision issues with unprefixed AJAX action hooks
+- Added direct file access protection to all PHP files
+- Fixed ABSPATH check placement (after namespace declaration per PHP standards)
+
+### Changed
+- Removed unused dependencies (nesbot/carbon, johnbillion/extended-cpts)
+- Updated minimum-stability to "stable" in composer.json
+- Cleaned up composer dependencies to only include actively used packages
+
+### Security
+- All PHP files now protected against direct access
+- All AJAX hooks properly prefixed with "truebeep_" to prevent collisions
+
 ## [2.0.8] - 2025-09-05
 
 ### Changed
