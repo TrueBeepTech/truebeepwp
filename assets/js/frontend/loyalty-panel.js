@@ -95,7 +95,7 @@
                 url: truebeep_panel.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'get_loyalty_data',
+                    action: 'truebeep_get_loyalty_data',
                     nonce: truebeep_panel.nonce
                 },
                 success: function(response) {

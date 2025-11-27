@@ -12,7 +12,7 @@ class Ajax
      */
     public function __construct()
     {
-        add_action('wp_ajax_get_loyalty_data', [$this, 'handle_get_loyalty_data']);
+        add_action('wp_ajax_truebeep_get_loyalty_data', [$this, 'handle_get_loyalty_data']);
     }
 
     /**

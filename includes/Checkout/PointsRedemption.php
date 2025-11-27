@@ -28,9 +28,9 @@ class PointsRedemption
         add_action('wp_enqueue_scripts', [$this, 'enqueue_checkout_scripts']);
 
         // AJAX handlers - only for logged in users
-        add_action('wp_ajax_apply_points_discount', [$this, 'ajax_apply_points_discount']);
-        add_action('wp_ajax_remove_points_discount', [$this, 'ajax_remove_points_discount']);
-        add_action('wp_ajax_validate_points', [$this, 'ajax_validate_points']);
+        add_action('wp_ajax_truebeep_apply_points_discount', [$this, 'ajax_apply_points_discount']);
+        add_action('wp_ajax_truebeep_remove_points_discount', [$this, 'ajax_remove_points_discount']);
+        add_action('wp_ajax_truebeep_validate_points', [$this, 'ajax_validate_points']);
 
         // Apply discount to cart
         add_action('woocommerce_cart_calculate_fees', [$this, 'apply_points_discount_to_cart']);

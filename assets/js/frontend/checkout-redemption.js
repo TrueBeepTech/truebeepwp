@@ -99,7 +99,7 @@
                 url: truebeep_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'validate_points',
+                    action: 'truebeep_validate_points',
                     points: points,
                     nonce: truebeep_checkout.nonce
                 },
@@ -136,7 +136,7 @@
                 url: truebeep_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'apply_points_discount',
+                    action: 'truebeep_apply_points_discount',
                     points: points,
                     nonce: truebeep_checkout.nonce
                 },
@@ -174,7 +174,7 @@
                 url: truebeep_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'remove_points_discount',
+                    action: 'truebeep_remove_points_discount',
                     nonce: truebeep_checkout.nonce
                 },
                 success: function(response) {
@@ -219,7 +219,7 @@
                 url: truebeep_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'apply_points_discount',
+                    action: 'truebeep_apply_points_discount',
                     coupon_index: couponIndex,
                     nonce: truebeep_checkout.nonce
                 },
@@ -257,7 +257,7 @@
                 url: truebeep_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'remove_points_discount',
+                    action: 'truebeep_remove_points_discount',
                     nonce: truebeep_checkout.nonce
                 },
                 success: function(response) {
