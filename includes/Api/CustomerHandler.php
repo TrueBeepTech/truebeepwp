@@ -2,6 +2,8 @@
 
 namespace Truebeep\Api;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

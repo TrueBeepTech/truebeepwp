@@ -1,6 +1,8 @@
 <?php
 
-namespace Truebeep; 
+namespace Truebeep;
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly 
 
 /**
  * Frontend class

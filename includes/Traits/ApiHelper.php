@@ -2,6 +2,8 @@
 
 namespace Truebeep\Traits;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Truebeep\Config\Constants;
 
 trait ApiHelper

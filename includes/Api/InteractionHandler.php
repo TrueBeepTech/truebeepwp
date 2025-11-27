@@ -2,6 +2,8 @@
 
 namespace Truebeep\Api;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Truebeep\Traits\ApiHelper;
 
 /**

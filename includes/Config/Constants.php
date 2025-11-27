@@ -2,6 +2,8 @@
 
 namespace Truebeep\Config;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Constants class for Truebeep plugin
  */

@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 $truebeep_customer_id = get_user_meta($user->ID, '_truebeep_customer_id', true);
 $sync_status = get_user_meta($user->ID, '_truebeep_sync_status', true);
 $last_sync = get_user_meta($user->ID, '_truebeep_last_sync', true);

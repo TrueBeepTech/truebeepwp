@@ -2,6 +2,8 @@
 
 namespace Truebeep\Legacy;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Customer Sync Settings Page
  * 

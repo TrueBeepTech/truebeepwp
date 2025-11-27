@@ -1,3 +1,6 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+?>
 <div id="truebeep-loyalty-panel" class="truebeep-loyalty-panel <?php echo esc_attr($panel_position); ?>" data-customer-id="<?php echo esc_attr($truebeep_customer_id); ?>">
     <div class="panel-toggle">
         Rewards

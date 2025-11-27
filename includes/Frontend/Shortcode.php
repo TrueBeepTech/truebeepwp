@@ -2,6 +2,8 @@
 
 namespace Truebeep\Frontend;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Truebeep\Traits\ApiHelper;
 
 /**
