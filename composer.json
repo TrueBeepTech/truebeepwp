@@ -12,7 +12,6 @@
   "minimum-stability": "dev",
   "require": {
     "nesbot/carbon": "2.x-dev",
-    "johnbillion/extended-cpts": "dev-develop",
     "woocommerce/action-scheduler": "^3.8"
   },
   "autoload": {
