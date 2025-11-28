@@ -12,8 +12,6 @@ return array(
     'Symfony\\Contracts\\Translation\\' => array($vendorDir . '/symfony/translation-contracts'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
     'Psr\\Clock\\' => array($vendorDir . '/psr/clock/src'),
-    'ExtCPTs\\' => array($vendorDir . '/johnbillion/extended-cpts/src'),
     'Carbon\\Doctrine\\' => array($vendorDir . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
-    'Args\\' => array($vendorDir . '/johnbillion/args/src'),
 );
