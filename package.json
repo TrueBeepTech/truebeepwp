@@ -1,0 +1,11 @@
+{
+  "name": "truebeepwp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/TrueBeepTech/truebeepwp.git",
+  "author": "Md Nayeem Farid <39758380+nayeem07007@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "bundle": "mkdir -p ~/Downloads/Truebeep && rsync -av --progress . ~/Downloads/Truebeep --exclude='/.stylelintrc.json' --exclude='/LICENSE' --exclude='/.eslintrc' --exclude='/.eslintrc.json' --exclude='/.git' --exclude='/.gitattributes' --exclude='/.github' --exclude='/.gitignore' --exclude='/README.md' --exclude='/composer.json' --exclude='/composer.lock' --exclude='/node_modules' --exclude='/package-lock.json' --exclude='/package.json' --exclude='/.travis.yml' --exclude='/phpcs.xml.dist' --exclude='/readme.md' --exclude='/sass' --exclude='/src' --exclude='/yarn.lock' --exclude='/tailwind-blocks.config.js' --exclude='/tailwind.config.js' --exclude='/webpack.config.js' --exclude='/build' --exclude='/.editorconfig' --exclude='/.eslintignore' --exclude='/.prettierrc' --exclude='/includes/gutenberg/node_modules' --exclude='/includes/gutenberg/src' --exclude='/includes/gutenberg/package.json' --exclude='/includes/gutenberg/node_modules' --exclude='/includes/gutenberg/src' --exclude='/includes/gutenberg/readme.txt' --exclude='/includes/gutenberg/yarn.lock' --exclude='/includes/gutenberg/pnpm-lock.yaml' && cd ~/Downloads && zip -r Truebeep.zip Truebeep && rm -rf Truebeep"
+  }
+}
