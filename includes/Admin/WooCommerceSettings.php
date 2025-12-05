@@ -40,6 +40,7 @@ class WooCommerceSettings
             'loyalty' => __('Loyalty', 'truebeep'),
             'wallet' => __('Wallet', 'truebeep'),
         ];
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook pattern
         return apply_filters('woocommerce_get_sections_truebeep', $sections);
     }
 
@@ -70,6 +71,7 @@ class WooCommerceSettings
             $settings = $this->get_credentials_settings();
         }
 
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook pattern
         return apply_filters('woocommerce_get_settings_truebeep', $settings, $current_section);
     }
 
