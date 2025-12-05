@@ -15,26 +15,26 @@ if (!defined('ABSPATH')) {
 }
 
 // Sanitize attributes
-$show_points = $attributes['show_points'] === 'true';
-$show_tier = $attributes['show_tier'] === 'true';
-$show_wallet = $attributes['show_wallet'] === 'true';
-$layout = sanitize_text_field($attributes['layout']);
-$style = sanitize_text_field($attributes['style']);
+$truebeep_show_points = $attributes['show_points'] === 'true';
+$truebeep_show_tier = $attributes['show_tier'] === 'true';
+$truebeep_show_wallet = $attributes['show_wallet'] === 'true';
+$truebeep_layout = sanitize_text_field($attributes['layout']);
+$truebeep_style = sanitize_text_field($attributes['style']);
 
 // Set classes
-$container_classes = [
+$truebeep_container_classes = [
     'truebeep-loyalty-shortcode',
-    'layout-' . $layout,
-    'style-' . $style
+    'layout-' . $truebeep_layout,
+    'style-' . $truebeep_style
 ];
 ?>
 
-<div class="<?php echo esc_attr(implode(' ', $container_classes)); ?>">
+<div class="<?php echo esc_attr(implode(' ', $truebeep_container_classes)); ?>">
     
-    <?php if ($show_points || $show_tier): ?>
+    <?php if ($truebeep_show_points || $truebeep_show_tier): ?>
     <div class="loyalty-welcome">
         <div class="welcome-content">
-            <?php if ($show_points): ?>
+            <?php if ($truebeep_show_points): ?>
             <h3>
                 <?php 
                 printf(
@@ -47,7 +47,7 @@ $container_classes = [
             </h3>
             <?php endif; ?>
             
-            <?php if ($show_tier && $tier_name && $tier_name !== 'bronze'): ?>
+            <?php if ($truebeep_show_tier && $tier_name && $tier_name !== 'bronze'): ?>
             <p class="tier-status">
                 <?php 
                 /* translators: %s: tier name */
@@ -65,7 +65,7 @@ $container_classes = [
     </div>
     <?php endif; ?>
     
-    <?php if ($show_wallet && ($apple_wallet_url || $google_wallet_url)): ?>
+    <?php if ($truebeep_show_wallet && ($apple_wallet_url || $google_wallet_url)): ?>
     <div class="loyalty-wallet-section">
         <h4><?php esc_html_e('Add your loyalty card to your digital wallet', 'truebeep'); ?></h4>
         
