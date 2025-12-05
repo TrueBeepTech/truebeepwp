@@ -3,9 +3,9 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 $truebeep_customer_id = get_user_meta($user->ID, '_truebeep_customer_id', true);
-$sync_status = get_user_meta($user->ID, '_truebeep_sync_status', true);
-$last_sync = get_user_meta($user->ID, '_truebeep_last_sync', true);
-$sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
+$truebeep_sync_status = get_user_meta($user->ID, '_truebeep_sync_status', true);
+$truebeep_last_sync = get_user_meta($user->ID, '_truebeep_last_sync', true);
+$truebeep_sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
 
 ?>
 
@@ -22,21 +22,21 @@ $sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
     <tr>
         <th><label><?php esc_html_e('Sync Status', 'truebeep'); ?></label></th>
         <td>
-            <?php if ($sync_status === 'synced'): ?>
+            <?php if ($truebeep_sync_status === 'synced'): ?>
                 <span style="color: green;">✓ <?php esc_html_e('Synced', 'truebeep'); ?></span>
-            <?php elseif ($sync_status === 'error'): ?>
+            <?php elseif ($truebeep_sync_status === 'error'): ?>
                 <span style="color: red;">✗ <?php esc_html_e('Error', 'truebeep'); ?></span>
-                <?php if ($sync_error): ?>
-                    <p class="description" style="color: red;"><?php echo esc_html($sync_error); ?></p>
+                <?php if ($truebeep_sync_error): ?>
+                    <p class="description" style="color: red;"><?php echo esc_html($truebeep_sync_error); ?></p>
                 <?php endif; ?>
             <?php else: ?>
                 <span><?php esc_html_e('Not synced', 'truebeep'); ?></span>
             <?php endif; ?>
 
-            <?php if ($last_sync): ?>
+            <?php if ($truebeep_last_sync): ?>
                 <p class="description"><?php 
                 /* translators: %s: last sync date/time */
-                printf(esc_html__('Last sync: %s', 'truebeep'), esc_html($last_sync)); 
+                printf(esc_html__('Last sync: %s', 'truebeep'), esc_html($truebeep_last_sync)); 
                 ?></p>
             <?php endif; ?>
         </td>
