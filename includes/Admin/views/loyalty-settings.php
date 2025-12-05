@@ -31,15 +31,15 @@ if (!defined('ABSPATH')) {
                             </tr>
                         </thead>
                         <tbody id="truebeep-tiers-list">
-                            <?php foreach ($tiers as $index => $tier) : ?>
-                                <tr class="tier-row" data-index="<?php echo esc_attr($index); ?>">
-                                    <td><?php echo esc_html($tier['name']); ?></td>
-                                    <td><?php echo esc_html($tier['order_to_points'] ?? '1'); ?></td>
-                                    <td><?php echo esc_html($tier['points_to_amount'] ?? '1'); ?></td>
-                                    <td><?php echo esc_html($tier['threshold'] ?? '0'); ?></td>
+                            <?php foreach ($tiers as $truebeep_index => $truebeep_tier) : ?>
+                                <tr class="tier-row" data-index="<?php echo esc_attr($truebeep_index); ?>">
+                                    <td><?php echo esc_html($truebeep_tier['name']); ?></td>
+                                    <td><?php echo esc_html($truebeep_tier['order_to_points'] ?? '1'); ?></td>
+                                    <td><?php echo esc_html($truebeep_tier['points_to_amount'] ?? '1'); ?></td>
+                                    <td><?php echo esc_html($truebeep_tier['threshold'] ?? '0'); ?></td>
                                     <td>
-                                        <button type="button" class="button edit-tier" data-tier='<?php echo esc_attr(json_encode($tier)); ?>' data-index="<?php echo esc_attr($index); ?>"><?php esc_html_e('Edit', 'truebeep'); ?></button>
-                                        <button type="button" class="button remove-tier" data-index="<?php echo esc_attr($index); ?>"><?php esc_html_e('Remove', 'truebeep'); ?></button>
+                                        <button type="button" class="button edit-tier" data-tier='<?php echo esc_attr(json_encode($truebeep_tier)); ?>' data-index="<?php echo esc_attr($truebeep_index); ?>"><?php esc_html_e('Edit', 'truebeep'); ?></button>
+                                        <button type="button" class="button remove-tier" data-index="<?php echo esc_attr($truebeep_index); ?>"><?php esc_html_e('Remove', 'truebeep'); ?></button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
