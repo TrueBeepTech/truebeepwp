@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:       Truebeep: Smart Wallet Loyalty
- * Plugin URI:        https://truebeep.com
+ * Plugin URI:        https://wp.truebeep.com
  * Description:       Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
  * Version:           1.0.1
  * Author:            Truebeep
