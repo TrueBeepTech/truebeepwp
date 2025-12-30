@@ -21,7 +21,32 @@ class NetworkDiagnostics {
     public function __construct() {
         $this->load_github_config();
         add_action('admin_menu', [$this, 'add_diagnostics_page']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
         add_action('wp_ajax_truebeep_test_github_connection', [$this, 'test_github_connection']);
+    }
+    
+    /**
+     * Enqueue scripts and styles for diagnostics page
+     *
+     * @param string $hook Current admin page hook
+     */
+    public function enqueue_scripts($hook) {
+        // Only load on our diagnostics page
+        if ('tools_page_truebeep-diagnostics' !== $hook) {
+            return;
+        }
+        
+        wp_enqueue_script(
+            'truebeep-network-diagnostics',
+            TRUEBEEP_URL . '/assets/js/admin/network-diagnostics.js',
+            [],
+            TRUEBEEP_VERSION,
+            true
+        );
+        
+        wp_localize_script('truebeep-network-diagnostics', 'truebeepDiagnostics', [
+            'nonce' => wp_create_nonce('truebeep_diagnostics'),
+        ]);
     }
     
     /**
@@ -166,37 +191,6 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
                 </ol>
             </div>
         </div>
-        
-        <script>
-        document.getElementById('run-diagnostics').addEventListener('click', function() {
-            var button = this;
-            var resultsDiv = document.getElementById('truebeep-diagnostics-results');
-            
-            button.disabled = true;
-            button.textContent = 'Running...';
-            
-            resultsDiv.innerHTML = '<div class="notice notice-info"><p>Running diagnostics...</p></div>';
-            
-            fetch(ajaxurl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'action=truebeep_test_github_connection&_wpnonce=' + '<?php echo esc_js(wp_create_nonce('truebeep_diagnostics')); ?>'
-            })
-            .then(response => response.json())
-            .then(data => {
-                resultsDiv.innerHTML = data.data.html;
-                button.disabled = false;
-                button.textContent = 'Run Diagnostics';
-            })
-            .catch(error => {
-                resultsDiv.innerHTML = '<div class="notice notice-error"><p>Error running diagnostics: ' + error.message + '</p></div>';
-                button.disabled = false;
-                button.textContent = 'Run Diagnostics';
-            });
-        });
-        </script>
         <?php
     }
     

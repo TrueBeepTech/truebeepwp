@@ -19,7 +19,47 @@ class UserHandler
         // Add custom column to users list
         add_filter('manage_users_columns', [$this, 'add_truebeep_synced_column']);
         add_filter('manage_users_custom_column', [$this, 'show_truebeep_synced_column_content'], 10, 3);
-        add_action('admin_head', [$this, 'add_truebeep_column_styles']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
+    }
+    
+    /**
+     * Enqueue scripts and styles
+     *
+     * @param string $hook Current admin page hook
+     */
+    public function enqueue_assets($hook)
+    {
+        // Load styles on users list page
+        if ('users' === $hook) {
+            wp_enqueue_style(
+                'truebeep-user-columns',
+                TRUEBEEP_URL . '/assets/css/admin/user-columns.css',
+                [],
+                TRUEBEEP_VERSION
+            );
+        }
+        
+        // Load scripts on user profile/edit pages
+        if (in_array($hook, ['user-edit.php', 'profile.php'], true)) {
+            wp_enqueue_script(
+                'truebeep-user-profile-fields',
+                TRUEBEEP_URL . '/assets/js/admin/user-profile-fields.js',
+                ['jquery'],
+                TRUEBEEP_VERSION,
+                true
+            );
+            
+            wp_localize_script('truebeep-user-profile-fields', 'truebeepUserProfile', [
+                'nonceSync' => wp_create_nonce('truebeep_sync_user'),
+                'nonceRemove' => wp_create_nonce('truebeep_remove_sync'),
+                'strings' => [
+                    'syncing' => __('Syncing...', 'truebeep'),
+                    'syncFailed' => __('Sync failed', 'truebeep'),
+                    'syncWithTruebeep' => __('Sync with Truebeep', 'truebeep'),
+                    'confirmRemove' => __('Are you sure you want to remove the Truebeep link?', 'truebeep'),
+                ]
+            ]);
+        }
     }
 
     /**
@@ -100,48 +140,4 @@ class UserHandler
         return $value;
     }
     
-    /**
-     * Add CSS styles for Truebeep column
-     */
-    public function add_truebeep_column_styles()
-    {
-        $screen = get_current_screen();
-        
-        // Only add styles on users list page
-        if ($screen && $screen->id === 'users') {
-            ?>
-            <style type="text/css">
-                .column-truebeep_synced {
-                    width: 120px;
-                    text-align: center;
-                }
-                
-                .truebeep-sync-status {
-                    display: inline-block;
-                    cursor: help;
-                }
-                
-                .truebeep-sync-status .dashicons {
-                    font-size: 20px;
-                    width: 20px;
-                    height: 20px;
-                }
-                
-                .truebeep-sync-status.synced .dashicons {
-                    color: #46b450;
-                }
-                
-                .truebeep-sync-status.not-synced .dashicons {
-                    color: #dc3232;
-                }
-                
-                @media screen and (max-width: 782px) {
-                    .column-truebeep_synced {
-                        display: none;
-                    }
-                }
-            </style>
-            <?php
-        }
-    }
 }
