@@ -78,6 +78,85 @@ Truebeep uses secure API integration to synchronize customer data and manage loy
 
 All data transmission is encrypted and follows industry security standards.
 
+== External Services ==
+
+This plugin connects to the following external services:
+
+= Truebeep API Service =
+
+**Service:** Truebeep API (https://api.truebeep.com)
+
+**Purpose:** This is the core service that powers the loyalty program functionality. The plugin requires an active connection to Truebeep's servers to:
+* Synchronize customer information between WordPress and Truebeep
+* Manage and update loyalty point balances in real-time
+* Handle tier assignments and tier progression
+* Generate Apple Wallet and Google Wallet passes for customers
+* Process loyalty point transactions (earnings and redemptions)
+
+**Data Sent:**
+* Customer email addresses
+* Customer names
+* Order information (order totals, dates, status)
+* Point transaction details (earned, redeemed, adjusted)
+* Customer tier information
+* Wallet pass template IDs and customer IDs
+
+**When Data is Sent:**
+* When a customer places an order (to credit points)
+* When a customer redeems points at checkout (to deduct points)
+* When administrators manually sync customers
+* When a wallet pass is requested by a customer
+* When customer information is updated in WordPress
+* When orders are refunded or cancelled (to adjust points)
+
+**Service Provider:** Truebeep
+* Terms of Service: https://truebeep.com/terms
+* Privacy Policy: https://truebeep.com/privacy
+
+**Note:** An active Truebeep API account is required for the plugin to function. Sign up at truebeep.com to obtain API credentials.
+
+= GitHub API (Diagnostics Tool Only) =
+
+**Service:** GitHub API (https://api.github.com) and GitHub.com
+
+**Purpose:** The Network Diagnostics tool (available in Tools > Truebeep Diagnostics) uses GitHub API to:
+* Check plugin update availability
+* Test connectivity to GitHub for potential plugin updates
+* Verify download capabilities
+
+**Data Sent:**
+* HTTP User-Agent header (WordPress version)
+* Repository name (if configured in github-config.php)
+
+**When Data is Sent:**
+* Only when administrators manually run the diagnostics tool from Tools > Truebeep Diagnostics
+* Only if a GitHub repository URL is configured in github-config.php
+* Not sent during normal plugin operation
+
+**Service Provider:** GitHub, Inc.
+* Terms of Service: https://docs.github.com/en/github/site-policy/github-terms-of-service
+* Privacy Policy: https://docs.github.com/en/github/site-policy/github-privacy-statement
+
+**Note:** This is an optional diagnostic tool. The plugin does not require GitHub connectivity to function normally.
+
+= httpbin.org (Diagnostics Tool Only) =
+
+**Service:** httpbin.org (https://httpbin.org)
+
+**Purpose:** Used only by the Network Diagnostics tool to verify the User-Agent string that WordPress sends with HTTP requests.
+
+**Data Sent:**
+* HTTP User-Agent header (WordPress version)
+
+**When Data is Sent:**
+* Only when administrators manually run the diagnostics tool from Tools > Truebeep Diagnostics
+* Not sent during normal plugin operation
+
+**Service Provider:** httpbin.org
+* Privacy Policy: httpbin.org does not collect or store personal data beyond standard HTTP logs
+
+**Note:** This is an optional diagnostic tool. The plugin does not require httpbin.org connectivity to function normally.
+
 = Privacy & Data =
 
 This plugin processes the following customer data:
