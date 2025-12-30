@@ -39,8 +39,8 @@ class CustomerHandler
         add_action('woocommerce_checkout_update_user_meta', [$this, 'handle_checkout_user_update'], 10, 2);
         add_action('woocommerce_customer_save_address', [$this, 'handle_address_update'], 10, 2);
         add_action('admin_notices', [$this, 'show_api_notices']);
-        add_action('wp_ajax_truebeep_sync_user', [$this, 'ajax_sync_user']);
-        add_action('wp_ajax_truebeep_remove_sync', [$this, 'ajax_remove_sync']);
+        add_action('wp_ajax_truebeep_smwl_sync_user', [$this, 'ajax_sync_user']);
+        add_action('wp_ajax_truebeep_smwl_remove_sync', [$this, 'ajax_remove_sync']);
     }
 
     /**
@@ -393,7 +393,7 @@ class CustomerHandler
      */
     public function ajax_sync_user()
     {
-        check_ajax_referer('truebeep_sync_user', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_user', 'nonce');
 
         if (!current_user_can('edit_users')) {
             wp_send_json_error(['message' => __('Permission denied', 'truebeep')]);
@@ -417,7 +417,7 @@ class CustomerHandler
      */
     public function ajax_remove_sync()
     {
-        check_ajax_referer('truebeep_remove_sync', 'nonce');
+        check_ajax_referer('truebeep_smwl_remove_sync', 'nonce');
 
         if (!current_user_can('edit_users')) {
             wp_send_json_error(['message' => __('Permission denied', 'truebeep')]);

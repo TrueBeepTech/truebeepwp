@@ -3,34 +3,34 @@ jQuery(document).ready(function($) {
     var couponsData = [];
     
     // Connection button functionality
-    $('#truebeep-connection-btn').on('click', function(e) {
+    $('#truebeep-smwl-connection-btn').on('click', function(e) {
         e.preventDefault();
         
         var $button = $(this);
-        var $message = $('#truebeep-connection-message');
-        var $status = $('#truebeep-status');
+        var $message = $('#truebeep-smwl-connection-message');
+        var $status = $('#truebeep-smwl-status');
         var currentStatus = $button.data('status');
         var action = (currentStatus === 'connected') ? 'disconnect' : 'connect';
         var originalText = $button.text();
         
         // Show loading state
-        $button.text(truebeep_admin.strings.processing).prop('disabled', true);
-        $message.html('<span style="color: blue;">' + truebeep_admin.strings.processing + '</span>');
+        $button.text(truebeep_smwl_admin.strings.processing).prop('disabled', true);
+        $message.html('<span style="color: blue;">' + truebeep_smwl_admin.strings.processing + '</span>');
         
         // Make AJAX request
         $.ajax({
-            url: truebeep_admin.ajax_url,
+            url: truebeep_smwl_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'truebeep_update_connection',
-                nonce: truebeep_admin.connection_nonce,
+                action: 'truebeep_smwl_update_connection',
+                nonce: truebeep_smwl_admin.connection_nonce,
                 connection_action: action
             },
             success: function(response) {
                 if (response.success) {
                     var newStatus = response.data.status;
-                    var newButtonText = (newStatus === 'connected') ? truebeep_admin.strings.disconnect : truebeep_admin.strings.connect;
-                    var statusText = (newStatus === 'connected') ? truebeep_admin.strings.connected : truebeep_admin.strings.disconnected;
+                    var newButtonText = (newStatus === 'connected') ? truebeep_smwl_admin.strings.disconnect : truebeep_smwl_admin.strings.connect;
+                    var statusText = (newStatus === 'connected') ? truebeep_smwl_admin.strings.connected : truebeep_smwl_admin.strings.disconnected;
                     var statusColor = (newStatus === 'connected') ? 'green' : 'red';
                     
                     // Update button
@@ -51,7 +51,7 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function() {
-                $message.html('<span style="color: red;">✗ ' + truebeep_admin.strings.connectionFailed + '</span>');
+                $message.html('<span style="color: red;">✗ ' + truebeep_smwl_admin.strings.connectionFailed + '</span>');
             },
             complete: function() {
                 $button.prop('disabled', false);
@@ -180,7 +180,7 @@ jQuery(document).ready(function($) {
     $(document).on('click', '.remove-tier', function() {
         var index = $(this).data('index');
         
-        if (confirm(truebeep_admin.strings.confirmRemoveTier)) {
+        if (confirm(truebeep_smwl_admin.strings.confirmRemoveTier)) {
             $(this).closest('tr').remove();
             
             // Remove from data array
@@ -201,7 +201,7 @@ jQuery(document).ready(function($) {
     // Add new coupon
     $('#add-coupon-button').on('click', function() {
         var newCoupon = {
-            name: truebeep_admin.strings.newCoupon,
+            name: truebeep_smwl_admin.strings.newCoupon,
             value: 1
         };
         
@@ -212,8 +212,8 @@ jQuery(document).ready(function($) {
             '<td>' + newCoupon.name + '</td>' +
             '<td>$' + newCoupon.value + '</td>' +
             '<td>' +
-                '<button type="button" class="button edit-coupon" data-coupon=\'' + JSON.stringify(newCoupon) + '\' data-index="' + newIndex + '">' + truebeep_admin.strings.edit + '</button> ' +
-                '<button type="button" class="button remove-coupon" data-index="' + newIndex + '">' + truebeep_admin.strings.remove + '</button>' +
+                '<button type="button" class="button edit-coupon" data-coupon=\'' + JSON.stringify(newCoupon) + '\' data-index="' + newIndex + '">' + truebeep_smwl_admin.strings.edit + '</button> ' +
+                '<button type="button" class="button remove-coupon" data-index="' + newIndex + '">' + truebeep_smwl_admin.strings.remove + '</button>' +
             '</td>' +
         '</tr>';
         
@@ -264,7 +264,7 @@ jQuery(document).ready(function($) {
     $(document).on('click', '.remove-coupon', function() {
         var index = $(this).data('index');
         
-        if (confirm(truebeep_admin.strings.confirmRemoveCoupon)) {
+        if (confirm(truebeep_smwl_admin.strings.confirmRemoveCoupon)) {
             $(this).closest('tr').remove();
             
             // Remove from data array
@@ -285,7 +285,7 @@ jQuery(document).ready(function($) {
     $('#save-coupons-button').on('click', function() {
         var button = $(this);
         var originalText = button.text();
-        button.text(truebeep_admin.strings.saving);
+        button.text(truebeep_smwl_admin.strings.saving);
         button.prop('disabled', true);
 
         // Collect current coupons data
@@ -304,11 +304,11 @@ jQuery(document).ready(function($) {
         console.log('Saving coupons only:', currentCoupons);
 
         $.ajax({
-            url: truebeep_admin.ajax_url,
+            url: truebeep_smwl_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'truebeep_save_coupons',
-                nonce: truebeep_admin.coupons_nonce,
+                action: 'truebeep_smwl_save_coupons',
+                nonce: truebeep_smwl_admin.coupons_nonce,
                 coupons: currentCoupons
             },
             success: function(response) {
@@ -333,7 +333,7 @@ jQuery(document).ready(function($) {
                 $('.wrap h1').after(notice);
             },
             complete: function() {
-                button.text(truebeep_admin.strings.save_coupons);
+                button.text(truebeep_smwl_admin.strings.save_coupons);
                 button.prop('disabled', false);
             }
         });
@@ -343,7 +343,7 @@ jQuery(document).ready(function($) {
     $('#save-all-button').on('click', function() {
         var button = $(this);
         var originalText = button.text();
-        button.text(truebeep_admin.strings.saving);
+        button.text(truebeep_smwl_admin.strings.saving);
         button.prop('disabled', true);
         
         // Collect loyalty fields values
@@ -385,11 +385,11 @@ jQuery(document).ready(function($) {
         });
 
         $.ajax({
-            url: truebeep_admin.ajax_url,
+            url: truebeep_smwl_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'truebeep_save_loyalty',
-                nonce: truebeep_admin.nonce,
+                action: 'truebeep_smwl_save_loyalty',
+                nonce: truebeep_smwl_admin.nonce,
                 redeem_method: redeemMethod,
                 earning_value: earningValue,
                 redeeming_value: redeemingValue,

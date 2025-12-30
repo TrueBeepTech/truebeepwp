@@ -16,20 +16,21 @@ class WooCommerceSettings
     public function __construct()
     {
         add_filter('woocommerce_settings_tabs_array', [$this, 'add_settings_tab'], 50);
-        add_action('woocommerce_settings_tabs_truebeep', [$this, 'settings_tab']);
-        add_action('woocommerce_update_options_truebeep', [$this, 'update_settings']);
-        add_action('woocommerce_update_options_truebeep_loyalty', [$this, 'update_settings']);
-        add_action('woocommerce_sections_truebeep', [$this, 'output_sections']);
+        add_action('woocommerce_settings_tabs_truebeep_smwl', [$this, 'settings_tab']);
+        add_action('woocommerce_update_options_truebeep_smwl', [$this, 'update_settings']);
+        add_action('woocommerce_update_options_truebeep_smwl_loyalty', [$this, 'update_settings']);
+        add_action('woocommerce_sections_truebeep_smwl', [$this, 'output_sections']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-        add_action('wp_ajax_truebeep_save_loyalty', [$this, 'ajax_save_loyalty']);
-        add_action('wp_ajax_truebeep_save_coupons', [$this, 'ajax_save_coupons']);
-        add_action('wp_ajax_truebeep_update_connection', [$this, 'ajax_update_connection']);
-        add_action('woocommerce_admin_field_truebeep_coupons', [$this, 'output_loyalty_field']);
+        add_action('wp_ajax_truebeep_smwl_save_loyalty', [$this, 'ajax_save_loyalty']);
+        add_action('wp_ajax_truebeep_smwl_save_coupons', [$this, 'ajax_save_coupons']);
+        add_action('wp_ajax_truebeep_smwl_update_connection', [$this, 'ajax_update_connection']);
+        add_action('woocommerce_admin_field_truebeep_smwl_coupons', [$this, 'output_loyalty_field']);
+        add_action('woocommerce_admin_field_truebeep_smwl_tiers', [$this, 'output_loyalty_field']);
     }
 
     public function add_settings_tab($settings_tabs)
     {
-        $settings_tabs['truebeep'] = __('Truebeep', 'truebeep');
+        $settings_tabs['truebeep_smwl'] = __('Truebeep', 'truebeep');
         return $settings_tabs;
     }
 
@@ -41,7 +42,7 @@ class WooCommerceSettings
             'wallet' => __('Wallet', 'truebeep'),
         ];
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook pattern
-        return apply_filters('woocommerce_get_sections_truebeep', $sections);
+        return apply_filters('woocommerce_get_sections_truebeep_smwl', $sections);
     }
 
     public function output_sections()
@@ -56,7 +57,7 @@ class WooCommerceSettings
         echo '<ul class="subsubsub">';
         $array_keys = array_keys($sections);
         foreach ($sections as $id => $label) {
-            echo '<li><a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep&section=' . sanitize_title($id))) . '" class="' . esc_attr($current_section == $id ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
+            echo '<li><a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep_smwl&section=' . sanitize_title($id))) . '" class="' . esc_attr($current_section == $id ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
         }
         echo '</ul><br class="clear" />';
     }
@@ -72,7 +73,7 @@ class WooCommerceSettings
         }
 
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook pattern
-        return apply_filters('woocommerce_get_settings_truebeep', $settings, $current_section);
+        return apply_filters('woocommerce_get_settings_truebeep_smwl', $settings, $current_section);
     }
 
     private function get_credentials_settings()
@@ -87,7 +88,7 @@ class WooCommerceSettings
             [
                 'title' => __('Truebeep Credentials', 'truebeep'),
                 'type' => 'title',
-                'desc' => __('Configure your Truebeep API credentials', 'truebeep') . '<br/>Status: <span id="truebeep-status" style="color: ' . $status_color . '; font-weight: bold;">' . $status_text . '</span>',
+                'desc' => __('Configure your Truebeep API credentials', 'truebeep') . '<br/>Status: <span id="truebeep-smwl-status" style="color: ' . $status_color . '; font-weight: bold;">' . $status_text . '</span>',
                 'id' => 'truebeep_credentials_section'
             ],
             [
@@ -103,7 +104,7 @@ class WooCommerceSettings
             ],
             [
                 'title' => __('API Key', 'truebeep'),
-                'desc' => __('Enter your Truebeep API Key', 'truebeep') . '<br/><br/><button type="button" class="button button-primary" id="truebeep-connection-btn" data-status="' . $connection_status . '">' . $button_text . '</button><span id="truebeep-connection-message" style="margin-left: 10px;"></span>',
+                'desc' => __('Enter your Truebeep API Key', 'truebeep') . '<br/><br/><button type="button" class="button button-primary" id="truebeep-smwl-connection-btn" data-status="' . $connection_status . '">' . $button_text . '</button><span id="truebeep-smwl-connection-message" style="margin-left: 10px;"></span>',
                 'id' => 'truebeep_api_key',
                 'type' => 'password',
                 'css' => 'min-width:400px;',
@@ -140,7 +141,7 @@ class WooCommerceSettings
                 'desc_tip' => true,
             ],
             [
-                'type' => 'truebeep_coupons',
+                'type' => 'truebeep_smwl_coupons',
                 'id' => 'truebeep_coupons_settings'
             ],
             [
@@ -185,7 +186,7 @@ class WooCommerceSettings
                 'desc_tip' => true,
             ],
             [
-                'type' => 'truebeep_tiers',
+                'type' => 'truebeep_smwl_tiers',
                 'id' => 'truebeep_tiers_settings'
             ],
             [
@@ -289,7 +290,7 @@ class WooCommerceSettings
     public function output_loyalty_field($value)
     {
         // This is a custom field type handler for loyalty fields
-        if ($value['type'] == 'truebeep_coupons') {
+        if ($value['type'] == 'truebeep_smwl_coupons') {
             $coupons = get_option('truebeep_coupons', $this->get_default_coupons());
             ?>
             <tr valign="top" id="coupon-settings-section" style="display:none;">
@@ -377,7 +378,7 @@ class WooCommerceSettings
 
     public function ajax_save_loyalty()
     {
-        check_ajax_referer('truebeep_save_loyalty', 'nonce');
+        check_ajax_referer('truebeep_smwl_save_loyalty', 'nonce');
 
         if (!current_user_can('manage_woocommerce')) {
             wp_die(esc_html__('You do not have permission to perform this action.', 'truebeep'));
@@ -434,7 +435,7 @@ class WooCommerceSettings
 
     public function ajax_save_coupons()
     {
-        check_ajax_referer('truebeep_save_coupons', 'nonce');
+        check_ajax_referer('truebeep_smwl_save_coupons', 'nonce');
 
         if (!current_user_can('manage_woocommerce')) {
             wp_die(esc_html__('You do not have permission to perform this action.', 'truebeep'));
@@ -465,7 +466,7 @@ class WooCommerceSettings
      */
     public function ajax_update_connection()
     {
-        check_ajax_referer('truebeep_connection', 'nonce');
+        check_ajax_referer('truebeep_smwl_connection', 'nonce');
         
         if (!current_user_can('manage_woocommerce')) {
             wp_send_json_error(['message' => __('You do not have permission to perform this action.', 'truebeep')]);
@@ -528,20 +529,20 @@ class WooCommerceSettings
         // Get current tab safely without nonce verification (read-only check for script loading)
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for conditional script loading
         $current_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : '';
-        if ($current_tab === 'truebeep') {
+        if ($current_tab === 'truebeep_smwl') {
             wp_enqueue_script(
-                'truebeep-woocommerce-settings',
+                'truebeep-smwl-woocommerce-settings',
                 TRUEBEEP_URL . '/assets/js/admin/woocommerce-settings.js',
                 ['jquery'],
                 TRUEBEEP_VERSION,
                 true
             );
 
-            wp_localize_script('truebeep-woocommerce-settings', 'truebeep_admin', [
+            wp_localize_script('truebeep-smwl-woocommerce-settings', 'truebeep_smwl_admin', [
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('truebeep_save_loyalty'),
-                'coupons_nonce' => wp_create_nonce('truebeep_save_coupons'),
-                'connection_nonce' => wp_create_nonce('truebeep_connection'),
+                'nonce' => wp_create_nonce('truebeep_smwl_save_loyalty'),
+                'coupons_nonce' => wp_create_nonce('truebeep_smwl_save_coupons'),
+                'connection_nonce' => wp_create_nonce('truebeep_smwl_connection'),
                 'strings' => [
                     'tier_name' => __('Tier Name', 'truebeep'),
                     'remove' => __('Remove', 'truebeep'),
@@ -562,7 +563,7 @@ class WooCommerceSettings
             ]);
 
             wp_enqueue_style(
-                'truebeep-woocommerce-settings',
+                'truebeep-smwl-woocommerce-settings',
                 TRUEBEEP_URL . '/assets/css/admin/woocommerce-settings.css',
                 [],
                 TRUEBEEP_VERSION

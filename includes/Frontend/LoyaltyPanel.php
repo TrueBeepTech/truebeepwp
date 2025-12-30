@@ -55,7 +55,7 @@ class LoyaltyPanel
 
         $panel_position = get_option('truebeep_panel_position', 'bottom-right');
 
-        wp_enqueue_script('truebeep-loyalty-panel');
+        wp_enqueue_script('truebeep-smwl-loyalty-panel');
         wp_enqueue_style('truebeep-loyalty-panel');
 
         // Get wallet template IDs
@@ -64,9 +64,9 @@ class LoyaltyPanel
         $user_id = get_current_user_id();
 
         // Localize script with necessary data
-        wp_localize_script('truebeep-loyalty-panel', 'truebeep_panel', [
+        wp_localize_script('truebeep-smwl-loyalty-panel', 'truebeep_smwl_panel', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('truebeep_panel_nonce'),
+            'nonce' => wp_create_nonce('truebeep_smwl_panel_nonce'),
             'apple_wallet_url' => $wallet_base_url . '/api/apple/v1/generate-pass',
             'google_wallet_url' => $wallet_base_url . '/api/google/v1/generate-pass',
             'apple_template_id' => $wallet_id,
@@ -93,7 +93,7 @@ class LoyaltyPanel
     public function ajax_get_loyalty_data()
     {
         // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'truebeep_panel_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'truebeep_smwl_panel_nonce')) {
             wp_send_json_error(['message' => __('Security check failed', 'truebeep')]);
         }
 

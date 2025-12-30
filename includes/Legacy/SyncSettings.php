@@ -34,7 +34,7 @@ class SyncSettings
         
         add_action('admin_menu', [$this, 'add_sync_menu']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
-        add_action('wp_ajax_truebeep_get_sync_statistics', [$this, 'ajax_get_statistics']);
+        add_action('wp_ajax_truebeep_smwl_get_sync_statistics', [$this, 'ajax_get_statistics']);
     }
     
     /**
@@ -51,7 +51,7 @@ class SyncSettings
             __('Sync to Truebeep', 'truebeep'),
             __('Sync to Truebeep', 'truebeep'),
             'manage_options',
-            'truebeep-sync',
+            'truebeep-smwl-sync',
             [$this, 'render_sync_page']
         );
     }
@@ -67,21 +67,21 @@ class SyncSettings
      */
     public function enqueue_scripts($hook_suffix)
     {
-        if ($hook_suffix !== 'users_page_truebeep-sync') {
+        if ($hook_suffix !== 'users_page_truebeep-smwl-sync') {
             return;
         }
         
         wp_enqueue_script(
-            'truebeep-sync',
+            'truebeep-smwl-sync',
             plugins_url('assets/js/sync-admin.js', dirname(dirname(__FILE__))),
             ['jquery'],
             filemtime(plugin_dir_path(dirname(dirname(__FILE__))) . 'assets/js/sync-admin.js'),
             true
         );
         
-        wp_localize_script('truebeep-sync', 'truebeep_sync', [
+        wp_localize_script('truebeep-smwl-sync', 'truebeep_smwl_sync', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('truebeep_sync_nonce'),
+            'nonce' => wp_create_nonce('truebeep_smwl_sync_nonce'),
             'strings' => [
                 'starting' => __('Starting sync...', 'truebeep'),
                 'stopping' => __('Stopping sync...', 'truebeep'),
@@ -92,7 +92,7 @@ class SyncSettings
         ]);
         
         wp_enqueue_style(
-            'truebeep-sync',
+            'truebeep-smwl-sync',
             plugins_url('assets/css/sync-admin.css', dirname(dirname(__FILE__))),
             [],
             filemtime(plugin_dir_path(dirname(dirname(__FILE__))) . 'assets/css/sync-admin.css')
@@ -122,7 +122,7 @@ class SyncSettings
             <?php if (!get_option('truebeep_api_url') || !get_option('truebeep_api_key')): ?>
                 <div class="notice notice-error">
                     <p><?php esc_html_e('Please configure Truebeep API settings first.', 'truebeep'); ?></p>
-                    <p><a href="<?php echo esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep')); ?>" class="button button-primary"><?php esc_html_e('Configure Settings', 'truebeep'); ?></a></p>
+                    <p><a href="<?php echo esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep_smwl')); ?>" class="button button-primary"><?php esc_html_e('Configure Settings', 'truebeep'); ?></a></p>
                 </div>
                 <?php return; ?>
             <?php endif; ?>
@@ -394,7 +394,7 @@ class SyncSettings
      */
     public function ajax_get_statistics()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
             wp_send_json_error(__('Permission denied', 'truebeep'));

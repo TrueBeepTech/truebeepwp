@@ -42,16 +42,16 @@ class UserHandler
         // Load scripts on user profile/edit pages
         if (in_array($hook, ['user-edit.php', 'profile.php'], true)) {
             wp_enqueue_script(
-                'truebeep-user-profile-fields',
+                'truebeep-smwl-user-profile-fields',
                 TRUEBEEP_URL . '/assets/js/admin/user-profile-fields.js',
                 ['jquery'],
                 TRUEBEEP_VERSION,
                 true
             );
             
-            wp_localize_script('truebeep-user-profile-fields', 'truebeepUserProfile', [
-                'nonceSync' => wp_create_nonce('truebeep_sync_user'),
-                'nonceRemove' => wp_create_nonce('truebeep_remove_sync'),
+            wp_localize_script('truebeep-smwl-user-profile-fields', 'truebeep_smwl_user_profile', [
+                'nonceSync' => wp_create_nonce('truebeep_smwl_sync_user'),
+                'nonceRemove' => wp_create_nonce('truebeep_smwl_remove_sync'),
                 'strings' => [
                     'syncing' => __('Syncing...', 'truebeep'),
                     'syncFailed' => __('Sync failed', 'truebeep'),

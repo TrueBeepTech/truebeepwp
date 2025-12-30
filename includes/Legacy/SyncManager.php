@@ -54,15 +54,15 @@ class SyncManager
      */
     private function init_hooks()
     {
-        add_action('wp_ajax_truebeep_start_sync', [$this, 'ajax_start_sync']);
-        add_action('wp_ajax_truebeep_get_sync_status', [$this, 'ajax_get_sync_status']);
-        add_action('wp_ajax_truebeep_cancel_sync', [$this, 'ajax_cancel_sync']);
-        add_action('wp_ajax_truebeep_reset_sync', [$this, 'ajax_reset_sync']);
+        add_action('wp_ajax_truebeep_smwl_start_sync', [$this, 'ajax_start_sync']);
+        add_action('wp_ajax_truebeep_smwl_get_sync_status', [$this, 'ajax_get_sync_status']);
+        add_action('wp_ajax_truebeep_smwl_cancel_sync', [$this, 'ajax_cancel_sync']);
+        add_action('wp_ajax_truebeep_smwl_reset_sync', [$this, 'ajax_reset_sync']);
         
-        add_action('truebeep_sync_healthcheck', [$this->processor, 'handle_cron_healthcheck']);
+        add_action('truebeep_smwl_sync_healthcheck', [$this->processor, 'handle_cron_healthcheck']);
         
-        if (!wp_next_scheduled('truebeep_sync_healthcheck')) {
-            wp_schedule_event(time(), 'hourly', 'truebeep_sync_healthcheck');
+        if (!wp_next_scheduled('truebeep_smwl_sync_healthcheck')) {
+            wp_schedule_event(time(), 'hourly', 'truebeep_smwl_sync_healthcheck');
         }
     }
 
@@ -263,7 +263,7 @@ class SyncManager
      */
     public function ajax_start_sync()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
             wp_send_json_error(__('Permission denied', 'truebeep'));
@@ -287,7 +287,7 @@ class SyncManager
      */
     public function ajax_get_sync_status()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
             wp_send_json_error(__('Permission denied', 'truebeep'));
@@ -306,7 +306,7 @@ class SyncManager
      */
     public function ajax_cancel_sync()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
             wp_send_json_error(__('Permission denied', 'truebeep'));
@@ -325,7 +325,7 @@ class SyncManager
      */
     public function ajax_reset_sync()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
             wp_send_json_error(__('Permission denied', 'truebeep'));

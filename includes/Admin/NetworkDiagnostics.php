@@ -22,7 +22,7 @@ class NetworkDiagnostics {
         $this->load_github_config();
         add_action('admin_menu', [$this, 'add_diagnostics_page']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
-        add_action('wp_ajax_truebeep_test_github_connection', [$this, 'test_github_connection']);
+        add_action('wp_ajax_truebeep_smwl_test_github_connection', [$this, 'test_github_connection']);
     }
     
     /**
@@ -37,15 +37,15 @@ class NetworkDiagnostics {
         }
         
         wp_enqueue_script(
-            'truebeep-network-diagnostics',
+            'truebeep-smwl-network-diagnostics',
             TRUEBEEP_URL . '/assets/js/admin/network-diagnostics.js',
             [],
             TRUEBEEP_VERSION,
             true
         );
         
-        wp_localize_script('truebeep-network-diagnostics', 'truebeepDiagnostics', [
-            'nonce' => wp_create_nonce('truebeep_diagnostics'),
+        wp_localize_script('truebeep-smwl-network-diagnostics', 'truebeep_smwl_diagnostics', [
+            'nonce' => wp_create_nonce('truebeep_smwl_diagnostics'),
             'strings' => [
                 'running' => __('Running...', 'truebeep'),
                 'runDiagnostics' => __('Run Diagnostics', 'truebeep'),
@@ -204,7 +204,7 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
      * Test GitHub connection via AJAX
      */
     public function test_github_connection() {
-        check_ajax_referer('truebeep_diagnostics');
+        check_ajax_referer('truebeep_smwl_diagnostics');
         
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('Unauthorized', 'truebeep'));

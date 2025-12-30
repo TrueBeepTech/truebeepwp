@@ -12,16 +12,16 @@
             var resultsDiv = document.getElementById('truebeep-diagnostics-results');
             
             button.disabled = true;
-            button.textContent = truebeepDiagnostics.strings.running;
+            button.textContent = truebeep_smwl_diagnostics.strings.running;
             
-            resultsDiv.innerHTML = '<div class="notice notice-info"><p>' + truebeepDiagnostics.strings.runningDiagnostics + '</p></div>';
+            resultsDiv.innerHTML = '<div class="notice notice-info"><p>' + truebeep_smwl_diagnostics.strings.runningDiagnostics + '</p></div>';
             
             fetch(ajaxurl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'action=truebeep_test_github_connection&_wpnonce=' + truebeepDiagnostics.nonce
+                body: 'action=truebeep_smwl_test_github_connection&_wpnonce=' + truebeep_smwl_diagnostics.nonce
             })
             .then(function(response) {
                 return response.json();
@@ -29,13 +29,13 @@
             .then(function(data) {
                 resultsDiv.innerHTML = data.data.html;
                 button.disabled = false;
-                button.textContent = truebeepDiagnostics.strings.runDiagnostics;
+                button.textContent = truebeep_smwl_diagnostics.strings.runDiagnostics;
             })
             .catch(function(error) {
-                var errorMessage = truebeepDiagnostics.strings.errorRunning.replace('%s', error.message);
+                var errorMessage = truebeep_smwl_diagnostics.strings.errorRunning.replace('%s', error.message);
                 resultsDiv.innerHTML = '<div class="notice notice-error"><p>' + errorMessage + '</p></div>';
                 button.disabled = false;
-                button.textContent = truebeepDiagnostics.strings.runDiagnostics;
+                button.textContent = truebeep_smwl_diagnostics.strings.runDiagnostics;
             });
         });
     });

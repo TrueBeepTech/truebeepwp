@@ -28,9 +28,9 @@ class PointsRedemption
         add_action('wp_enqueue_scripts', [$this, 'enqueue_checkout_scripts']);
 
         // AJAX handlers - only for logged in users
-        add_action('wp_ajax_truebeep_apply_points_discount', [$this, 'ajax_apply_points_discount']);
-        add_action('wp_ajax_truebeep_remove_points_discount', [$this, 'ajax_remove_points_discount']);
-        add_action('wp_ajax_truebeep_validate_points', [$this, 'ajax_validate_points']);
+        add_action('wp_ajax_truebeep_smwl_apply_points_discount', [$this, 'ajax_apply_points_discount']);
+        add_action('wp_ajax_truebeep_smwl_remove_points_discount', [$this, 'ajax_remove_points_discount']);
+        add_action('wp_ajax_truebeep_smwl_validate_points', [$this, 'ajax_validate_points']);
 
         // Apply discount to cart
         add_action('woocommerce_cart_calculate_fees', [$this, 'apply_points_discount_to_cart']);
@@ -162,16 +162,16 @@ class PointsRedemption
         }
 
         wp_enqueue_script(
-            'truebeep-checkout-redemption',
+            'truebeep-smwl-checkout-redemption',
             TRUEBEEP_URL . '/assets/js/frontend/checkout-redemption.js',
             ['jquery'],
             TRUEBEEP_VERSION,
             true
         );
 
-        wp_localize_script('truebeep-checkout-redemption', 'truebeep_checkout', [
+        wp_localize_script('truebeep-smwl-checkout-redemption', 'truebeep_smwl_checkout', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('truebeep_checkout_nonce'),
+            'nonce' => wp_create_nonce('truebeep_smwl_checkout_nonce'),
             'redemption_method' => $this->redemption_method,
             'user_points' => $this->user_points,
             'redemption_rate' => $this->get_redemption_rate(),
@@ -197,7 +197,7 @@ class PointsRedemption
 
     public function ajax_apply_points_discount()
     {
-        check_ajax_referer('truebeep_checkout_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_checkout_nonce', 'nonce');
 
         if (!is_user_logged_in()) {
             wp_send_json_error(['message' => __('Please log in to redeem points.', 'truebeep')]);
@@ -267,7 +267,7 @@ class PointsRedemption
 
     public function ajax_remove_points_discount()
     {
-        check_ajax_referer('truebeep_checkout_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_checkout_nonce', 'nonce');
 
         // Clear session data
         WC()->session->set('truebeep_points_redeemed', null);
@@ -285,7 +285,7 @@ class PointsRedemption
 
     public function ajax_validate_points()
     {
-        check_ajax_referer('truebeep_checkout_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_checkout_nonce', 'nonce');
 
         $points = isset($_POST['points']) ? intval($_POST['points']) : 0;
 

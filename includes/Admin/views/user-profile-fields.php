@@ -44,11 +44,11 @@ $truebeep_sync_error = get_user_meta($user->ID, '_truebeep_sync_error', true);
     <tr>
         <th></th>
         <td>
-            <button type="button" class="button" id="truebeep-sync-user" data-user-id="<?php echo esc_attr($user->ID); ?>">
+            <button type="button" class="button" id="truebeep-smwl-sync-user" data-user-id="<?php echo esc_attr($user->ID); ?>">
                 <?php esc_html_e('Sync with Truebeep', 'truebeep'); ?>
             </button>
             <?php if (!empty($truebeep_customer_id)): ?>
-                <button type="button" class="button" id="truebeep-remove-sync" data-user-id="<?php echo esc_attr($user->ID); ?>">
+                <button type="button" class="button" id="truebeep-smwl-remove-sync" data-user-id="<?php echo esc_attr($user->ID); ?>">
                     <?php esc_html_e('Remove Truebeep Link', 'truebeep'); ?>
                 </button>
             <?php endif; ?>

@@ -46,7 +46,7 @@ class LegacyIntegration
     public static function show_sync_notices()
     {
         $screen = get_current_screen();
-        if (!$screen || !in_array($screen->id, ['users_page_truebeep-sync', 'woocommerce_page_wc-settings'])) {
+        if (!$screen || !in_array($screen->id, ['users_page_truebeep-smwl-sync', 'woocommerce_page_wc-settings'])) {
             return;
         }
         
@@ -65,7 +65,7 @@ class LegacyIntegration
                 intval($processed),
                 intval($total)
             );
-            echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-sync')) . '">' . esc_html__('View Progress', 'truebeep') . '</a>';
+            echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-smwl-sync')) . '">' . esc_html__('View Progress', 'truebeep') . '</a>';
             echo '</p>';
             echo '</div>';
         }
@@ -82,7 +82,7 @@ class LegacyIntegration
                     esc_html__('Truebeep customer sync completed successfully! %d customers were synchronized.', 'truebeep'),
                     intval($successful)
                 );
-                echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-sync')) . '">' . esc_html__('View Details', 'truebeep') . '</a>';
+                echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-smwl-sync')) . '">' . esc_html__('View Details', 'truebeep') . '</a>';
                 echo '</p>';
                 echo '</div>';
             }
