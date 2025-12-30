@@ -548,6 +548,16 @@ class WooCommerceSettings
                     'saving' => __('Saving...', 'truebeep'),
                     'save_tiers' => __('Save Changes', 'truebeep'),
                     'save_coupons' => __('Save Coupons', 'truebeep'),
+                    'processing' => __('Processing...', 'truebeep'),
+                    'connect' => __('Connect', 'truebeep'),
+                    'disconnect' => __('Disconnect', 'truebeep'),
+                    'connected' => __('Connected', 'truebeep'),
+                    'disconnected' => __('Disconnected', 'truebeep'),
+                    'connectionFailed' => __('Connection failed. Please try again.', 'truebeep'),
+                    'confirmRemoveTier' => __('Are you sure you want to remove this tier?', 'truebeep'),
+                    'confirmRemoveCoupon' => __('Are you sure you want to remove this coupon?', 'truebeep'),
+                    'newCoupon' => __('New Coupon', 'truebeep'),
+                    'edit' => __('Edit', 'truebeep'),
                 ]
             ]);
 

@@ -12,9 +12,9 @@
             var resultsDiv = document.getElementById('truebeep-diagnostics-results');
             
             button.disabled = true;
-            button.textContent = 'Running...';
+            button.textContent = truebeepDiagnostics.strings.running;
             
-            resultsDiv.innerHTML = '<div class="notice notice-info"><p>Running diagnostics...</p></div>';
+            resultsDiv.innerHTML = '<div class="notice notice-info"><p>' + truebeepDiagnostics.strings.runningDiagnostics + '</p></div>';
             
             fetch(ajaxurl, {
                 method: 'POST',
@@ -29,12 +29,13 @@
             .then(function(data) {
                 resultsDiv.innerHTML = data.data.html;
                 button.disabled = false;
-                button.textContent = 'Run Diagnostics';
+                button.textContent = truebeepDiagnostics.strings.runDiagnostics;
             })
             .catch(function(error) {
-                resultsDiv.innerHTML = '<div class="notice notice-error"><p>Error running diagnostics: ' + error.message + '</p></div>';
+                var errorMessage = truebeepDiagnostics.strings.errorRunning.replace('%s', error.message);
+                resultsDiv.innerHTML = '<div class="notice notice-error"><p>' + errorMessage + '</p></div>';
                 button.disabled = false;
-                button.textContent = 'Run Diagnostics';
+                button.textContent = truebeepDiagnostics.strings.runDiagnostics;
             });
         });
     });

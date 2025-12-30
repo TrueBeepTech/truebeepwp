@@ -46,6 +46,12 @@ class NetworkDiagnostics {
         
         wp_localize_script('truebeep-network-diagnostics', 'truebeepDiagnostics', [
             'nonce' => wp_create_nonce('truebeep_diagnostics'),
+            'strings' => [
+                'running' => __('Running...', 'truebeep'),
+                'runDiagnostics' => __('Run Diagnostics', 'truebeep'),
+                'runningDiagnostics' => __('Running diagnostics...', 'truebeep'),
+                'errorRunning' => __('Error running diagnostics: %s', 'truebeep'),
+            ],
         ]);
     }
     
@@ -130,8 +136,8 @@ class NetworkDiagnostics {
     public function add_diagnostics_page() {
         add_submenu_page(
             'tools.php',
-            'Truebeep Network Diagnostics',
-            'Truebeep Diagnostics',
+            esc_html__('Truebeep Network Diagnostics', 'truebeep'),
+            esc_html__('Truebeep Diagnostics', 'truebeep'),
             'manage_options',
             'truebeep-diagnostics',
             [$this, 'diagnostics_page']
@@ -144,50 +150,50 @@ class NetworkDiagnostics {
     public function diagnostics_page() {
         ?>
         <div class="wrap">
-            <h1>Truebeep Network Diagnostics</h1>
-            <p>Use this tool to diagnose GitHub connectivity issues for plugin updates.</p>
+            <h1><?php esc_html_e('Truebeep Network Diagnostics', 'truebeep'); ?></h1>
+            <p><?php esc_html_e('Use this tool to diagnose GitHub connectivity issues for plugin updates.', 'truebeep'); ?></p>
             
             <?php if (empty($this->github_config['repository_url'])): ?>
             <div class="notice notice-error">
-                <p><strong>GitHub repository not configured!</strong></p>
-                <p>Please configure your repository URL in <code>github-config.php</code>:</p>
+                <p><strong><?php esc_html_e('GitHub repository not configured!', 'truebeep'); ?></strong></p>
+                <p><?php esc_html_e('Please configure your repository URL in', 'truebeep'); ?> <code>github-config.php</code>:</p>
                 <pre><code>'repository_url' => 'https://github.com/YOUR_USERNAME/YOUR_REPOSITORY'</code></pre>
             </div>
             <?php else: ?>
             <div class="notice notice-info">
-                <p><strong>Configured Repository:</strong> <?php echo esc_html($this->github_config['repository_url']); ?></p>
+                <p><strong><?php esc_html_e('Configured Repository:', 'truebeep'); ?></strong> <?php echo esc_html($this->github_config['repository_url']); ?></p>
             </div>
             <?php endif; ?>
             
             <div id="truebeep-diagnostics-results">
                 <button type="button" class="button button-primary" id="run-diagnostics">
-                    Run Diagnostics
+                    <?php esc_html_e('Run Diagnostics', 'truebeep'); ?>
                 </button>
             </div>
             
-            <h2>Manual Fixes</h2>
+            <h2><?php esc_html_e('Manual Fixes', 'truebeep'); ?></h2>
             <div class="card">
-                <h3>If GitHub API is blocked:</h3>
+                <h3><?php esc_html_e('If GitHub API is blocked:', 'truebeep'); ?></h3>
                 <ol>
-                    <li><strong>Check your firewall:</strong> Ensure api.github.com and github.com are allowed</li>
-                    <li><strong>Proxy settings:</strong> If behind a corporate proxy, configure WordPress proxy constants</li>
-                    <li><strong>Local environment:</strong> Some local environments block external connections</li>
-                    <li><strong>Manual update:</strong> Download the latest release ZIP from GitHub and upload manually</li>
+                    <li><strong><?php esc_html_e('Check your firewall:', 'truebeep'); ?></strong> <?php esc_html_e('Ensure api.github.com and github.com are allowed', 'truebeep'); ?></li>
+                    <li><strong><?php esc_html_e('Proxy settings:', 'truebeep'); ?></strong> <?php esc_html_e('If behind a corporate proxy, configure WordPress proxy constants', 'truebeep'); ?></li>
+                    <li><strong><?php esc_html_e('Local environment:', 'truebeep'); ?></strong> <?php esc_html_e('Some local environments block external connections', 'truebeep'); ?></li>
+                    <li><strong><?php esc_html_e('Manual update:', 'truebeep'); ?></strong> <?php esc_html_e('Download the latest release ZIP from GitHub and upload manually', 'truebeep'); ?></li>
                 </ol>
                 
-                <h3>WordPress Proxy Configuration:</h3>
-                <p>Add these constants to your wp-config.php if you're behind a proxy:</p>
+                <h3><?php esc_html_e('WordPress Proxy Configuration:', 'truebeep'); ?></h3>
+                <p><?php esc_html_e('Add these constants to your wp-config.php if you\'re behind a proxy:', 'truebeep'); ?></p>
                 <pre><code>define('WP_PROXY_HOST', 'your-proxy-host');
 define('WP_PROXY_PORT', 'your-proxy-port');
 define('WP_PROXY_USERNAME', 'username'); // Optional
 define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
                 
-                <h3>Manual Update Process:</h3>
+                <h3><?php esc_html_e('Manual Update Process:', 'truebeep'); ?></h3>
                 <ol>
-                    <li>Go to: <a href="<?php echo esc_url($this->get_releases_url()); ?>" target="_blank"><?php echo esc_html($this->get_releases_url()); ?></a></li>
-                    <li>Download the latest release ZIP file</li>
-                    <li>In WordPress admin, go to Plugins > Add New > Upload Plugin</li>
-                    <li>Upload the ZIP file and activate</li>
+                    <li><?php esc_html_e('Go to:', 'truebeep'); ?> <a href="<?php echo esc_url($this->get_releases_url()); ?>" target="_blank"><?php echo esc_html($this->get_releases_url()); ?></a></li>
+                    <li><?php esc_html_e('Download the latest release ZIP file', 'truebeep'); ?></li>
+                    <li><?php esc_html_e('In WordPress admin, go to Plugins > Add New > Upload Plugin', 'truebeep'); ?></li>
+                    <li><?php esc_html_e('Upload the ZIP file and activate', 'truebeep'); ?></li>
                 </ol>
             </div>
         </div>
@@ -201,12 +207,13 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         check_ajax_referer('truebeep_diagnostics');
         
         if (!current_user_can('manage_options')) {
-            wp_die('Unauthorized');
+            wp_die(esc_html__('Unauthorized', 'truebeep'));
         }
         
         // Check if repository is configured
         if (empty($this->github_config['repository_url'])) {
-            wp_send_json_error(['html' => '<div class="notice notice-error"><p>GitHub repository not configured! Please update github-config.php</p></div>']);
+            $error_html = '<div class="notice notice-error"><p>' . esc_html__('GitHub repository not configured! Please update github-config.php', 'truebeep') . '</p></div>';
+            wp_send_json_error(['html' => $error_html]);
             return;
         }
         
@@ -248,9 +255,13 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (is_wp_error($response)) {
             return [
-                'test' => 'Basic GitHub Connectivity',
+                'test' => __('Basic GitHub Connectivity', 'truebeep'),
                 'status' => 'failed',
-                'message' => 'Failed: ' . $response->get_error_message(),
+                'message' => sprintf(
+                    /* translators: %s: error message */
+                    esc_html__('Failed: %s', 'truebeep'),
+                    esc_html($response->get_error_message())
+                ),
                 'duration' => $duration . 'ms'
             ];
         }
@@ -258,9 +269,13 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         $status_code = wp_remote_retrieve_response_code($response);
         
         return [
-            'test' => 'Basic GitHub Connectivity',
+            'test' => __('Basic GitHub Connectivity', 'truebeep'),
             'status' => $status_code == 200 ? 'passed' : 'warning',
-            'message' => "HTTP Status: $status_code",
+            'message' => sprintf(
+                /* translators: %d: HTTP status code */
+                esc_html__('HTTP Status: %d', 'truebeep'),
+                $status_code
+            ),
             'duration' => $duration . 'ms'
         ];
     }
@@ -286,9 +301,13 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (is_wp_error($response)) {
             return [
-                'test' => 'GitHub API Access',
+                'test' => __('GitHub API Access', 'truebeep'),
                 'status' => 'failed',
-                'message' => 'Failed: ' . $response->get_error_message(),
+                'message' => sprintf(
+                    /* translators: %s: error message */
+                    esc_html__('Failed: %s', 'truebeep'),
+                    esc_html($response->get_error_message())
+                ),
                 'duration' => $duration . 'ms'
             ];
         }
@@ -299,23 +318,31 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if ($status_code == 200 && !empty($data->tag_name)) {
             return [
-                'test' => 'GitHub API Access',
+                'test' => __('GitHub API Access', 'truebeep'),
                 'status' => 'passed',
-                'message' => "Success! Latest version: {$data->tag_name}",
+                'message' => sprintf(
+                    /* translators: %s: version tag name */
+                    esc_html__('Success! Latest version: %s', 'truebeep'),
+                    esc_html($data->tag_name)
+                ),
                 'duration' => $duration . 'ms'
             ];
         } elseif ($status_code == 403) {
             return [
-                'test' => 'GitHub API Access',
+                'test' => __('GitHub API Access', 'truebeep'),
                 'status' => 'warning',
-                'message' => 'Rate limited (403). This is normal for public repos without authentication.',
+                'message' => esc_html__('Rate limited (403). This is normal for public repos without authentication.', 'truebeep'),
                 'duration' => $duration . 'ms'
             ];
         } else {
             return [
-                'test' => 'GitHub API Access',
+                'test' => __('GitHub API Access', 'truebeep'),
                 'status' => 'failed',
-                'message' => "HTTP Status: $status_code",
+                'message' => sprintf(
+                    /* translators: %d: HTTP status code */
+                    esc_html__('HTTP Status: %d', 'truebeep'),
+                    $status_code
+                ),
                 'duration' => $duration . 'ms'
             ];
         }
@@ -342,9 +369,13 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (is_wp_error($response)) {
             return [
-                'test' => 'Download Capability',
+                'test' => __('Download Capability', 'truebeep'),
                 'status' => 'failed',
-                'message' => 'Failed: ' . $response->get_error_message(),
+                'message' => sprintf(
+                    /* translators: %s: error message */
+                    esc_html__('Failed: %s', 'truebeep'),
+                    esc_html($response->get_error_message())
+                ),
                 'duration' => $duration . 'ms'
             ];
         }
@@ -352,9 +383,13 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         $status_code = wp_remote_retrieve_response_code($response);
         
         return [
-            'test' => 'Download Capability',
+            'test' => __('Download Capability', 'truebeep'),
             'status' => in_array($status_code, [200, 206]) ? 'passed' : 'failed',
-            'message' => "HTTP Status: $status_code",
+            'message' => sprintf(
+                /* translators: %d: HTTP status code */
+                esc_html__('HTTP Status: %d', 'truebeep'),
+                $status_code
+            ),
             'duration' => $duration . 'ms'
         ];
     }
@@ -368,14 +403,20 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         foreach ($domains as $domain) {
             $ip = gethostbyname($domain);
-            $results[] = $ip !== $domain ? "✓ $domain → $ip" : "✗ $domain (failed)";
+            if ($ip !== $domain) {
+                /* translators: %1$s: domain name, %2$s: IP address */
+                $results[] = sprintf(esc_html__('✓ %1$s → %2$s', 'truebeep'), esc_html($domain), esc_html($ip));
+            } else {
+                /* translators: %s: domain name */
+                $results[] = sprintf(esc_html__('✗ %s (failed)', 'truebeep'), esc_html($domain));
+            }
         }
         
         return [
-            'test' => 'DNS Resolution',
+            'test' => __('DNS Resolution', 'truebeep'),
             'status' => 'info',
             'message' => implode('<br>', $results),
-            'duration' => 'N/A'
+            'duration' => esc_html__('N/A', 'truebeep')
         ];
     }
     
@@ -397,25 +438,29 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
             $error_message = $response->get_error_message();
             if (strpos($error_message, 'SSL') !== false) {
                 return [
-                    'test' => 'SSL/TLS Connection',
+                    'test' => __('SSL/TLS Connection', 'truebeep'),
                     'status' => 'warning',
-                    'message' => 'SSL verification failed. Plugin uses sslverify=false as fallback.',
+                    'message' => esc_html__('SSL verification failed. Plugin uses sslverify=false as fallback.', 'truebeep'),
                     'duration' => $duration . 'ms'
                 ];
             } else {
                 return [
-                    'test' => 'SSL/TLS Connection',
+                    'test' => __('SSL/TLS Connection', 'truebeep'),
                     'status' => 'failed',
-                    'message' => 'Failed: ' . $error_message,
+                    'message' => sprintf(
+                        /* translators: %s: error message */
+                        esc_html__('Failed: %s', 'truebeep'),
+                        esc_html($error_message)
+                    ),
                     'duration' => $duration . 'ms'
                 ];
             }
         }
         
         return [
-            'test' => 'SSL/TLS Connection',
+            'test' => __('SSL/TLS Connection', 'truebeep'),
             'status' => 'passed',
-            'message' => 'SSL connection successful',
+            'message' => esc_html__('SSL connection successful', 'truebeep'),
             'duration' => $duration . 'ms'
         ];
     }
@@ -424,7 +469,7 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
      * Format test results as HTML
      */
     private function format_results($results) {
-        $html = '<h2>Diagnostic Results</h2>';
+        $html = '<h2>' . esc_html__('Diagnostic Results', 'truebeep') . '</h2>';
         
         foreach ($results as $result) {
             $class = '';
@@ -451,22 +496,30 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
             
             $html .= sprintf(
                 '<div class="notice %s"><p><strong>%s %s</strong> (%s)<br>%s</p></div>',
-                $class,
-                $icon,
-                $result['test'],
-                $result['duration'],
-                $result['message']
+                esc_attr($class),
+                esc_html($icon),
+                esc_html($result['test']),
+                esc_html($result['duration']),
+                $result['message'] // Already escaped in test methods
             );
         }
         
         // Add system info
-        $html .= '<h3>System Information</h3>';
+        $html .= '<h3>' . esc_html__('System Information', 'truebeep') . '</h3>';
         $html .= '<div class="notice notice-info"><p>';
-        $html .= '<strong>WordPress Version:</strong> ' . get_bloginfo('version') . '<br>';
-        $html .= '<strong>PHP Version:</strong> ' . PHP_VERSION . '<br>';
-        $html .= '<strong>cURL Version:</strong> ' . (function_exists('curl_version') ? curl_version()['version'] : 'Not available') . '<br>';
-        $html .= '<strong>OpenSSL Version:</strong> ' . (defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT : 'Not available') . '<br>';
-        $html .= '<strong>User Agent:</strong> ' . wp_remote_retrieve_header(wp_remote_get('https://httpbin.org/user-agent'), 'User-Agent') . '<br>';
+        $html .= '<strong>' . esc_html__('WordPress Version:', 'truebeep') . '</strong> ' . esc_html(get_bloginfo('version')) . '<br>';
+        $html .= '<strong>' . esc_html__('PHP Version:', 'truebeep') . '</strong> ' . esc_html(PHP_VERSION) . '<br>';
+        
+        $curl_version = function_exists('curl_version') ? curl_version()['version'] : '';
+        $curl_display = !empty($curl_version) ? esc_html($curl_version) : esc_html__('Not available', 'truebeep');
+        $html .= '<strong>' . esc_html__('cURL Version:', 'truebeep') . '</strong> ' . $curl_display . '<br>';
+        
+        $openssl_display = defined('OPENSSL_VERSION_TEXT') ? esc_html(OPENSSL_VERSION_TEXT) : esc_html__('Not available', 'truebeep');
+        $html .= '<strong>' . esc_html__('OpenSSL Version:', 'truebeep') . '</strong> ' . $openssl_display . '<br>';
+        
+        $user_agent_response = wp_remote_get('https://httpbin.org/user-agent');
+        $user_agent = is_wp_error($user_agent_response) ? esc_html__('Not available', 'truebeep') : esc_html(wp_remote_retrieve_header($user_agent_response, 'User-Agent'));
+        $html .= '<strong>' . esc_html__('User Agent:', 'truebeep') . '</strong> ' . $user_agent . '<br>';
         $html .= '</p></div>';
         
         return $html;

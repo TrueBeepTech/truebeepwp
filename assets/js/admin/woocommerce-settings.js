@@ -14,8 +14,8 @@ jQuery(document).ready(function($) {
         var originalText = $button.text();
         
         // Show loading state
-        $button.text('Processing...').prop('disabled', true);
-        $message.html('<span style="color: blue;">Processing...</span>');
+        $button.text(truebeep_admin.strings.processing).prop('disabled', true);
+        $message.html('<span style="color: blue;">' + truebeep_admin.strings.processing + '</span>');
         
         // Make AJAX request
         $.ajax({
@@ -29,8 +29,8 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     var newStatus = response.data.status;
-                    var newButtonText = (newStatus === 'connected') ? 'Disconnect' : 'Connect';
-                    var statusText = (newStatus === 'connected') ? 'Connected' : 'Disconnected';
+                    var newButtonText = (newStatus === 'connected') ? truebeep_admin.strings.disconnect : truebeep_admin.strings.connect;
+                    var statusText = (newStatus === 'connected') ? truebeep_admin.strings.connected : truebeep_admin.strings.disconnected;
                     var statusColor = (newStatus === 'connected') ? 'green' : 'red';
                     
                     // Update button
@@ -51,7 +51,7 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function() {
-                $message.html('<span style="color: red;">✗ Connection failed. Please try again.</span>');
+                $message.html('<span style="color: red;">✗ ' + truebeep_admin.strings.connectionFailed + '</span>');
             },
             complete: function() {
                 $button.prop('disabled', false);
@@ -180,7 +180,7 @@ jQuery(document).ready(function($) {
     $(document).on('click', '.remove-tier', function() {
         var index = $(this).data('index');
         
-        if (confirm('Are you sure you want to remove this tier?')) {
+        if (confirm(truebeep_admin.strings.confirmRemoveTier)) {
             $(this).closest('tr').remove();
             
             // Remove from data array
@@ -201,7 +201,7 @@ jQuery(document).ready(function($) {
     // Add new coupon
     $('#add-coupon-button').on('click', function() {
         var newCoupon = {
-            name: 'New Coupon',
+            name: truebeep_admin.strings.newCoupon,
             value: 1
         };
         
@@ -212,8 +212,8 @@ jQuery(document).ready(function($) {
             '<td>' + newCoupon.name + '</td>' +
             '<td>$' + newCoupon.value + '</td>' +
             '<td>' +
-                '<button type="button" class="button edit-coupon" data-coupon=\'' + JSON.stringify(newCoupon) + '\' data-index="' + newIndex + '">Edit</button> ' +
-                '<button type="button" class="button remove-coupon" data-index="' + newIndex + '">Remove</button>' +
+                '<button type="button" class="button edit-coupon" data-coupon=\'' + JSON.stringify(newCoupon) + '\' data-index="' + newIndex + '">' + truebeep_admin.strings.edit + '</button> ' +
+                '<button type="button" class="button remove-coupon" data-index="' + newIndex + '">' + truebeep_admin.strings.remove + '</button>' +
             '</td>' +
         '</tr>';
         
@@ -264,7 +264,7 @@ jQuery(document).ready(function($) {
     $(document).on('click', '.remove-coupon', function() {
         var index = $(this).data('index');
         
-        if (confirm('Are you sure you want to remove this coupon?')) {
+        if (confirm(truebeep_admin.strings.confirmRemoveCoupon)) {
             $(this).closest('tr').remove();
             
             // Remove from data array
@@ -285,7 +285,7 @@ jQuery(document).ready(function($) {
     $('#save-coupons-button').on('click', function() {
         var button = $(this);
         var originalText = button.text();
-        button.text('Saving...');
+        button.text(truebeep_admin.strings.saving);
         button.prop('disabled', true);
 
         // Collect current coupons data
@@ -343,7 +343,7 @@ jQuery(document).ready(function($) {
     $('#save-all-button').on('click', function() {
         var button = $(this);
         var originalText = button.text();
-        button.text('Saving...');
+        button.text(truebeep_admin.strings.saving);
         button.prop('disabled', true);
         
         // Collect loyalty fields values
