@@ -53,10 +53,10 @@ class UserHandler
                 'nonceSync' => wp_create_nonce('truebeep_smwl_sync_user'),
                 'nonceRemove' => wp_create_nonce('truebeep_smwl_remove_sync'),
                 'strings' => [
-                    'syncing' => __('Syncing...', 'truebeep'),
-                    'syncFailed' => __('Sync failed', 'truebeep'),
-                    'syncWithTruebeep' => __('Sync with Truebeep', 'truebeep'),
-                    'confirmRemove' => __('Are you sure you want to remove the Truebeep link?', 'truebeep'),
+                    'syncing' => __('Syncing...', 'truebeep-smart-wallet-loyalty'),
+                    'syncFailed' => __('Sync failed', 'truebeep-smart-wallet-loyalty'),
+                    'syncWithTruebeep' => __('Sync with Truebeep', 'truebeep-smart-wallet-loyalty'),
+                    'confirmRemove' => __('Are you sure you want to remove the Truebeep link?', 'truebeep-smart-wallet-loyalty'),
                 ]
             ]);
         }
@@ -105,7 +105,7 @@ class UserHandler
      */
     public function add_truebeep_synced_column($columns)
     {
-        $columns['truebeep_synced'] = __('Truebeep Synced', 'truebeep');
+        $columns['truebeep_synced'] = __('Truebeep Synced', 'truebeep-smart-wallet-loyalty');
         return $columns;
     }
     
@@ -124,15 +124,15 @@ class UserHandler
             
             if (!empty($truebeep_customer_id)) {
                 // User is synced - show checkmark icon
-                $value = '<span class="truebeep-sync-status synced" title="' . esc_attr__('Synced with Truebeep', 'truebeep') . '">';
+                $value = '<span class="truebeep-sync-status synced" title="' . esc_attr__('Synced with Truebeep', 'truebeep-smart-wallet-loyalty') . '">';
                 $value .= '<span class="dashicons dashicons-yes-alt"></span>';
-                $value .= '<span class="screen-reader-text">' . __('Synced', 'truebeep') . '</span>';
+                $value .= '<span class="screen-reader-text">' . __('Synced', 'truebeep-smart-wallet-loyalty') . '</span>';
                 $value .= '</span>';
             } else {
                 // User is not synced - show X icon
-                $value = '<span class="truebeep-sync-status not-synced" title="' . esc_attr__('Not synced with Truebeep', 'truebeep') . '">';
+                $value = '<span class="truebeep-sync-status not-synced" title="' . esc_attr__('Not synced with Truebeep', 'truebeep-smart-wallet-loyalty') . '">';
                 $value .= '<span class="dashicons dashicons-dismiss"></span>';
-                $value .= '<span class="screen-reader-text">' . __('Not synced', 'truebeep') . '</span>';
+                $value .= '<span class="screen-reader-text">' . __('Not synced', 'truebeep-smart-wallet-loyalty') . '</span>';
                 $value .= '</span>';
             }
         }

@@ -61,11 +61,11 @@ class LegacyIntegration
             echo '<p>';
             printf(
                 /* translators: %1$d: processed customers, %2$d: total customers */
-                esc_html__('Truebeep customer sync is running in the background. %1$d of %2$d customers processed.', 'truebeep'),
+                esc_html__('Truebeep customer sync is running in the background. %1$d of %2$d customers processed.', 'truebeep-smart-wallet-loyalty'),
                 intval($processed),
                 intval($total)
             );
-            echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-smwl-sync')) . '">' . esc_html__('View Progress', 'truebeep') . '</a>';
+            echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-smwl-sync')) . '">' . esc_html__('View Progress', 'truebeep-smart-wallet-loyalty') . '</a>';
             echo '</p>';
             echo '</div>';
         }
@@ -79,10 +79,10 @@ class LegacyIntegration
                 echo '<p>';
                 printf(
                     /* translators: %d: number of successfully synchronized customers */
-                    esc_html__('Truebeep customer sync completed successfully! %d customers were synchronized.', 'truebeep'),
+                    esc_html__('Truebeep customer sync completed successfully! %d customers were synchronized.', 'truebeep-smart-wallet-loyalty'),
                     intval($successful)
                 );
-                echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-smwl-sync')) . '">' . esc_html__('View Details', 'truebeep') . '</a>';
+                echo ' <a href="' . esc_url(admin_url('users.php?page=truebeep-smwl-sync')) . '">' . esc_html__('View Details', 'truebeep-smart-wallet-loyalty') . '</a>';
                 echo '</p>';
                 echo '</div>';
             }
@@ -109,28 +109,28 @@ class LegacyIntegration
             <thead>
                 <tr>
                     <th colspan="3" data-export-label="Truebeep Sync">
-                        <h2><?php esc_html_e('Truebeep Customer Sync', 'truebeep'); ?></h2>
+                        <h2><?php esc_html_e('Truebeep Customer Sync', 'truebeep-smart-wallet-loyalty'); ?></h2>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td data-export-label="Sync Status"><?php esc_html_e('Sync Status', 'truebeep'); ?>:</td>
+                    <td data-export-label="Sync Status"><?php esc_html_e('Sync Status', 'truebeep-smart-wallet-loyalty'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td><?php echo esc_html(ucfirst(str_replace('_', ' ', $sync_status))); ?></td>
                 </tr>
                 <tr>
-                    <td data-export-label="Total Customers"><?php esc_html_e('Total Customers', 'truebeep'); ?>:</td>
+                    <td data-export-label="Total Customers"><?php esc_html_e('Total Customers', 'truebeep-smart-wallet-loyalty'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td><?php echo esc_html(number_format($stats['total'])); ?></td>
                 </tr>
                 <tr>
-                    <td data-export-label="Customers Remaining"><?php esc_html_e('Customers Remaining', 'truebeep'); ?>:</td>
+                    <td data-export-label="Customers Remaining"><?php esc_html_e('Customers Remaining', 'truebeep-smart-wallet-loyalty'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td><?php echo esc_html(number_format($stats['remaining'])); ?></td>
                 </tr>
                 <tr>
-                    <td data-export-label="Sync Progress"><?php esc_html_e('Sync Progress', 'truebeep'); ?>:</td>
+                    <td data-export-label="Sync Progress"><?php esc_html_e('Sync Progress', 'truebeep-smart-wallet-loyalty'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td>
                         <?php 
@@ -145,14 +145,14 @@ class LegacyIntegration
                 </tr>
                 <?php if (!empty($progress['successful'])): ?>
                 <tr>
-                    <td data-export-label="Successful Syncs"><?php esc_html_e('Successful Syncs', 'truebeep'); ?>:</td>
+                    <td data-export-label="Successful Syncs"><?php esc_html_e('Successful Syncs', 'truebeep-smart-wallet-loyalty'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td><?php echo esc_html(number_format($progress['successful'])); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if (!empty($progress['failed'])): ?>
                 <tr>
-                    <td data-export-label="Failed Syncs"><?php esc_html_e('Failed Syncs', 'truebeep'); ?>:</td>
+                    <td data-export-label="Failed Syncs"><?php esc_html_e('Failed Syncs', 'truebeep-smart-wallet-loyalty'); ?>:</td>
                     <td class="help">&nbsp;</td>
                     <td><?php echo esc_html(number_format($progress['failed'])); ?></td>
                 </tr>

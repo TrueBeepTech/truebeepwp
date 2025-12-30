@@ -80,7 +80,7 @@ class LoyaltyHandler
         $points_redeemed_amount = floatval($order->get_meta('_truebeep_points_redeemed_amount'));
         
         if (($has_redeemed_points === 'yes' || $points_redeemed_amount > 0) && !$this->should_earn_on_redeemed_orders()) {
-            $order->add_order_note(__('Loyalty points not awarded: Points were redeemed on this order and earning on redeemed orders is disabled.', 'truebeep'));
+            $order->add_order_note(__('Loyalty points not awarded: Points were redeemed on this order and earning on redeemed orders is disabled.', 'truebeep-smart-wallet-loyalty'));
             return;
         }
 
@@ -110,7 +110,7 @@ class LoyaltyHandler
 
             $order->add_order_note(sprintf(
                 /* translators: %s: number of points awarded */
-                __('Awarded %s loyalty points to customer via Truebeep', 'truebeep'), 
+                __('Awarded %s loyalty points to customer via Truebeep', 'truebeep-smart-wallet-loyalty'), 
                 $points
             ));
             truebeep_log('Points awarded: ' . $points . ' points to order #' . $order_id, 'LoyaltyHandler');
@@ -118,7 +118,7 @@ class LoyaltyHandler
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
                 /* translators: %s: error message */
-                __('Failed to award loyalty points: %s', 'truebeep'), 
+                __('Failed to award loyalty points: %s', 'truebeep-smart-wallet-loyalty'), 
                 $error_message
             ));
             truebeep_log('Failed to award points to order #' . $order_id, 'LoyaltyHandler', ['error' => $error_message]);
@@ -184,7 +184,7 @@ class LoyaltyHandler
 
             $order->add_order_note(sprintf(
                 /* translators: %s: number of points revoked */
-                __('Revoked %s loyalty points from customer via Truebeep', 'truebeep'), 
+                __('Revoked %s loyalty points from customer via Truebeep', 'truebeep-smart-wallet-loyalty'), 
                 $points_earned
             ));
             truebeep_log('Points revoked: ' . $points_earned . ' points from order #' . $order->get_id(), 'LoyaltyHandler');
@@ -192,7 +192,7 @@ class LoyaltyHandler
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
                 /* translators: %s: error message */
-                __('Failed to revoke loyalty points: %s', 'truebeep'), 
+                __('Failed to revoke loyalty points: %s', 'truebeep-smart-wallet-loyalty'), 
                 $error_message
             ));
             truebeep_log('Failed to revoke points from order #' . $order->get_id(), 'LoyaltyHandler', ['error' => $error_message]);
@@ -240,14 +240,14 @@ class LoyaltyHandler
 
             $order->add_order_note(sprintf(
                 /* translators: %s: number of points returned */
-                __('Returned %s redeemed loyalty points to customer via Truebeep', 'truebeep'), 
+                __('Returned %s redeemed loyalty points to customer via Truebeep', 'truebeep-smart-wallet-loyalty'), 
                 $points_redeemed
             ));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
                 /* translators: %s: error message */
-                __('Failed to return redeemed loyalty points: %s', 'truebeep'), 
+                __('Failed to return redeemed loyalty points: %s', 'truebeep-smart-wallet-loyalty'), 
                 $error_message
             ));
         }
@@ -291,7 +291,7 @@ class LoyaltyHandler
 
                     $order->add_order_note(sprintf(
                         /* translators: %s: number of points deducted */
-                        __('Deducted %s loyalty points due to partial refund', 'truebeep'), 
+                        __('Deducted %s loyalty points due to partial refund', 'truebeep-smart-wallet-loyalty'), 
                         $points_to_deduct
                     ));
                 }
@@ -318,7 +318,7 @@ class LoyaltyHandler
 
                     $order->add_order_note(sprintf(
                         /* translators: %1$s: number of points returned, %2$.1f: refund percentage */
-                        __('Returned %1$s redeemed loyalty points due to partial refund (%2$.1f%% of order)', 'truebeep'), 
+                        __('Returned %1$s redeemed loyalty points due to partial refund (%2$.1f%% of order)', 'truebeep-smart-wallet-loyalty'), 
                         $points_to_return,
                         $refund_percentage * 100
                     ));
@@ -326,7 +326,7 @@ class LoyaltyHandler
                     $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
                     $order->add_order_note(sprintf(
                         /* translators: %s: error message */
-                        __('Failed to return redeemed points for partial refund: %s', 'truebeep'), 
+                        __('Failed to return redeemed points for partial refund: %s', 'truebeep-smart-wallet-loyalty'), 
                         $error_message
                     ));
                 }
@@ -365,7 +365,7 @@ class LoyaltyHandler
 
                     $order->add_order_note(sprintf(
                         /* translators: %s: number of points deducted */
-                        __('Deducted %s loyalty points via Truebeep API', 'truebeep'), 
+                        __('Deducted %s loyalty points via Truebeep API', 'truebeep-smart-wallet-loyalty'), 
                         $points_redeemed
                     ));
                     truebeep_log('Points redeemed: ' . $points_redeemed . ' points from order #' . $order_id, 'LoyaltyHandler');
@@ -373,7 +373,7 @@ class LoyaltyHandler
                     $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
                     $order->add_order_note(sprintf(
                         /* translators: %s: error message */
-                        __('Failed to deduct loyalty points: %s', 'truebeep'), 
+                        __('Failed to deduct loyalty points: %s', 'truebeep-smart-wallet-loyalty'), 
                         $error_message
                     ));
                     truebeep_log('Failed to redeem points from order #' . $order_id, 'LoyaltyHandler', ['error' => $error_message]);
@@ -456,15 +456,15 @@ class LoyaltyHandler
         $points_redeemed = $order->get_meta('_truebeep_points_redeemed_amount');
 
         if ($points_earned || $points_redeemed) {
-            echo '<h2>' . esc_html__('Loyalty Points', 'truebeep') . '</h2>';
+            echo '<h2>' . esc_html__('Loyalty Points', 'truebeep-smart-wallet-loyalty') . '</h2>';
             echo '<table class="woocommerce-table woocommerce-table--loyalty-points">';
 
             if ($points_earned) {
                 echo '<tr>';
-                echo '<th>' . esc_html__('Points Earned:', 'truebeep') . '</th>';
+                echo '<th>' . esc_html__('Points Earned:', 'truebeep-smart-wallet-loyalty') . '</th>';
                 echo '<td>' . esc_html($points_earned);
                 if ($points_revoked === 'yes') {
-                    echo ' <span style="color: red;">(' . esc_html__('Revoked', 'truebeep') . ')</span>';
+                    echo ' <span style="color: red;">(' . esc_html__('Revoked', 'truebeep-smart-wallet-loyalty') . ')</span>';
                 }
                 echo '</td>';
                 echo '</tr>';
@@ -472,7 +472,7 @@ class LoyaltyHandler
 
             if ($points_redeemed) {
                 echo '<tr>';
-                echo '<th>' . esc_html__('Points Redeemed:', 'truebeep') . '</th>';
+                echo '<th>' . esc_html__('Points Redeemed:', 'truebeep-smart-wallet-loyalty') . '</th>';
                 echo '<td>' . esc_html($points_redeemed) . '</td>';
                 echo '</tr>';
             }
@@ -497,24 +497,24 @@ class LoyaltyHandler
         if ($points_earned || $points_redeemed) {
 ?>
             <div class="truebeep-loyalty-points-info" style="margin-top: 20px;">
-                <h3><?php esc_html_e('Truebeep Loyalty Points', 'truebeep'); ?></h3>
+                <h3><?php esc_html_e('Truebeep Loyalty Points', 'truebeep-smart-wallet-loyalty'); ?></h3>
                 <table style="width: 100%; border-collapse: collapse;">
                     <?php if ($points_earned): ?>
                     <tr>
-                        <td style="padding: 5px 0;"><strong><?php esc_html_e('Points Earned:', 'truebeep'); ?></strong></td>
+                        <td style="padding: 5px 0;"><strong><?php esc_html_e('Points Earned:', 'truebeep-smart-wallet-loyalty'); ?></strong></td>
                         <td style="padding: 5px 0;">
                             <?php echo number_format($points_earned); ?>
                             <?php if ($points_awarded === 'yes'): ?>
-                                <span style="color: green; font-size: 12px;">(<?php esc_html_e('Awarded', 'truebeep'); ?>)</span>
+                                <span style="color: green; font-size: 12px;">(<?php esc_html_e('Awarded', 'truebeep-smart-wallet-loyalty'); ?>)</span>
                             <?php endif; ?>
                             <?php if ($points_revoked === 'yes'): ?>
-                                <span style="color: red; font-size: 12px;">(<?php esc_html_e('Revoked', 'truebeep'); ?>)</span>
+                                <span style="color: red; font-size: 12px;">(<?php esc_html_e('Revoked', 'truebeep-smart-wallet-loyalty'); ?>)</span>
                             <?php endif; ?>
                             <?php if ($points_refunded > 0): ?>
                                 <span style="color: orange; font-size: 12px;">
                                     (<?php 
                                     /* translators: %s: number of points deducted */
-                                    printf(esc_html__('%s points deducted for refunds', 'truebeep'), esc_html(number_format($points_refunded))); 
+                                    printf(esc_html__('%s points deducted for refunds', 'truebeep-smart-wallet-loyalty'), esc_html(number_format($points_refunded))); 
                                     ?>)
                                 </span>
                             <?php endif; ?>
@@ -524,16 +524,16 @@ class LoyaltyHandler
 
                     <?php if ($points_redeemed): ?>
                     <tr>
-                        <td style="padding: 5px 0;"><strong><?php esc_html_e('Points Redeemed:', 'truebeep'); ?></strong></td>
+                        <td style="padding: 5px 0;"><strong><?php esc_html_e('Points Redeemed:', 'truebeep-smart-wallet-loyalty'); ?></strong></td>
                         <td style="padding: 5px 0;">
                             <?php echo number_format($points_redeemed); ?>
                             <?php if ($points_returned === 'yes'): ?>
-                                <span style="color: green; font-size: 12px;">(<?php esc_html_e('Fully Returned', 'truebeep'); ?>)</span>
+                                <span style="color: green; font-size: 12px;">(<?php esc_html_e('Fully Returned', 'truebeep-smart-wallet-loyalty'); ?>)</span>
                             <?php elseif ($points_partial_returned > 0): ?>
                                 <span style="color: orange; font-size: 12px;">
                                     (<?php 
                                     /* translators: %s: number of points returned */
-                                    printf(esc_html__('%s points returned', 'truebeep'), esc_html(number_format($points_partial_returned))); 
+                                    printf(esc_html__('%s points returned', 'truebeep-smart-wallet-loyalty'), esc_html(number_format($points_partial_returned))); 
                                     ?>)
                                 </span>
                             <?php endif; ?>

@@ -50,7 +50,7 @@ trait ApiHelper
 
         if (empty($api_url) || empty($api_key)) {
             truebeep_log('API credentials missing', 'ApiHelper', ['endpoint' => $endpoint]);
-            return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep'));
+            return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep-smart-wallet-loyalty'));
         }
 
         $url = rtrim($api_url, '/') . '/' . ltrim($endpoint, '/');
@@ -92,7 +92,7 @@ trait ApiHelper
                 'code' => $response_code,
             ];
         } else {
-            $error_message = $response_data['message'] ?? __('API request failed', 'truebeep');
+            $error_message = $response_data['message'] ?? __('API request failed', 'truebeep-smart-wallet-loyalty');
             truebeep_log('API Response Error: ' . $response_code . ' ' . $endpoint, 'ApiHelper', ['error' => $error_message]);
             return [
                 'success' => false,
@@ -113,7 +113,7 @@ trait ApiHelper
         foreach ($required_fields as $field) {
             if (empty($customer_data[$field])) {
                 /* translators: %s: field name */
-                return new \WP_Error('missing_field', sprintf(__('Required field %s is missing', 'truebeep'), $field));
+                return new \WP_Error('missing_field', sprintf(__('Required field %s is missing', 'truebeep-smart-wallet-loyalty'), $field));
             }
         }
 
@@ -171,7 +171,7 @@ trait ApiHelper
     public function create_truebeep_customers_bulk($customers_data)
     {
         if (empty($customers_data) || !is_array($customers_data)) {
-            return new \WP_Error('invalid_data', __('Invalid customer data array', 'truebeep'));
+            return new \WP_Error('invalid_data', __('Invalid customer data array', 'truebeep-smart-wallet-loyalty'));
         }
 
         $formatted_customers = [];
@@ -234,14 +234,14 @@ trait ApiHelper
         }
 
         if (empty($formatted_customers)) {
-            return new \WP_Error('no_valid_customers', __('No valid customers to sync', 'truebeep'));
+            return new \WP_Error('no_valid_customers', __('No valid customers to sync', 'truebeep-smart-wallet-loyalty'));
         }
 
         $api_url = $this->get_api_url();
         $api_key = $this->get_api_key();
 
         if (empty($api_url) || empty($api_key)) {
-            return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep'));
+            return new \WP_Error('missing_credentials', __('API URL or API Key is not configured', 'truebeep-smart-wallet-loyalty'));
         }
 
         $args = [
@@ -274,7 +274,7 @@ trait ApiHelper
         } else {
             return [
                 'success' => false,
-                'error' => $response_data['message'] ?? __('Bulk API request failed', 'truebeep'),
+                'error' => $response_data['message'] ?? __('Bulk API request failed', 'truebeep-smart-wallet-loyalty'),
                 'data' => $response_data,
                 'code' => $response_code,
             ];
@@ -287,7 +287,7 @@ trait ApiHelper
     public function get_truebeep_customer($customer_id)
     {
         if (empty($customer_id)) {
-            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep'));
+            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep-smart-wallet-loyalty'));
         }
 
         return $this->make_api_request('customer/' . $customer_id, 'GET');
@@ -299,7 +299,7 @@ trait ApiHelper
     public function update_truebeep_customer($customer_id, $customer_data)
     {
         if (empty($customer_id)) {
-            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep'));
+            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep-smart-wallet-loyalty'));
         }
 
         $formatted_data = [];
@@ -354,7 +354,7 @@ trait ApiHelper
     public function delete_truebeep_customer($customer_id)
     {
         if (empty($customer_id)) {
-            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep'));
+            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep-smart-wallet-loyalty'));
         }
 
         return $this->make_api_request('customer/' . $customer_id, 'DELETE');
@@ -375,11 +375,11 @@ trait ApiHelper
     public function update_loyalty_points($customer_id, $points, $type = 'increment', $channel = 'woocommerce')
     {
         if (empty($customer_id)) {
-            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep'));
+            return new \WP_Error('missing_id', __('Customer ID is required', 'truebeep-smart-wallet-loyalty'));
         }
 
         if (!in_array($type, ['increment', 'decrement'])) {
-            return new \WP_Error('invalid_type', __('Type must be either increment or decrement', 'truebeep'));
+            return new \WP_Error('invalid_type', __('Type must be either increment or decrement', 'truebeep-smart-wallet-loyalty'));
         }
 
         $payload = [
@@ -536,12 +536,12 @@ trait ApiHelper
         if ($response['success']) {
             return [
                 'success' => true,
-                'message' => __('API connection successful', 'truebeep'),
+                'message' => __('API connection successful', 'truebeep-smart-wallet-loyalty'),
             ];
         } else {
             return [
                 'success' => false,
-                'message' => $response['error'] ?? __('API connection failed', 'truebeep'),
+                'message' => $response['error'] ?? __('API connection failed', 'truebeep-smart-wallet-loyalty'),
             ];
         }
     }
@@ -553,7 +553,7 @@ trait ApiHelper
     {
         $api_url = $this->get_api_url();
         if (empty($api_url)) {
-            return new \WP_Error('missing_api_url', __('API URL is not configured', 'truebeep'));
+            return new \WP_Error('missing_api_url', __('API URL is not configured', 'truebeep-smart-wallet-loyalty'));
         }
         
         // Build the interaction endpoint URL

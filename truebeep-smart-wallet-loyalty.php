@@ -9,7 +9,7 @@
  * Author URI:        https://truebeep.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       truebeep
+ * Text Domain:       truebeep-smart-wallet-loyalty
  */
 
 if (!defined('ABSPATH')) {
@@ -234,7 +234,7 @@ final class Truebeep
         }
 ?>
         <div class="error">
-            <p><?php esc_html_e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
+            <p><?php esc_html_e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep-smart-wallet-loyalty'); ?></p>
         </div>
 <?php
     }
@@ -262,17 +262,17 @@ final class Truebeep
             'settings' => sprintf(
                 '<a href="%s">%s</a>',
                 esc_url($settings_url),
-                __('Settings', 'truebeep')
+                __('Settings', 'truebeep-smart-wallet-loyalty')
             ),
             'docs' => sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 esc_url($docs_url),
-                __('Docs', 'truebeep')
+                __('Docs', 'truebeep-smart-wallet-loyalty')
             ),
             'support' => sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 esc_url($support_url),
-                __('Support', 'truebeep')
+                __('Support', 'truebeep-smart-wallet-loyalty')
             )
         ];
 
@@ -341,7 +341,7 @@ function truebeep_log($message, $class_name, $data = [])
     }
     
     // Use a single source identifier for all Truebeep logs
-    $context = ['source' => 'truebeep'];
+    $context = ['source' => 'truebeep-smart-wallet-loyalty'];
     
     $logger->info($formatted_message, $context);
 }

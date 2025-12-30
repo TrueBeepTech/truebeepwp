@@ -382,7 +382,7 @@ class CustomerHandler
         if (empty($api_url) || empty($api_key)) {
 ?>
             <div class="notice notice-warning">
-                <p><?php esc_html_e('Truebeep API credentials are not configured. Please configure them in WooCommerce > Settings > Truebeep.', 'truebeep'); ?></p>
+                <p><?php esc_html_e('Truebeep API credentials are not configured. Please configure them in WooCommerce > Settings > Truebeep.', 'truebeep-smart-wallet-loyalty'); ?></p>
             </div>
 <?php
         }
@@ -396,7 +396,7 @@ class CustomerHandler
         check_ajax_referer('truebeep_smwl_sync_user', 'nonce');
 
         if (!current_user_can('edit_users')) {
-            wp_send_json_error(['message' => __('Permission denied', 'truebeep')]);
+            wp_send_json_error(['message' => __('Permission denied', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
@@ -405,10 +405,10 @@ class CustomerHandler
         $sync_status = get_user_meta($user_id, '_truebeep_sync_status', true);
 
         if ($sync_status === 'synced') {
-            wp_send_json_success(['message' => __('User synced successfully', 'truebeep')]);
+            wp_send_json_success(['message' => __('User synced successfully', 'truebeep-smart-wallet-loyalty')]);
         } else {
             $error = get_user_meta($user_id, '_truebeep_sync_error', true);
-            wp_send_json_error(['message' => $error ?: __('Sync failed', 'truebeep')]);
+            wp_send_json_error(['message' => $error ?: __('Sync failed', 'truebeep-smart-wallet-loyalty')]);
         }
     }
 
@@ -420,7 +420,7 @@ class CustomerHandler
         check_ajax_referer('truebeep_smwl_remove_sync', 'nonce');
 
         if (!current_user_can('edit_users')) {
-            wp_send_json_error(['message' => __('Permission denied', 'truebeep')]);
+            wp_send_json_error(['message' => __('Permission denied', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
@@ -430,6 +430,6 @@ class CustomerHandler
         delete_user_meta($user_id, '_truebeep_last_sync');
         delete_user_meta($user_id, '_truebeep_sync_error');
         
-        wp_send_json_success(['message' => __('Truebeep link removed', 'truebeep')]);
+        wp_send_json_success(['message' => __('Truebeep link removed', 'truebeep-smart-wallet-loyalty')]);
     }
 }

@@ -41,14 +41,14 @@ class Shortcode
 
         // Check if user is logged in
         if (!is_user_logged_in()) {
-            return '<div class="truebeep-loyalty-shortcode error">' . __('Please log in to view your loyalty information.', 'truebeep') . '</div>';
+            return '<div class="truebeep-loyalty-shortcode error">' . __('Please log in to view your loyalty information.', 'truebeep-smart-wallet-loyalty') . '</div>';
         }
 
         $user_id = get_current_user_id();
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
 
         if (!$truebeep_customer_id) {
-            return '<div class="truebeep-loyalty-shortcode error">' . __('Loyalty account not found.', 'truebeep') . '</div>';
+            return '<div class="truebeep-loyalty-shortcode error">' . __('Loyalty account not found.', 'truebeep-smart-wallet-loyalty') . '</div>';
         }
 
         // Get customer data from API

@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
                 <?php 
                 printf(
                     /* translators: %1$s: User name, %2$s: Points count */
-                    esc_html__('Hello %1$s, you have %2$s loyalty points', 'truebeep'),
+                    esc_html__('Hello %1$s, you have %2$s loyalty points', 'truebeep-smart-wallet-loyalty'),
                     '<strong>' . esc_html($user_name) . '</strong>',
                     '<span class="points-count">' . number_format($points) . '</span>'
                 );
@@ -33,7 +33,7 @@ if (!defined('ABSPATH')) {
             <p class="tier-status">
                 <?php 
                 /* translators: %s: Tier name */
-                echo wp_kses_post(sprintf(__('Your current tier: %s', 'truebeep'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>')); 
+                echo wp_kses_post(sprintf(__('Your current tier: %s', 'truebeep-smart-wallet-loyalty'), '<strong>' . esc_html(ucfirst($tier_name)) . '</strong>')); 
                 ?>
             </p>
             <?php endif; ?>
@@ -44,18 +44,18 @@ if (!defined('ABSPATH')) {
 
     <?php if ($apple_wallet_url || $google_wallet_url): ?>
     <div class="loyalty-wallet-section">
-        <p><?php esc_html_e('Download wallet card for easy access to your rewards and points', 'truebeep'); ?></p>
+        <p><?php esc_html_e('Download wallet card for easy access to your rewards and points', 'truebeep-smart-wallet-loyalty'); ?></p>
         
         <div class="wallet-buttons-dashboard">
             <?php if ($apple_wallet_url): ?>
             <a href="<?php echo esc_url($apple_wallet_url); ?>" class="wallet-btn-dashboard apple-wallet" target="_blank" rel="noopener">
-                <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-apple-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Apple Wallet', 'truebeep'); ?>" />
+                <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-apple-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Apple Wallet', 'truebeep-smart-wallet-loyalty'); ?>" />
             </a>
             <?php endif; ?>
             
             <?php if ($google_wallet_url): ?>
             <a href="<?php echo esc_url($google_wallet_url); ?>" class="wallet-btn-dashboard google-wallet" target="_blank" rel="noopener">
-                <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-google-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Google Wallet', 'truebeep'); ?>" />
+                <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-google-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Google Wallet', 'truebeep-smart-wallet-loyalty'); ?>" />
             </a>
             <?php endif; ?>
         </div>

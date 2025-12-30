@@ -26,7 +26,7 @@ class Assets
     public function get_scripts()
     {
         return [
-            'truebeep' => [
+            'truebeep-smart-wallet-loyalty' => [
                 'src'     => TRUEBEEP_ASSETS . '/js/truebeep.js',
                 'version' => filemtime(TRUEBEEP_PATH . '/assets/js/truebeep.js'),
                 'deps'    => ['jquery']
@@ -47,7 +47,7 @@ class Assets
     public function get_styles()
     {
         return [
-            'truebeep' => [
+            'truebeep-smart-wallet-loyalty' => [
                 'src'     => TRUEBEEP_ASSETS . '/css/truebeep.css',
                 'version' => filemtime(TRUEBEEP_PATH . '/assets/css/truebeep.css'),
             ],

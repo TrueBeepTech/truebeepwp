@@ -47,10 +47,10 @@ class NetworkDiagnostics {
         wp_localize_script('truebeep-smwl-network-diagnostics', 'truebeep_smwl_diagnostics', [
             'nonce' => wp_create_nonce('truebeep_smwl_diagnostics'),
             'strings' => [
-                'running' => __('Running...', 'truebeep'),
-                'runDiagnostics' => __('Run Diagnostics', 'truebeep'),
-                'runningDiagnostics' => __('Running diagnostics...', 'truebeep'),
-                'errorRunning' => __('Error running diagnostics: %s', 'truebeep'),
+                'running' => __('Running...', 'truebeep-smart-wallet-loyalty'),
+                'runDiagnostics' => __('Run Diagnostics', 'truebeep-smart-wallet-loyalty'),
+                'runningDiagnostics' => __('Running diagnostics...', 'truebeep-smart-wallet-loyalty'),
+                'errorRunning' => __('Error running diagnostics: %s', 'truebeep-smart-wallet-loyalty'),
             ],
         ]);
     }
@@ -136,8 +136,8 @@ class NetworkDiagnostics {
     public function add_diagnostics_page() {
         add_submenu_page(
             'tools.php',
-            esc_html__('Truebeep Network Diagnostics', 'truebeep'),
-            esc_html__('Truebeep Diagnostics', 'truebeep'),
+            esc_html__('Truebeep Network Diagnostics', 'truebeep-smart-wallet-loyalty'),
+            esc_html__('Truebeep Diagnostics', 'truebeep-smart-wallet-loyalty'),
             'manage_options',
             'truebeep-diagnostics',
             [$this, 'diagnostics_page']
@@ -150,50 +150,50 @@ class NetworkDiagnostics {
     public function diagnostics_page() {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Truebeep Network Diagnostics', 'truebeep'); ?></h1>
-            <p><?php esc_html_e('Use this tool to diagnose GitHub connectivity issues for plugin updates.', 'truebeep'); ?></p>
+            <h1><?php esc_html_e('Truebeep Network Diagnostics', 'truebeep-smart-wallet-loyalty'); ?></h1>
+            <p><?php esc_html_e('Use this tool to diagnose GitHub connectivity issues for plugin updates.', 'truebeep-smart-wallet-loyalty'); ?></p>
             
             <?php if (empty($this->github_config['repository_url'])): ?>
             <div class="notice notice-error">
-                <p><strong><?php esc_html_e('GitHub repository not configured!', 'truebeep'); ?></strong></p>
-                <p><?php esc_html_e('Please configure your repository URL in', 'truebeep'); ?> <code>github-config.php</code>:</p>
+                <p><strong><?php esc_html_e('GitHub repository not configured!', 'truebeep-smart-wallet-loyalty'); ?></strong></p>
+                <p><?php esc_html_e('Please configure your repository URL in', 'truebeep-smart-wallet-loyalty'); ?> <code>github-config.php</code>:</p>
                 <pre><code>'repository_url' => 'https://github.com/YOUR_USERNAME/YOUR_REPOSITORY'</code></pre>
             </div>
             <?php else: ?>
             <div class="notice notice-info">
-                <p><strong><?php esc_html_e('Configured Repository:', 'truebeep'); ?></strong> <?php echo esc_html($this->github_config['repository_url']); ?></p>
+                <p><strong><?php esc_html_e('Configured Repository:', 'truebeep-smart-wallet-loyalty'); ?></strong> <?php echo esc_html($this->github_config['repository_url']); ?></p>
             </div>
             <?php endif; ?>
             
             <div id="truebeep-diagnostics-results">
                 <button type="button" class="button button-primary" id="run-diagnostics">
-                    <?php esc_html_e('Run Diagnostics', 'truebeep'); ?>
+                    <?php esc_html_e('Run Diagnostics', 'truebeep-smart-wallet-loyalty'); ?>
                 </button>
             </div>
             
-            <h2><?php esc_html_e('Manual Fixes', 'truebeep'); ?></h2>
+            <h2><?php esc_html_e('Manual Fixes', 'truebeep-smart-wallet-loyalty'); ?></h2>
             <div class="card">
-                <h3><?php esc_html_e('If GitHub API is blocked:', 'truebeep'); ?></h3>
+                <h3><?php esc_html_e('If GitHub API is blocked:', 'truebeep-smart-wallet-loyalty'); ?></h3>
                 <ol>
-                    <li><strong><?php esc_html_e('Check your firewall:', 'truebeep'); ?></strong> <?php esc_html_e('Ensure api.github.com and github.com are allowed', 'truebeep'); ?></li>
-                    <li><strong><?php esc_html_e('Proxy settings:', 'truebeep'); ?></strong> <?php esc_html_e('If behind a corporate proxy, configure WordPress proxy constants', 'truebeep'); ?></li>
-                    <li><strong><?php esc_html_e('Local environment:', 'truebeep'); ?></strong> <?php esc_html_e('Some local environments block external connections', 'truebeep'); ?></li>
-                    <li><strong><?php esc_html_e('Manual update:', 'truebeep'); ?></strong> <?php esc_html_e('Download the latest release ZIP from GitHub and upload manually', 'truebeep'); ?></li>
+                    <li><strong><?php esc_html_e('Check your firewall:', 'truebeep-smart-wallet-loyalty'); ?></strong> <?php esc_html_e('Ensure api.github.com and github.com are allowed', 'truebeep-smart-wallet-loyalty'); ?></li>
+                    <li><strong><?php esc_html_e('Proxy settings:', 'truebeep-smart-wallet-loyalty'); ?></strong> <?php esc_html_e('If behind a corporate proxy, configure WordPress proxy constants', 'truebeep-smart-wallet-loyalty'); ?></li>
+                    <li><strong><?php esc_html_e('Local environment:', 'truebeep-smart-wallet-loyalty'); ?></strong> <?php esc_html_e('Some local environments block external connections', 'truebeep-smart-wallet-loyalty'); ?></li>
+                    <li><strong><?php esc_html_e('Manual update:', 'truebeep-smart-wallet-loyalty'); ?></strong> <?php esc_html_e('Download the latest release ZIP from GitHub and upload manually', 'truebeep-smart-wallet-loyalty'); ?></li>
                 </ol>
                 
-                <h3><?php esc_html_e('WordPress Proxy Configuration:', 'truebeep'); ?></h3>
-                <p><?php esc_html_e('Add these constants to your wp-config.php if you\'re behind a proxy:', 'truebeep'); ?></p>
+                <h3><?php esc_html_e('WordPress Proxy Configuration:', 'truebeep-smart-wallet-loyalty'); ?></h3>
+                <p><?php esc_html_e('Add these constants to your wp-config.php if you\'re behind a proxy:', 'truebeep-smart-wallet-loyalty'); ?></p>
                 <pre><code>define('WP_PROXY_HOST', 'your-proxy-host');
 define('WP_PROXY_PORT', 'your-proxy-port');
 define('WP_PROXY_USERNAME', 'username'); // Optional
 define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
                 
-                <h3><?php esc_html_e('Manual Update Process:', 'truebeep'); ?></h3>
+                <h3><?php esc_html_e('Manual Update Process:', 'truebeep-smart-wallet-loyalty'); ?></h3>
                 <ol>
-                    <li><?php esc_html_e('Go to:', 'truebeep'); ?> <a href="<?php echo esc_url($this->get_releases_url()); ?>" target="_blank"><?php echo esc_html($this->get_releases_url()); ?></a></li>
-                    <li><?php esc_html_e('Download the latest release ZIP file', 'truebeep'); ?></li>
-                    <li><?php esc_html_e('In WordPress admin, go to Plugins > Add New > Upload Plugin', 'truebeep'); ?></li>
-                    <li><?php esc_html_e('Upload the ZIP file and activate', 'truebeep'); ?></li>
+                    <li><?php esc_html_e('Go to:', 'truebeep-smart-wallet-loyalty'); ?> <a href="<?php echo esc_url($this->get_releases_url()); ?>" target="_blank"><?php echo esc_html($this->get_releases_url()); ?></a></li>
+                    <li><?php esc_html_e('Download the latest release ZIP file', 'truebeep-smart-wallet-loyalty'); ?></li>
+                    <li><?php esc_html_e('In WordPress admin, go to Plugins > Add New > Upload Plugin', 'truebeep-smart-wallet-loyalty'); ?></li>
+                    <li><?php esc_html_e('Upload the ZIP file and activate', 'truebeep-smart-wallet-loyalty'); ?></li>
                 </ol>
             </div>
         </div>
@@ -207,12 +207,12 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         check_ajax_referer('truebeep_smwl_diagnostics');
         
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized', 'truebeep'));
+            wp_die(esc_html__('Unauthorized', 'truebeep-smart-wallet-loyalty'));
         }
         
         // Check if repository is configured
         if (empty($this->github_config['repository_url'])) {
-            $error_html = '<div class="notice notice-error"><p>' . esc_html__('GitHub repository not configured! Please update github-config.php', 'truebeep') . '</p></div>';
+            $error_html = '<div class="notice notice-error"><p>' . esc_html__('GitHub repository not configured! Please update github-config.php', 'truebeep-smart-wallet-loyalty') . '</p></div>';
             wp_send_json_error(['html' => $error_html]);
             return;
         }
@@ -255,11 +255,11 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (is_wp_error($response)) {
             return [
-                'test' => __('Basic GitHub Connectivity', 'truebeep'),
+                'test' => __('Basic GitHub Connectivity', 'truebeep-smart-wallet-loyalty'),
                 'status' => 'failed',
                 'message' => sprintf(
                     /* translators: %s: error message */
-                    esc_html__('Failed: %s', 'truebeep'),
+                    esc_html__('Failed: %s', 'truebeep-smart-wallet-loyalty'),
                     esc_html($response->get_error_message())
                 ),
                 'duration' => $duration . 'ms'
@@ -269,11 +269,11 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         $status_code = wp_remote_retrieve_response_code($response);
         
         return [
-            'test' => __('Basic GitHub Connectivity', 'truebeep'),
+            'test' => __('Basic GitHub Connectivity', 'truebeep-smart-wallet-loyalty'),
             'status' => $status_code == 200 ? 'passed' : 'warning',
             'message' => sprintf(
                 /* translators: %d: HTTP status code */
-                esc_html__('HTTP Status: %d', 'truebeep'),
+                esc_html__('HTTP Status: %d', 'truebeep-smart-wallet-loyalty'),
                 $status_code
             ),
             'duration' => $duration . 'ms'
@@ -301,11 +301,11 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (is_wp_error($response)) {
             return [
-                'test' => __('GitHub API Access', 'truebeep'),
+                'test' => __('GitHub API Access', 'truebeep-smart-wallet-loyalty'),
                 'status' => 'failed',
                 'message' => sprintf(
                     /* translators: %s: error message */
-                    esc_html__('Failed: %s', 'truebeep'),
+                    esc_html__('Failed: %s', 'truebeep-smart-wallet-loyalty'),
                     esc_html($response->get_error_message())
                 ),
                 'duration' => $duration . 'ms'
@@ -318,29 +318,29 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if ($status_code == 200 && !empty($data->tag_name)) {
             return [
-                'test' => __('GitHub API Access', 'truebeep'),
+                'test' => __('GitHub API Access', 'truebeep-smart-wallet-loyalty'),
                 'status' => 'passed',
                 'message' => sprintf(
                     /* translators: %s: version tag name */
-                    esc_html__('Success! Latest version: %s', 'truebeep'),
+                    esc_html__('Success! Latest version: %s', 'truebeep-smart-wallet-loyalty'),
                     esc_html($data->tag_name)
                 ),
                 'duration' => $duration . 'ms'
             ];
         } elseif ($status_code == 403) {
             return [
-                'test' => __('GitHub API Access', 'truebeep'),
+                'test' => __('GitHub API Access', 'truebeep-smart-wallet-loyalty'),
                 'status' => 'warning',
-                'message' => esc_html__('Rate limited (403). This is normal for public repos without authentication.', 'truebeep'),
+                'message' => esc_html__('Rate limited (403). This is normal for public repos without authentication.', 'truebeep-smart-wallet-loyalty'),
                 'duration' => $duration . 'ms'
             ];
         } else {
             return [
-                'test' => __('GitHub API Access', 'truebeep'),
+                'test' => __('GitHub API Access', 'truebeep-smart-wallet-loyalty'),
                 'status' => 'failed',
                 'message' => sprintf(
                     /* translators: %d: HTTP status code */
-                    esc_html__('HTTP Status: %d', 'truebeep'),
+                    esc_html__('HTTP Status: %d', 'truebeep-smart-wallet-loyalty'),
                     $status_code
                 ),
                 'duration' => $duration . 'ms'
@@ -369,11 +369,11 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         
         if (is_wp_error($response)) {
             return [
-                'test' => __('Download Capability', 'truebeep'),
+                'test' => __('Download Capability', 'truebeep-smart-wallet-loyalty'),
                 'status' => 'failed',
                 'message' => sprintf(
                     /* translators: %s: error message */
-                    esc_html__('Failed: %s', 'truebeep'),
+                    esc_html__('Failed: %s', 'truebeep-smart-wallet-loyalty'),
                     esc_html($response->get_error_message())
                 ),
                 'duration' => $duration . 'ms'
@@ -383,11 +383,11 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         $status_code = wp_remote_retrieve_response_code($response);
         
         return [
-            'test' => __('Download Capability', 'truebeep'),
+            'test' => __('Download Capability', 'truebeep-smart-wallet-loyalty'),
             'status' => in_array($status_code, [200, 206]) ? 'passed' : 'failed',
             'message' => sprintf(
                 /* translators: %d: HTTP status code */
-                esc_html__('HTTP Status: %d', 'truebeep'),
+                esc_html__('HTTP Status: %d', 'truebeep-smart-wallet-loyalty'),
                 $status_code
             ),
             'duration' => $duration . 'ms'
@@ -405,18 +405,18 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
             $ip = gethostbyname($domain);
             if ($ip !== $domain) {
                 /* translators: %1$s: domain name, %2$s: IP address */
-                $results[] = sprintf(esc_html__('✓ %1$s → %2$s', 'truebeep'), esc_html($domain), esc_html($ip));
+                $results[] = sprintf(esc_html__('✓ %1$s → %2$s', 'truebeep-smart-wallet-loyalty'), esc_html($domain), esc_html($ip));
             } else {
                 /* translators: %s: domain name */
-                $results[] = sprintf(esc_html__('✗ %s (failed)', 'truebeep'), esc_html($domain));
+                $results[] = sprintf(esc_html__('✗ %s (failed)', 'truebeep-smart-wallet-loyalty'), esc_html($domain));
             }
         }
         
         return [
-            'test' => __('DNS Resolution', 'truebeep'),
+            'test' => __('DNS Resolution', 'truebeep-smart-wallet-loyalty'),
             'status' => 'info',
             'message' => implode('<br>', $results),
-            'duration' => esc_html__('N/A', 'truebeep')
+            'duration' => esc_html__('N/A', 'truebeep-smart-wallet-loyalty')
         ];
     }
     
@@ -438,18 +438,18 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
             $error_message = $response->get_error_message();
             if (strpos($error_message, 'SSL') !== false) {
                 return [
-                    'test' => __('SSL/TLS Connection', 'truebeep'),
+                    'test' => __('SSL/TLS Connection', 'truebeep-smart-wallet-loyalty'),
                     'status' => 'warning',
-                    'message' => esc_html__('SSL verification failed. Plugin uses sslverify=false as fallback.', 'truebeep'),
+                    'message' => esc_html__('SSL verification failed. Plugin uses sslverify=false as fallback.', 'truebeep-smart-wallet-loyalty'),
                     'duration' => $duration . 'ms'
                 ];
             } else {
                 return [
-                    'test' => __('SSL/TLS Connection', 'truebeep'),
+                    'test' => __('SSL/TLS Connection', 'truebeep-smart-wallet-loyalty'),
                     'status' => 'failed',
                     'message' => sprintf(
                         /* translators: %s: error message */
-                        esc_html__('Failed: %s', 'truebeep'),
+                        esc_html__('Failed: %s', 'truebeep-smart-wallet-loyalty'),
                         esc_html($error_message)
                     ),
                     'duration' => $duration . 'ms'
@@ -458,9 +458,9 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         }
         
         return [
-            'test' => __('SSL/TLS Connection', 'truebeep'),
+            'test' => __('SSL/TLS Connection', 'truebeep-smart-wallet-loyalty'),
             'status' => 'passed',
-            'message' => esc_html__('SSL connection successful', 'truebeep'),
+            'message' => esc_html__('SSL connection successful', 'truebeep-smart-wallet-loyalty'),
             'duration' => $duration . 'ms'
         ];
     }
@@ -469,7 +469,7 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
      * Format test results as HTML
      */
     private function format_results($results) {
-        $html = '<h2>' . esc_html__('Diagnostic Results', 'truebeep') . '</h2>';
+        $html = '<h2>' . esc_html__('Diagnostic Results', 'truebeep-smart-wallet-loyalty') . '</h2>';
         
         foreach ($results as $result) {
             $class = '';
@@ -505,21 +505,21 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         }
         
         // Add system info
-        $html .= '<h3>' . esc_html__('System Information', 'truebeep') . '</h3>';
+        $html .= '<h3>' . esc_html__('System Information', 'truebeep-smart-wallet-loyalty') . '</h3>';
         $html .= '<div class="notice notice-info"><p>';
-        $html .= '<strong>' . esc_html__('WordPress Version:', 'truebeep') . '</strong> ' . esc_html(get_bloginfo('version')) . '<br>';
-        $html .= '<strong>' . esc_html__('PHP Version:', 'truebeep') . '</strong> ' . esc_html(PHP_VERSION) . '<br>';
+        $html .= '<strong>' . esc_html__('WordPress Version:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . esc_html(get_bloginfo('version')) . '<br>';
+        $html .= '<strong>' . esc_html__('PHP Version:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . esc_html(PHP_VERSION) . '<br>';
         
         $curl_version = function_exists('curl_version') ? curl_version()['version'] : '';
-        $curl_display = !empty($curl_version) ? esc_html($curl_version) : esc_html__('Not available', 'truebeep');
-        $html .= '<strong>' . esc_html__('cURL Version:', 'truebeep') . '</strong> ' . $curl_display . '<br>';
+        $curl_display = !empty($curl_version) ? esc_html($curl_version) : esc_html__('Not available', 'truebeep-smart-wallet-loyalty');
+        $html .= '<strong>' . esc_html__('cURL Version:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . $curl_display . '<br>';
         
-        $openssl_display = defined('OPENSSL_VERSION_TEXT') ? esc_html(OPENSSL_VERSION_TEXT) : esc_html__('Not available', 'truebeep');
-        $html .= '<strong>' . esc_html__('OpenSSL Version:', 'truebeep') . '</strong> ' . $openssl_display . '<br>';
+        $openssl_display = defined('OPENSSL_VERSION_TEXT') ? esc_html(OPENSSL_VERSION_TEXT) : esc_html__('Not available', 'truebeep-smart-wallet-loyalty');
+        $html .= '<strong>' . esc_html__('OpenSSL Version:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . $openssl_display . '<br>';
         
         $user_agent_response = wp_remote_get('https://httpbin.org/user-agent');
-        $user_agent = is_wp_error($user_agent_response) ? esc_html__('Not available', 'truebeep') : esc_html(wp_remote_retrieve_header($user_agent_response, 'User-Agent'));
-        $html .= '<strong>' . esc_html__('User Agent:', 'truebeep') . '</strong> ' . $user_agent . '<br>';
+        $user_agent = is_wp_error($user_agent_response) ? esc_html__('Not available', 'truebeep-smart-wallet-loyalty') : esc_html(wp_remote_retrieve_header($user_agent_response, 'User-Agent'));
+        $html .= '<strong>' . esc_html__('User Agent:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . $user_agent . '<br>';
         $html .= '</p></div>';
         
         return $html;

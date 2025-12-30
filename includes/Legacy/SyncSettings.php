@@ -48,8 +48,8 @@ class SyncSettings
     {
         add_submenu_page(
             'users.php',
-            __('Sync to Truebeep', 'truebeep'),
-            __('Sync to Truebeep', 'truebeep'),
+            __('Sync to Truebeep', 'truebeep-smart-wallet-loyalty'),
+            __('Sync to Truebeep', 'truebeep-smart-wallet-loyalty'),
             'manage_options',
             'truebeep-smwl-sync',
             [$this, 'render_sync_page']
@@ -83,11 +83,11 @@ class SyncSettings
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('truebeep_smwl_sync_nonce'),
             'strings' => [
-                'starting' => __('Starting sync...', 'truebeep'),
-                'stopping' => __('Stopping sync...', 'truebeep'),
-                'error' => __('An error occurred. Please try again.', 'truebeep'),
-                'confirm_cancel' => __('Are you sure you want to cancel the sync?', 'truebeep'),
-                'confirm_reset' => __('Are you sure you want to reset all sync data? This cannot be undone.', 'truebeep')
+                'starting' => __('Starting sync...', 'truebeep-smart-wallet-loyalty'),
+                'stopping' => __('Stopping sync...', 'truebeep-smart-wallet-loyalty'),
+                'error' => __('An error occurred. Please try again.', 'truebeep-smart-wallet-loyalty'),
+                'confirm_cancel' => __('Are you sure you want to cancel the sync?', 'truebeep-smart-wallet-loyalty'),
+                'confirm_reset' => __('Are you sure you want to reset all sync data? This cannot be undone.', 'truebeep-smart-wallet-loyalty')
             ]
         ]);
         
@@ -116,20 +116,20 @@ class SyncSettings
         <div class="wrap truebeep-sync-wrap">
             <h1 class="wp-heading-inline">
                 <span class="dashicons dashicons-update" style="font-size: 30px; width: 30px; height: 30px; margin-right: 10px;"></span>
-                <?php esc_html_e('Sync Customers to Truebeep', 'truebeep'); ?>
+                <?php esc_html_e('Sync Customers to Truebeep', 'truebeep-smart-wallet-loyalty'); ?>
             </h1>
             
             <?php if (!get_option('truebeep_api_url') || !get_option('truebeep_api_key')): ?>
                 <div class="notice notice-error">
-                    <p><?php esc_html_e('Please configure Truebeep API settings first.', 'truebeep'); ?></p>
-                    <p><a href="<?php echo esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep_smwl')); ?>" class="button button-primary"><?php esc_html_e('Configure Settings', 'truebeep'); ?></a></p>
+                    <p><?php esc_html_e('Please configure Truebeep API settings first.', 'truebeep-smart-wallet-loyalty'); ?></p>
+                    <p><a href="<?php echo esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep_smwl')); ?>" class="button button-primary"><?php esc_html_e('Configure Settings', 'truebeep-smart-wallet-loyalty'); ?></a></p>
                 </div>
                 <?php return; ?>
             <?php endif; ?>
             
             <!-- Full Width Status Card -->
             <div class="card sync-status-card">
-                <h2 class="title"><?php esc_html_e('Sync Status', 'truebeep'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Sync Status', 'truebeep-smart-wallet-loyalty'); ?></h2>
                 <div class="card-body">
                     <div class="sync-status-indicator">
                         <span class="status-badge status-<?php echo esc_attr($status['status']); ?>">
@@ -151,7 +151,7 @@ class SyncSettings
                                 <?php 
                                 printf(
                                     /* translators: %1$d: processed customers, %2$d: total customers, %3$s: percentage */
-                                    esc_html__('%1$d of %2$d customers synced (%3$s%%)', 'truebeep'),
+                                    esc_html__('%1$d of %2$d customers synced (%3$s%%)', 'truebeep-smart-wallet-loyalty'),
                                     intval($progress['processed'] ?? 0),
                                     intval($progress['total'] ?? 0),
                                     esc_html(number_format($stats['percentage'] ?? 0, 1))
@@ -162,15 +162,15 @@ class SyncSettings
                         
                         <div class="sync-stats-grid">
                             <div class="stat-item">
-                                <span class="stat-label"><?php esc_html_e('Successful', 'truebeep'); ?></span>
+                                <span class="stat-label"><?php esc_html_e('Successful', 'truebeep-smart-wallet-loyalty'); ?></span>
                                 <span class="stat-value success"><?php echo esc_html(number_format($progress['successful'] ?? 0)); ?></span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label"><?php esc_html_e('Failed', 'truebeep'); ?></span>
+                                <span class="stat-label"><?php esc_html_e('Failed', 'truebeep-smart-wallet-loyalty'); ?></span>
                                 <span class="stat-value error"><?php echo esc_html(number_format($progress['failed'] ?? 0)); ?></span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label"><?php esc_html_e('Skipped', 'truebeep'); ?></span>
+                                <span class="stat-label"><?php esc_html_e('Skipped', 'truebeep-smart-wallet-loyalty'); ?></span>
                                 <span class="stat-value warning"><?php echo esc_html(number_format($progress['skipped'] ?? 0)); ?></span>
                             </div>
                         </div>
@@ -181,7 +181,7 @@ class SyncSettings
                                     <?php 
                                     printf(
                                         /* translators: %1$d: batch size, %2$d: interval in seconds */
-                                        esc_html__('Processing %1$d customers per batch, with %2$d second intervals between batches.', 'truebeep'),
+                                        esc_html__('Processing %1$d customers per batch, with %2$d second intervals between batches.', 'truebeep-smart-wallet-loyalty'),
                                         intval($status['rate_limit']['batch_size'] ?? 20),
                                         intval($status['rate_limit']['interval'] ?? 60)
                                     ); 
@@ -192,7 +192,7 @@ class SyncSettings
                                         <?php 
                                         printf(
                                             /* translators: %s: human-readable time difference */
-                                            esc_html__('Estimated time remaining: %s', 'truebeep'),
+                                            esc_html__('Estimated time remaining: %s', 'truebeep-smart-wallet-loyalty'),
                                             esc_html(human_time_diff(time(), time() + $status['estimated_time_remaining']))
                                         ); 
                                         ?>
@@ -208,7 +208,7 @@ class SyncSettings
             <div class="truebeep-sync-container">
                 <!-- Controls Card -->
                 <div class="card">
-                    <h2 class="title"><?php esc_html_e('Sync Controls', 'truebeep'); ?></h2>
+                    <h2 class="title"><?php esc_html_e('Sync Controls', 'truebeep-smart-wallet-loyalty'); ?></h2>
                     <div class="card-body">
                         <div class="sync-controls">
                             <?php if ($status['status'] === 'idle' || $status['status'] === 'completed' || $status['status'] === 'cancelled'): ?>
@@ -218,7 +218,7 @@ class SyncSettings
                                             <?php 
                                             printf(
                                                 /* translators: %1$s: number of customers, %2$s: estimated time in minutes */
-                                                esc_html__('There are %1$s customers ready to sync. Estimated time: %2$s minutes.', 'truebeep'),
+                                                esc_html__('There are %1$s customers ready to sync. Estimated time: %2$s minutes.', 'truebeep-smart-wallet-loyalty'),
                                                 '<strong>' . esc_html(number_format($stats['remaining'])) . '</strong>',
                                                 '<strong>' . esc_html(ceil($stats['remaining'] / CustomerSyncProcessor::BATCH_SIZE)) . '</strong>'
                                             ); 
@@ -227,32 +227,32 @@ class SyncSettings
                                     </div>
                                 <?php else: ?>
                                     <div class="notice notice-success inline">
-                                        <p><?php esc_html_e('All customers are synchronized!', 'truebeep'); ?></p>
+                                        <p><?php esc_html_e('All customers are synchronized!', 'truebeep-smart-wallet-loyalty'); ?></p>
                                     </div>
                                 <?php endif; ?>
                                 
                                 <p class="sync-actions">
                                     <button type="button" class="button button-primary button-hero" id="start-sync" <?php echo $stats['remaining'] === 0 ? 'disabled' : ''; ?>>
                                         <span class="dashicons dashicons-update"></span>
-                                        <?php esc_html_e('Start Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Start Sync', 'truebeep-smart-wallet-loyalty'); ?>
                                     </button>
                                 </p>
                             <?php elseif ($status['status'] === 'processing' || $status['status'] === 'running'): ?>
                                 <p class="sync-actions">
                                     <button type="button" class="button button-secondary button-hero" id="cancel-sync">
                                         <span class="dashicons dashicons-no"></span>
-                                        <?php esc_html_e('Cancel Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Cancel Sync', 'truebeep-smart-wallet-loyalty'); ?>
                                     </button>
                                 </p>
                             <?php elseif ($status['status'] === 'paused'): ?>
                                 <p class="sync-actions">
                                     <button type="button" class="button button-primary button-hero" id="resume-sync">
                                         <span class="dashicons dashicons-controls-play"></span>
-                                        <?php esc_html_e('Resume Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Resume Sync', 'truebeep-smart-wallet-loyalty'); ?>
                                     </button>
                                     <button type="button" class="button button-secondary button-hero" id="cancel-sync">
                                         <span class="dashicons dashicons-no"></span>
-                                        <?php esc_html_e('Cancel Sync', 'truebeep'); ?>
+                                        <?php esc_html_e('Cancel Sync', 'truebeep-smart-wallet-loyalty'); ?>
                                     </button>
                                 </p>
                             <?php endif; ?>
@@ -261,7 +261,7 @@ class SyncSettings
                                 <hr style="margin: 20px 0;">
                                 <p>
                                     <button type="button" class="button button-link-delete" id="reset-sync">
-                                        <?php esc_html_e('Reset Sync Data', 'truebeep'); ?>
+                                        <?php esc_html_e('Reset Sync Data', 'truebeep-smart-wallet-loyalty'); ?>
                                     </button>
                                 </p>
                             <?php endif; ?>
@@ -271,31 +271,31 @@ class SyncSettings
                 
                 <!-- Statistics Card -->
                 <div class="card">
-                    <h2 class="title"><?php esc_html_e('Sync Statistics', 'truebeep'); ?></h2>
+                    <h2 class="title"><?php esc_html_e('Sync Statistics', 'truebeep-smart-wallet-loyalty'); ?></h2>
                     <div class="card-body">
                         <table class="wp-list-table widefat fixed striped">
                             <tbody>
                                 <tr>
-                                    <th><?php esc_html_e('Total Customers', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Total Customers', 'truebeep-smart-wallet-loyalty'); ?></th>
                                     <td><strong><?php echo esc_html(number_format(($stats['total'] ?? 0) + ($stats['remaining'] ?? 0))); ?></strong></td>
                                 </tr>
                                 <tr>
-                                    <th><?php esc_html_e('Already Synced', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Already Synced', 'truebeep-smart-wallet-loyalty'); ?></th>
                                     <td><strong><?php echo esc_html(number_format($stats['total'] ?? 0)); ?></strong></td>
                                 </tr>
                                 <tr>
-                                    <th><?php esc_html_e('Remaining to Sync', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Remaining to Sync', 'truebeep-smart-wallet-loyalty'); ?></th>
                                     <td><strong><?php echo esc_html(number_format($stats['remaining'] ?? 0)); ?></strong></td>
                                 </tr>
                                 <?php if ($status['started_at']): ?>
                                 <tr>
-                                    <th><?php esc_html_e('Started At', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Started At', 'truebeep-smart-wallet-loyalty'); ?></th>
                                     <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($status['started_at']))); ?></td>
                                 </tr>
                                 <?php endif; ?>
                                 <?php if ($status['completed_at']): ?>
                                 <tr>
-                                    <th><?php esc_html_e('Completed At', 'truebeep'); ?></th>
+                                    <th><?php esc_html_e('Completed At', 'truebeep-smart-wallet-loyalty'); ?></th>
                                     <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($status['completed_at']))); ?></td>
                                 </tr>
                                 <?php endif; ?>
@@ -309,7 +309,7 @@ class SyncSettings
             <?php $logs = $this->sync_manager->get_sync_logs(20); ?>
             <?php if (!empty($logs)): ?>
             <div class="card sync-log-card">
-                <h2 class="title"><?php esc_html_e('Sync Activity Log', 'truebeep'); ?></h2>
+                <h2 class="title"><?php esc_html_e('Sync Activity Log', 'truebeep-smart-wallet-loyalty'); ?></h2>
                 <div class="card-body">
                     <div class="sync-log-container">
                         <?php foreach ($logs as $log): ?>
@@ -322,13 +322,13 @@ class SyncSettings
                                 <?php if (!empty($log['errors'])): ?>
                                     <div class="log-details">
                                         <div class="log-errors">
-                                            <strong><?php esc_html_e('Errors:', 'truebeep'); ?></strong>
+                                            <strong><?php esc_html_e('Errors:', 'truebeep-smart-wallet-loyalty'); ?></strong>
                                             <ul class="error-list">
                                                 <?php foreach ($log['errors'] as $user_id => $error): ?>
                                                     <li class="error-item">
                                                         <span class="error-user"><?php 
                                                         /* translators: %s: user ID */
-                                                        printf(esc_html__('User ID %s:', 'truebeep'), esc_html($user_id)); 
+                                                        printf(esc_html__('User ID %s:', 'truebeep-smart-wallet-loyalty'), esc_html($user_id)); 
                                                         ?></span>
                                                         <span class="error-message"><?php echo esc_html($error); ?></span>
                                                     </li>
@@ -342,7 +342,7 @@ class SyncSettings
                                     <div class="log-success">
                                         <span class="success-count"><?php 
                                         /* translators: %d: number of successfully synced customers */
-                                        printf(esc_html__('%d customers synced successfully', 'truebeep'), intval($log['successful'])); 
+                                        printf(esc_html__('%d customers synced successfully', 'truebeep-smart-wallet-loyalty'), intval($log['successful'])); 
                                         ?></span>
                                     </div>
                                 <?php endif; ?>
@@ -352,7 +352,7 @@ class SyncSettings
                     
                     <?php if (count($logs) >= 20): ?>
                         <div class="log-footer">
-                            <p class="log-note"><?php esc_html_e('Showing latest 20 log entries. Logs are automatically cleaned after 100 entries.', 'truebeep'); ?></p>
+                            <p class="log-note"><?php esc_html_e('Showing latest 20 log entries. Logs are automatically cleaned after 100 entries.', 'truebeep-smart-wallet-loyalty'); ?></p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -373,13 +373,13 @@ class SyncSettings
     private function get_status_label($status)
     {
         $labels = [
-            'idle' => __('Not Started', 'truebeep'),
-            'preparing' => __('Preparing...', 'truebeep'),
-            'processing' => __('Syncing...', 'truebeep'),
-            'completed' => __('Completed', 'truebeep'),
-            'cancelled' => __('Cancelled', 'truebeep'),
-            'paused' => __('Paused', 'truebeep'),
-            'failed' => __('Failed', 'truebeep')
+            'idle' => __('Not Started', 'truebeep-smart-wallet-loyalty'),
+            'preparing' => __('Preparing...', 'truebeep-smart-wallet-loyalty'),
+            'processing' => __('Syncing...', 'truebeep-smart-wallet-loyalty'),
+            'completed' => __('Completed', 'truebeep-smart-wallet-loyalty'),
+            'cancelled' => __('Cancelled', 'truebeep-smart-wallet-loyalty'),
+            'paused' => __('Paused', 'truebeep-smart-wallet-loyalty'),
+            'failed' => __('Failed', 'truebeep-smart-wallet-loyalty')
         ];
         
         return $labels[$status] ?? $status;
@@ -397,7 +397,7 @@ class SyncSettings
         check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(__('Permission denied', 'truebeep'));
+            wp_send_json_error(__('Permission denied', 'truebeep-smart-wallet-loyalty'));
         }
         
         $status = $this->sync_manager->get_sync_status();

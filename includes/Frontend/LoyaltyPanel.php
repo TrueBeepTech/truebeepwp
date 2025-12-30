@@ -73,9 +73,9 @@ class LoyaltyPanel
             'google_template_id' => $wallet_id,
             'user_id' => $user_id,
             'strings' => [
-                'loading' => __('Loading...', 'truebeep'),
-                'error' => __('Error loading data', 'truebeep'),
-                'no_tier' => __('Bronze', 'truebeep'),
+                'loading' => __('Loading...', 'truebeep-smart-wallet-loyalty'),
+                'error' => __('Error loading data', 'truebeep-smart-wallet-loyalty'),
+                'no_tier' => __('Bronze', 'truebeep-smart-wallet-loyalty'),
             ]
         ]);
 
@@ -94,16 +94,16 @@ class LoyaltyPanel
     {
         // Verify nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'truebeep_smwl_panel_nonce')) {
-            wp_send_json_error(['message' => __('Security check failed', 'truebeep')]);
+            wp_send_json_error(['message' => __('Security check failed', 'truebeep-smart-wallet-loyalty')]);
         }
 
         if (!is_user_logged_in()) {
-            wp_send_json_error(['message' => __('Not logged in', 'truebeep')]);
+            wp_send_json_error(['message' => __('Not logged in', 'truebeep-smart-wallet-loyalty')]);
         }
         
         // Rate limiting - max 10 requests per minute
         if (RateLimiter::is_rate_limited('loyalty_data', RateLimiter::get_identifier(), 10, 60)) {
-            wp_send_json_error(['message' => __('Too many requests. Please try again later.', 'truebeep')]);
+            wp_send_json_error(['message' => __('Too many requests. Please try again later.', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $user_id = get_current_user_id();
@@ -112,12 +112,12 @@ class LoyaltyPanel
 
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
         if (!$truebeep_customer_id) {
-            wp_send_json_error(['message' => __('No customer ID found', 'truebeep')]);
+            wp_send_json_error(['message' => __('No customer ID found', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $customer_data = $this->get_customer_points($truebeep_customer_id);
         if (empty($customer_data)) {
-            wp_send_json_error(['message' => __('Failed to fetch customer data', 'truebeep')]);
+            wp_send_json_error(['message' => __('Failed to fetch customer data', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $tier_info = $this->get_customer_tier($truebeep_customer_id);
@@ -125,7 +125,7 @@ class LoyaltyPanel
             'points' => isset($customer_data['points']) ? intval($customer_data['points']) : 0,
             'total_earned' => isset($customer_data['totalEarnedPoints']) ? intval($customer_data['totalEarnedPoints']) : 0,
             'total_spent' => isset($customer_data['totalSpentPoints']) ? intval($customer_data['totalSpentPoints']) : 0,
-            'tier' => $tier_info['tier_name'] ?: __('Bronze', 'truebeep'),
+            'tier' => $tier_info['tier_name'] ?: __('Bronze', 'truebeep-smart-wallet-loyalty'),
             'tier_data' => $tier_info['full_tier'],
             'user_name' => $user_name
         ];
