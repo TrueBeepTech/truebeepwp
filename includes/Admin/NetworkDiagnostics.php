@@ -50,6 +50,7 @@ class NetworkDiagnostics {
                 'running' => __('Running...', 'truebeep-smart-wallet-loyalty'),
                 'runDiagnostics' => __('Run Diagnostics', 'truebeep-smart-wallet-loyalty'),
                 'runningDiagnostics' => __('Running diagnostics...', 'truebeep-smart-wallet-loyalty'),
+                /* translators: %s: error message */
                 'errorRunning' => __('Error running diagnostics: %s', 'truebeep-smart-wallet-loyalty'),
             ],
         ]);
