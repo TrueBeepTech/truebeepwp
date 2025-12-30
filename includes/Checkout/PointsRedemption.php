@@ -94,7 +94,7 @@ class PointsRedemption
                             min="0"
                             max="<?php echo esc_attr($this->user_points); ?>"
                             step="1"
-                            placeholder="<?php esc_attr_e('Enter points', 'truebeep'); ?>" />
+                            placeholder="<?php echo esc_attr__('Enter points', 'truebeep'); ?>" />
                         <span class="points-value-preview" data-rate="<?php echo esc_attr($this->get_redemption_rate()); ?>">
                             = $<span id="discount-preview">0.00</span>
                         </span>

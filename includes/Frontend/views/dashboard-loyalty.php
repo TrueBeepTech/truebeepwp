@@ -49,13 +49,13 @@ if (!defined('ABSPATH')) {
         <div class="wallet-buttons-dashboard">
             <?php if ($apple_wallet_url): ?>
             <a href="<?php echo esc_url($apple_wallet_url); ?>" class="wallet-btn-dashboard apple-wallet" target="_blank" rel="noopener">
-                <img src="<?php echo esc_url('https://pub-de9716fb9a7948d9a9929d6c524f14f0.r2.dev/add-to-apple-wallet-button.svg'); ?>" alt="Apple Wallet" />
+                <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-apple-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Apple Wallet', 'truebeep'); ?>" />
             </a>
             <?php endif; ?>
             
             <?php if ($google_wallet_url): ?>
             <a href="<?php echo esc_url($google_wallet_url); ?>" class="wallet-btn-dashboard google-wallet" target="_blank" rel="noopener">
-                <img src="<?php echo esc_url('https://pub-de9716fb9a7948d9a9929d6c524f14f0.r2.dev/add-to-google-wallet-button.svg'); ?>" alt="Google Wallet" />
+                <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-google-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Google Wallet', 'truebeep'); ?>" />
             </a>
             <?php endif; ?>
         </div>

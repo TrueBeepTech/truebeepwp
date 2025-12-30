@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
     <div class="panel-content">
         <div class="panel-header">
-            <button class="panel-close" aria-label="<?php esc_attr_e('Close panel', 'truebeep'); ?>">
+            <button class="panel-close" aria-label="<?php echo esc_attr__('Close panel', 'truebeep'); ?>">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
@@ -41,10 +41,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
             <!-- Wallet Buttons -->
             <div class="wallet-buttons">
                 <a href="#" class="wallet-btn apple-wallet" target="_blank" rel="noopener">
-                    <img src="<?php echo esc_url('https://pub-de9716fb9a7948d9a9929d6c524f14f0.r2.dev/add-to-apple-wallet-button.svg'); ?>" alt="Apple Wallet" />
+                    <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-apple-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Apple Wallet', 'truebeep'); ?>" />
                 </a>
                 <a href="#" class="wallet-btn google-wallet" target="_blank" rel="noopener">
-                    <img src="<?php echo esc_url('https://pub-de9716fb9a7948d9a9929d6c524f14f0.r2.dev/add-to-google-wallet-button.svg'); ?>" alt="Google Wallet" />
+                    <img src="<?php echo esc_url(TRUEBEEP_URL . '/assets/images/add-to-google-wallet-button.svg'); ?>" alt="<?php echo esc_attr__('Google Wallet', 'truebeep'); ?>" />
                 </a>
             </div>
         </div>
