@@ -54,12 +54,25 @@ class WooCommerceSettings
             return;
         }
 
-        echo '<ul class="subsubsub">';
         $array_keys = array_keys($sections);
+        $last_key = end($array_keys);
+        
+        printf('<ul class="subsubsub">%s', "\n");
         foreach ($sections as $id => $label) {
-            echo '<li><a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=truebeep_smwl&section=' . sanitize_title($id))) . '" class="' . esc_attr($current_section == $id ? 'current' : '') . '">' . esc_html($label) . '</a> ' . (end($array_keys) == $id ? '' : '|') . ' </li>';
+            $section_url = admin_url('admin.php?page=wc-settings&tab=truebeep_smwl&section=' . sanitize_title($id));
+            $section_class = ($current_section == $id) ? 'current' : '';
+            $separator = ($last_key == $id) ? '' : '|';
+            
+            printf(
+                '<li><a href="%s" class="%s">%s</a> %s </li>%s',
+                esc_url($section_url),
+                esc_attr($section_class),
+                esc_html($label),
+                esc_html($separator),
+                "\n"
+            );
         }
-        echo '</ul><br class="clear" />';
+        printf('</ul><br class="clear" />%s', "\n");
     }
 
     public function get_settings($current_section = '')

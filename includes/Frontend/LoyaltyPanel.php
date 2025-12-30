@@ -56,7 +56,7 @@ class LoyaltyPanel
         $panel_position = get_option('truebeep_panel_position', 'bottom-right');
 
         wp_enqueue_script('truebeep-smwl-loyalty-panel');
-        wp_enqueue_style('truebeep-loyalty-panel');
+        wp_enqueue_style('truebeep-smwl-loyalty-panel');
 
         // Get wallet template IDs
         $wallet_base_url = $this->get_wallet_base_url();
