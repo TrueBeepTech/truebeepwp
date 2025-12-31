@@ -2,38 +2,42 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Truebeep: Smart Wallet Loyalty 1.0.1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/truebeep\n"
+"Project-Id-Version: Truebeep: Smart Wallet Loyalty 1.0.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/truebeep-smart-wallet-loyalty\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-05T05:08:13+00:00\n"
+"POT-Creation-Date: 2025-12-31T05:23:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: truebeep\n"
+"X-Domain: truebeep-smart-wallet-loyalty\n"
 
 #. Plugin Name of the plugin
-#: truebeep.php
+#: truebeep-smart-wallet-loyalty.php
 msgid "Truebeep: Smart Wallet Loyalty"
 msgstr ""
 
 #. Plugin URI of the plugin
-#. Author URI of the plugin
-#: truebeep.php
-msgid "https://truebeep.com"
+#: truebeep-smart-wallet-loyalty.php
+msgid "https://wp.truebeep.com"
 msgstr ""
 
 #. Description of the plugin
-#: truebeep.php
+#: truebeep-smart-wallet-loyalty.php
 msgid "Reward customers with points they can track and redeem via Wallet. Retain them with smart tools."
 msgstr ""
 
 #. Author of the plugin
-#: truebeep.php
-#: includes/Admin/WooCommerceSettings.php:32
+#: truebeep-smart-wallet-loyalty.php
+#: includes/Admin/WooCommerceSettings.php:33
 msgid "Truebeep"
+msgstr ""
+
+#. Author URI of the plugin
+#: truebeep-smart-wallet-loyalty.php
+msgid "https://truebeep.com"
 msgstr ""
 
 #: includes/Admin/ConnectionHelper.php:32
@@ -50,24 +54,275 @@ msgstr ""
 msgid "Failed to update connection status"
 msgstr ""
 
-#: includes/Admin/UserHandler.php:68
+#: includes/Admin/NetworkDiagnostics.php:50
+msgid "Running..."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:51
+#: includes/Admin/NetworkDiagnostics.php:171
+msgid "Run Diagnostics"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:52
+msgid "Running diagnostics..."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Admin/NetworkDiagnostics.php:54
+#, php-format
+msgid "Error running diagnostics: %s"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:140
+#: includes/Admin/NetworkDiagnostics.php:154
+msgid "Truebeep Network Diagnostics"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:141
+msgid "Truebeep Diagnostics"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:155
+msgid "Use this tool to diagnose GitHub connectivity issues for plugin updates."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:159
+msgid "GitHub repository not configured!"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:160
+msgid "Please configure your repository URL in"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:165
+msgid "Configured Repository:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:175
+msgid "Manual Fixes"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:177
+msgid "If GitHub API is blocked:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:179
+msgid "Check your firewall:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:179
+msgid "Ensure api.github.com and github.com are allowed"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:180
+msgid "Proxy settings:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:180
+msgid "If behind a corporate proxy, configure WordPress proxy constants"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:181
+msgid "Local environment:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:181
+msgid "Some local environments block external connections"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:182
+msgid "Manual update:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:182
+msgid "Download the latest release ZIP from GitHub and upload manually"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:185
+msgid "WordPress Proxy Configuration:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:186
+msgid "Add these constants to your wp-config.php if you're behind a proxy:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:192
+msgid "Manual Update Process:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:194
+msgid "Go to:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:195
+msgid "Download the latest release ZIP file"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:196
+msgid "In WordPress admin, go to Plugins > Add New > Upload Plugin"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:197
+msgid "Upload the ZIP file and activate"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:211
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:216
+msgid "GitHub repository not configured! Please update github-config.php"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:259
+#: includes/Admin/NetworkDiagnostics.php:273
+msgid "Basic GitHub Connectivity"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Admin/NetworkDiagnostics.php:263
+#: includes/Admin/NetworkDiagnostics.php:309
+#: includes/Admin/NetworkDiagnostics.php:377
+#: includes/Admin/NetworkDiagnostics.php:453
+#, php-format
+msgid "Failed: %s"
+msgstr ""
+
+#. translators: %d: HTTP status code
+#: includes/Admin/NetworkDiagnostics.php:277
+#: includes/Admin/NetworkDiagnostics.php:344
+#: includes/Admin/NetworkDiagnostics.php:391
+#, php-format
+msgid "HTTP Status: %d"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:305
+#: includes/Admin/NetworkDiagnostics.php:322
+#: includes/Admin/NetworkDiagnostics.php:333
+#: includes/Admin/NetworkDiagnostics.php:340
+msgid "GitHub API Access"
+msgstr ""
+
+#. translators: %s: version tag name
+#: includes/Admin/NetworkDiagnostics.php:326
+#, php-format
+msgid "Success! Latest version: %s"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:335
+msgid "Rate limited (403). This is normal for public repos without authentication."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:373
+#: includes/Admin/NetworkDiagnostics.php:387
+msgid "Download Capability"
+msgstr ""
+
+#. translators: %1$s: domain name, %2$s: IP address
+#: includes/Admin/NetworkDiagnostics.php:409
+#, php-format
+msgid "✓ %1$s → %2$s"
+msgstr ""
+
+#. translators: %s: domain name
+#: includes/Admin/NetworkDiagnostics.php:412
+#, php-format
+msgid "✗ %s (failed)"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:417
+msgid "DNS Resolution"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:420
+msgid "N/A"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:442
+#: includes/Admin/NetworkDiagnostics.php:449
+#: includes/Admin/NetworkDiagnostics.php:462
+msgid "SSL/TLS Connection"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:444
+msgid "SSL verification failed. Plugin uses sslverify=false as fallback."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:464
+msgid "SSL connection successful"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:473
+msgid "Diagnostic Results"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:509
+msgid "System Information"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:511
+msgid "WordPress Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:512
+msgid "PHP Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:515
+#: includes/Admin/NetworkDiagnostics.php:518
+#: includes/Admin/NetworkDiagnostics.php:522
+msgid "Not available"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:516
+msgid "cURL Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:519
+msgid "OpenSSL Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:523
+msgid "User Agent:"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:56
+#: includes/Legacy/SyncSettings.php:378
+msgid "Syncing..."
+msgstr ""
+
+#: includes/Admin/UserHandler.php:57
+#: includes/Api/CustomerHandler.php:411
+msgid "Sync failed"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:58
+#: includes/Admin/views/user-profile-fields.php:48
+msgid "Sync with Truebeep"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:59
+msgid "Are you sure you want to remove the Truebeep link?"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:108
 msgid "Truebeep Synced"
 msgstr ""
 
-#: includes/Admin/UserHandler.php:87
+#: includes/Admin/UserHandler.php:127
 msgid "Synced with Truebeep"
 msgstr ""
 
-#: includes/Admin/UserHandler.php:89
+#: includes/Admin/UserHandler.php:129
 #: includes/Admin/views/user-profile-fields.php:26
 msgid "Synced"
 msgstr ""
 
-#: includes/Admin/UserHandler.php:93
+#: includes/Admin/UserHandler.php:133
 msgid "Not synced with Truebeep"
 msgstr ""
 
-#: includes/Admin/UserHandler.php:95
+#: includes/Admin/UserHandler.php:135
 #: includes/Admin/views/user-profile-fields.php:33
 msgid "Not synced"
 msgstr ""
@@ -81,7 +336,7 @@ msgid "Create membership levels with different earning rates and benefits. Custo
 msgstr ""
 
 #: includes/Admin/views/loyalty-settings.php:26
-#: includes/Admin/WooCommerceSettings.php:546
+#: includes/Admin/WooCommerceSettings.php:560
 msgid "Tier Name"
 msgstr ""
 
@@ -98,18 +353,19 @@ msgid "Threshold Points"
 msgstr ""
 
 #: includes/Admin/views/loyalty-settings.php:30
-#: includes/Admin/WooCommerceSettings.php:306
+#: includes/Admin/WooCommerceSettings.php:320
 msgid "Actions"
 msgstr ""
 
 #: includes/Admin/views/loyalty-settings.php:41
-#: includes/Admin/WooCommerceSettings.php:315
+#: includes/Admin/WooCommerceSettings.php:329
+#: includes/Admin/WooCommerceSettings.php:574
 msgid "Edit"
 msgstr ""
 
 #: includes/Admin/views/loyalty-settings.php:42
-#: includes/Admin/WooCommerceSettings.php:316
-#: includes/Admin/WooCommerceSettings.php:547
+#: includes/Admin/WooCommerceSettings.php:330
+#: includes/Admin/WooCommerceSettings.php:561
 msgid "Remove"
 msgstr ""
 
@@ -118,7 +374,7 @@ msgid "Add More Tier"
 msgstr ""
 
 #: includes/Admin/views/loyalty-settings.php:50
-#: includes/Admin/WooCommerceSettings.php:549
+#: includes/Admin/WooCommerceSettings.php:563
 msgid "Save Changes"
 msgstr ""
 
@@ -156,7 +412,7 @@ msgid "Edit Coupon"
 msgstr ""
 
 #: includes/Admin/views/loyalty-settings.php:104
-#: includes/Admin/WooCommerceSettings.php:304
+#: includes/Admin/WooCommerceSettings.php:318
 msgid "Coupon Name"
 msgstr ""
 
@@ -196,250 +452,255 @@ msgstr ""
 msgid "Last sync: %s"
 msgstr ""
 
-#: includes/Admin/views/user-profile-fields.php:48
-#: includes/Admin/views/user-profile-fields.php:76
-msgid "Sync with Truebeep"
-msgstr ""
-
 #: includes/Admin/views/user-profile-fields.php:52
 msgid "Remove Truebeep Link"
 msgstr ""
 
-#: includes/Admin/views/user-profile-fields.php:65
-#: includes/Legacy/SyncSettings.php:378
-msgid "Syncing..."
-msgstr ""
-
-#: includes/Admin/views/user-profile-fields.php:75
-#: includes/Api/CustomerHandler.php:411
-msgid "Sync failed"
-msgstr ""
-
-#: includes/Admin/views/user-profile-fields.php:82
-msgid "Are you sure you want to remove the Truebeep link?"
-msgstr ""
-
-#: includes/Admin/WooCommerceSettings.php:39
+#: includes/Admin/WooCommerceSettings.php:40
 msgid "Credentials"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:40
+#: includes/Admin/WooCommerceSettings.php:41
 msgid "Loyalty"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:41
+#: includes/Admin/WooCommerceSettings.php:42
 msgid "Wallet"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:82
+#: includes/Admin/WooCommerceSettings.php:96
+#: includes/Admin/WooCommerceSettings.php:568
 msgid "Connected"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:82
+#: includes/Admin/WooCommerceSettings.php:96
+#: includes/Admin/WooCommerceSettings.php:569
 msgid "Disconnected"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:84
+#: includes/Admin/WooCommerceSettings.php:98
+#: includes/Admin/WooCommerceSettings.php:567
 msgid "Disconnect"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:84
+#: includes/Admin/WooCommerceSettings.php:98
+#: includes/Admin/WooCommerceSettings.php:566
 msgid "Connect"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:88
+#: includes/Admin/WooCommerceSettings.php:102
 msgid "Truebeep Credentials"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:90
+#: includes/Admin/WooCommerceSettings.php:104
 msgid "Configure your Truebeep API credentials"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:94
+#: includes/Admin/WooCommerceSettings.php:108
 msgid "API URL"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:95
+#: includes/Admin/WooCommerceSettings.php:109
 msgid "Truebeep API URL (read-only)"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:105
+#: includes/Admin/WooCommerceSettings.php:119
 msgid "API Key"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:106
+#: includes/Admin/WooCommerceSettings.php:120
 msgid "Enter your Truebeep API Key"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:125
+#: includes/Admin/WooCommerceSettings.php:139
 msgid "Loyalty Configuration"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:127
+#: includes/Admin/WooCommerceSettings.php:141
 msgid "Configure loyalty points and tier settings"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:131
+#: includes/Admin/WooCommerceSettings.php:145
 msgid "Redemption Method"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:132
+#: includes/Admin/WooCommerceSettings.php:146
 msgid "Choose how customers will convert their points into discounts."
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:137
+#: includes/Admin/WooCommerceSettings.php:151
 msgid "Flexible Redemption (Customers can redeem any amount of points for instant discounts.))"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:138
+#: includes/Admin/WooCommerceSettings.php:152
 msgid "Fixed Rewards (Customers choose from preset point-to-discount combinations.))"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:147
+#: includes/Admin/WooCommerceSettings.php:161
 msgid "Point Earning Rate"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:148
+#: includes/Admin/WooCommerceSettings.php:162
 msgid "How many points customers earn for each $1 spent."
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:157
+#: includes/Admin/WooCommerceSettings.php:171
 msgid "Point Value"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:158
+#: includes/Admin/WooCommerceSettings.php:172
 msgid "The $ value of each point when customers redeem them."
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:167
+#: includes/Admin/WooCommerceSettings.php:181
 msgid "Points on Discounted Orders"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:168
+#: includes/Admin/WooCommerceSettings.php:182
 msgid "Allow customers to earn new points even when using points for discounts. Great for encouraging repeat purchases!"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:175
+#: includes/Admin/WooCommerceSettings.php:189
 msgid "Award Points on Order Status"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:176
+#: includes/Admin/WooCommerceSettings.php:190
 msgid "Select when customers earn loyalty points. Processing = immediately after payment, Completed = after order fulfillment"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:181
+#: includes/Admin/WooCommerceSettings.php:195
 msgid "Processing (Immediate)"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:182
+#: includes/Admin/WooCommerceSettings.php:196
 msgid "Completed (After Fulfillment)"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:183
+#: includes/Admin/WooCommerceSettings.php:197
 msgid "Both Processing and Completed"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:204
+#: includes/Admin/WooCommerceSettings.php:218
 msgid "Wallet Configuration"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:206
+#: includes/Admin/WooCommerceSettings.php:220
 msgid "Configure your wallet settings"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:210
+#: includes/Admin/WooCommerceSettings.php:224
 msgid "Show Loyalty Panel"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:211
+#: includes/Admin/WooCommerceSettings.php:225
 msgid "Display floating loyalty panel on frontend"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:219
+#: includes/Admin/WooCommerceSettings.php:233
 msgid "Wallet Base URL"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:220
+#: includes/Admin/WooCommerceSettings.php:234
 msgid "Base URL for wallet API (read-only)"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:230
+#: includes/Admin/WooCommerceSettings.php:244
 msgid "Panel Position"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:231
+#: includes/Admin/WooCommerceSettings.php:245
 msgid "Choose where to display the loyalty panel"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:235
+#: includes/Admin/WooCommerceSettings.php:249
 msgid "Bottom Right"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:236
+#: includes/Admin/WooCommerceSettings.php:250
 msgid "Bottom Left"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:262
+#: includes/Admin/WooCommerceSettings.php:276
 msgid "Wallet ID"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:263
+#: includes/Admin/WooCommerceSettings.php:277
 msgid "Enter your wallet ID"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:297
+#: includes/Admin/WooCommerceSettings.php:311
 msgid "Coupons"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:305
+#: includes/Admin/WooCommerceSettings.php:319
 msgid "Value"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:323
+#: includes/Admin/WooCommerceSettings.php:337
 msgid "Add New Coupon"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:324
-#: includes/Admin/WooCommerceSettings.php:550
+#: includes/Admin/WooCommerceSettings.php:338
+#: includes/Admin/WooCommerceSettings.php:564
 msgid "Save Coupons"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:383
-#: includes/Admin/WooCommerceSettings.php:440
-#: includes/Admin/WooCommerceSettings.php:471
+#: includes/Admin/WooCommerceSettings.php:397
+#: includes/Admin/WooCommerceSettings.php:454
+#: includes/Admin/WooCommerceSettings.php:485
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:432
+#: includes/Admin/WooCommerceSettings.php:446
 msgid "Loyalty settings saved successfully!"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:460
+#: includes/Admin/WooCommerceSettings.php:474
 msgid "Coupons saved successfully!"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:488
+#: includes/Admin/WooCommerceSettings.php:502
 msgid "Connected successfully!"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:492
+#: includes/Admin/WooCommerceSettings.php:506
 msgid "Connection failed"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:506
+#: includes/Admin/WooCommerceSettings.php:520
 msgid "Disconnected successfully!"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:513
+#: includes/Admin/WooCommerceSettings.php:527
 msgid "Disconnected locally"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:518
+#: includes/Admin/WooCommerceSettings.php:532
 msgid "Invalid action"
 msgstr ""
 
-#: includes/Admin/WooCommerceSettings.php:548
+#: includes/Admin/WooCommerceSettings.php:562
 msgid "Saving..."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:565
+msgid "Processing..."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:570
+msgid "Connection failed. Please try again."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:571
+msgid "Are you sure you want to remove this tier?"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:572
+msgid "Are you sure you want to remove this coupon?"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:573
+msgid "New Coupon"
 msgstr ""
 
 #: includes/Api/CustomerHandler.php:385
@@ -822,6 +1083,22 @@ msgstr ""
 msgid "Download wallet card for easy access to your rewards and points"
 msgstr ""
 
+#: includes/Frontend/views/dashboard-loyalty.php:52
+#: includes/Frontend/views/loyalty-panel.php:44
+#: includes/Frontend/views/loyalty-shortcode.php:78
+msgid "Apple Wallet"
+msgstr ""
+
+#: includes/Frontend/views/dashboard-loyalty.php:58
+#: includes/Frontend/views/loyalty-panel.php:47
+#: includes/Frontend/views/loyalty-shortcode.php:87
+msgid "Google Wallet"
+msgstr ""
+
+#: includes/Frontend/views/loyalty-panel.php:6
+msgid "Rewards"
+msgstr ""
+
 #: includes/Frontend/views/loyalty-panel.php:12
 msgid "Close panel"
 msgstr ""
@@ -840,14 +1117,6 @@ msgstr ""
 
 #: includes/Frontend/views/loyalty-shortcode.php:70
 msgid "Add your loyalty card to your digital wallet"
-msgstr ""
-
-#: includes/Frontend/views/loyalty-shortcode.php:78
-msgid "Apple Wallet"
-msgstr ""
-
-#: includes/Frontend/views/loyalty-shortcode.php:87
-msgid "Google Wallet"
 msgstr ""
 
 #: includes/Frontend/views/myaccount-loyalty.php:29
@@ -1231,18 +1500,19 @@ msgstr ""
 msgid "API URL is not configured"
 msgstr ""
 
-#: truebeep.php:237
+#: truebeep-smart-wallet-loyalty.php:110
+#: truebeep-smart-wallet-loyalty.php:237
 msgid "Truebeep requires WooCommerce to be installed and activated."
 msgstr ""
 
-#: truebeep.php:265
+#: truebeep-smart-wallet-loyalty.php:265
 msgid "Settings"
 msgstr ""
 
-#: truebeep.php:270
+#: truebeep-smart-wallet-loyalty.php:270
 msgid "Docs"
 msgstr ""
 
-#: truebeep.php:275
+#: truebeep-smart-wallet-loyalty.php:275
 msgid "Support"
 msgstr ""

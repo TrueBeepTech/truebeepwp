@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-01-XX
+
+### Fixed
+- Fixed unescaped and untranslated wp_die() message in plugin activation hook
+
+### Changed
+- Excluded AGENTS.md from plugin bundle distribution
+
 ## [1.0.1] - 2025-01-XX
 
 ### Fixed
