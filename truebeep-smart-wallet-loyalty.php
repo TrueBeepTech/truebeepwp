@@ -107,7 +107,7 @@ final class Truebeep
             // WordPress.org handles translations automatically
 
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die('Truebeep requires WooCommerce to be installed and activated.');
+            wp_die(esc_html__('Truebeep requires WooCommerce to be installed and activated.', 'truebeep-smart-wallet-loyalty'));
         }
 
         $installer = new Truebeep\Installer();
