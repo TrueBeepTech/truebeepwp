@@ -21,7 +21,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'action=truebeep_smwl_test_github_connection&_wpnonce=' + truebeep_smwl_diagnostics.nonce
+                body: 'action=truebeep_smwl_test_network_connection&_wpnonce=' + truebeep_smwl_diagnostics.nonce
             })
             .then(function(response) {
                 return response.json();

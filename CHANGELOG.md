@@ -42,7 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Customer sync system improvements with better error handling
 - Enhanced rate limiting for API calls
 - Improved Action Scheduler integration
-- GitHub-based auto-update system
 - Loyalty tier configuration improvements
 
 ### Fixed
