@@ -3,11 +3,11 @@
         'name' => 'truebeep/truebeep',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '51dc01a01b131ae8a213a234ecde28e0543d721c',
+        'reference' => '39154865314194f755a75c503a64f201408fa775',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => false,
+        'dev' => true,
     ),
     'versions' => array(
         'carbonphp/carbon-doctrine-types' => array(
@@ -16,26 +16,6 @@
             'reference' => '9098d1cc5ac1baf3c9733dc48f3388fbd35e7c9e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../carbonphp/carbon-doctrine-types',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'dev_requirement' => false,
-        ),
-        'johnbillion/args' => array(
-            'pretty_version' => '2.2.2',
-            'version' => '2.2.2.0',
-            'reference' => 'd13fe0c5388f66cfa9310a1940625c27347c38d9',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../johnbillion/args',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'johnbillion/extended-cpts' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
-            'reference' => '353a07acf750a85014988cd3a85f77eb40e7b355',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../johnbillion/extended-cpts',
             'aliases' => array(
                 0 => '9999999-dev',
             ),
@@ -97,7 +77,7 @@
         'symfony/translation' => array(
             'pretty_version' => '6.4.x-dev',
             'version' => '6.4.9999999.9999999-dev',
-            'reference' => 'c8559fe25c7ee7aa9d28f228903a46db008156a4',
+            'reference' => 'd1fdeefd0707d15eb150c04e8837bf0b15ebea39',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
@@ -123,7 +103,7 @@
         'truebeep/truebeep' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '51dc01a01b131ae8a213a234ecde28e0543d721c',
+            'reference' => '39154865314194f755a75c503a64f201408fa775',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
