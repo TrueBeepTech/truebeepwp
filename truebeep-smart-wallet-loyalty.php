@@ -127,16 +127,6 @@ final class Truebeep
         // Send disconnected status to TrueBeep
         $this->update_connection_status_on_deactivation();
         
-        // Clear scheduled update checks
-        $hook_name = 'truebeep_daily_update_check';
-        $timestamp = wp_next_scheduled($hook_name);
-        if ($timestamp) {
-            wp_unschedule_event($timestamp, $hook_name);
-        }
-        wp_clear_scheduled_hook($hook_name);
-        
-        // Clear update caches
-        delete_site_transient('update_plugins');
     }
     
     /**
