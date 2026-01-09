@@ -28,9 +28,9 @@ class PointsRedemption
         add_action('wp_enqueue_scripts', [$this, 'enqueue_checkout_scripts']);
 
         // AJAX handlers - only for logged in users
-        add_action('wp_ajax_apply_points_discount', [$this, 'ajax_apply_points_discount']);
-        add_action('wp_ajax_remove_points_discount', [$this, 'ajax_remove_points_discount']);
-        add_action('wp_ajax_validate_points', [$this, 'ajax_validate_points']);
+        add_action('wp_ajax_truebeep_smwl_apply_points_discount', [$this, 'ajax_apply_points_discount']);
+        add_action('wp_ajax_truebeep_smwl_remove_points_discount', [$this, 'ajax_remove_points_discount']);
+        add_action('wp_ajax_truebeep_smwl_validate_points', [$this, 'ajax_validate_points']);
 
         // Apply discount to cart
         add_action('woocommerce_cart_calculate_fees', [$this, 'apply_points_discount_to_cart']);
@@ -69,24 +69,24 @@ class PointsRedemption
 
 ?>
         <div id="truebeep-points-redemption" class="truebeep-checkout-section">
-            <h3><?php esc_html_e('Redeem Loyalty Points', 'truebeep'); ?></h3>
+            <h3><?php esc_html_e('Redeem Loyalty Points', 'truebeep-smart-wallet-loyalty'); ?></h3>
 
             <div class="points-balance">
                 <p><?php 
                 /* translators: %d: number of available points */
-                printf(wp_kses_post(__('Available Points: <strong>%d</strong>', 'truebeep')), esc_html($this->user_points)); 
+                printf(wp_kses_post(__('Available Points: <strong>%d</strong>', 'truebeep-smart-wallet-loyalty')), esc_html($this->user_points)); 
                 ?></p>
                 <?php if ($this->user_tier): ?>
                     <p><?php 
                     /* translators: %s: tier name */
-                    printf(wp_kses_post(__('Your Tier: <strong>%s</strong>', 'truebeep')), esc_html($this->user_tier['name'])); 
+                    printf(wp_kses_post(__('Your Tier: <strong>%s</strong>', 'truebeep-smart-wallet-loyalty')), esc_html($this->user_tier['name'])); 
                     ?></p>
                 <?php endif; ?>
             </div>
 
             <?php if ($this->redemption_method === 'dynamic_coupon'): ?>
                 <div class="dynamic-coupon-redemption">
-                    <label for="points-to-redeem"><?php esc_html_e('Points to Redeem:', 'truebeep'); ?></label>
+                    <label for="points-to-redeem"><?php esc_html_e('Points to Redeem:', 'truebeep-smart-wallet-loyalty'); ?></label>
                     <div class="points-input-wrapper">
                         <input type="number"
                             id="points-to-redeem"
@@ -94,33 +94,33 @@ class PointsRedemption
                             min="0"
                             max="<?php echo esc_attr($this->user_points); ?>"
                             step="1"
-                            placeholder="<?php esc_attr_e('Enter points', 'truebeep'); ?>" />
+                            placeholder="<?php echo esc_attr__('Enter points', 'truebeep-smart-wallet-loyalty'); ?>" />
                         <span class="points-value-preview" data-rate="<?php echo esc_attr($this->get_redemption_rate()); ?>">
                             = $<span id="discount-preview">0.00</span>
                         </span>
                     </div>
                     <div class="points-controls">
                         <button type="button" class="button apply-points-btn" id="apply-points">
-                            <?php esc_html_e('Apply Points', 'truebeep'); ?>
+                            <?php esc_html_e('Apply Points', 'truebeep-smart-wallet-loyalty'); ?>
                         </button>
                         <button type="button" class="button remove-points-btn" id="remove-points" style="display:none;">
-                            <?php esc_html_e('Remove Points', 'truebeep'); ?>
+                            <?php esc_html_e('Remove Points', 'truebeep-smart-wallet-loyalty'); ?>
                         </button>
                     </div>
                     <div class="points-message" id="points-message"></div>
                     <p class="max-discount-info">
                         <?php 
                         /* translators: %s: maximum discount amount */
-                        printf(esc_html__('Maximum discount available: $%s', 'truebeep'), esc_html(number_format($max_discount, 2))); 
+                        printf(esc_html__('Maximum discount available: $%s', 'truebeep-smart-wallet-loyalty'), esc_html(number_format($max_discount, 2))); 
                         ?>
                     </p>
                 </div>
             <?php else: // Predefined coupons 
             ?>
                 <div class="coupon-redemption">
-                    <label for="coupon-select"><?php esc_html_e('Select Coupon:', 'truebeep'); ?></label>
+                    <label for="coupon-select"><?php esc_html_e('Select Coupon:', 'truebeep-smart-wallet-loyalty'); ?></label>
                     <select id="coupon-select" name="selected_coupon">
-                        <option value=""><?php esc_html_e('-- Select a coupon --', 'truebeep'); ?></option>
+                        <option value=""><?php esc_html_e('-- Select a coupon --', 'truebeep-smart-wallet-loyalty'); ?></option>
                         <?php foreach ($this->coupons as $index => $coupon):
                             $points_required = $this->calculate_points_for_coupon($coupon['value']);
                             $is_available = $this->user_points >= $points_required;
@@ -132,9 +132,9 @@ class PointsRedemption
                                 <?php
                                 echo esc_html($coupon['name']) . ' - ' .
                                     /* translators: %d: number of points required */
-                                    sprintf(esc_html__('%d points', 'truebeep'), esc_html($points_required));
+                                    sprintf(esc_html__('%d points', 'truebeep-smart-wallet-loyalty'), esc_html($points_required));
                                 if (!$is_available) {
-                                    echo ' ' . esc_html__('(Insufficient points)', 'truebeep');
+                                    echo ' ' . esc_html__('(Insufficient points)', 'truebeep-smart-wallet-loyalty');
                                 }
                                 ?>
                             </option>
@@ -142,10 +142,10 @@ class PointsRedemption
                     </select>
                     <div class="points-controls">
                         <button type="button" class="button apply-coupon-btn" id="apply-coupon">
-                            <?php esc_html_e('Apply Coupon', 'truebeep'); ?>
+                            <?php esc_html_e('Apply Coupon', 'truebeep-smart-wallet-loyalty'); ?>
                         </button>
                         <button type="button" class="button remove-coupon-btn" id="remove-coupon" style="display:none;">
-                            <?php esc_html_e('Remove Coupon', 'truebeep'); ?>
+                            <?php esc_html_e('Remove Coupon', 'truebeep-smart-wallet-loyalty'); ?>
                         </button>
                     </div>
                     <div class="coupon-message" id="coupon-message"></div>
@@ -162,28 +162,28 @@ class PointsRedemption
         }
 
         wp_enqueue_script(
-            'truebeep-checkout-redemption',
+            'truebeep-smwl-checkout-redemption',
             TRUEBEEP_URL . '/assets/js/frontend/checkout-redemption.js',
             ['jquery'],
             TRUEBEEP_VERSION,
             true
         );
 
-        wp_localize_script('truebeep-checkout-redemption', 'truebeep_checkout', [
+        wp_localize_script('truebeep-smwl-checkout-redemption', 'truebeep_smwl_checkout', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('truebeep_checkout_nonce'),
+            'nonce' => wp_create_nonce('truebeep_smwl_checkout_nonce'),
             'redemption_method' => $this->redemption_method,
             'user_points' => $this->user_points,
             'redemption_rate' => $this->get_redemption_rate(),
             'strings' => [
-                'applying' => __('Applying...', 'truebeep'),
-                'removing' => __('Removing...', 'truebeep'),
-                'applied' => __('Points applied successfully!', 'truebeep'),
-                'removed' => __('Points removed successfully!', 'truebeep'),
-                'error' => __('An error occurred. Please try again.', 'truebeep'),
-                'invalid_points' => __('Please enter a valid number of points.', 'truebeep'),
-                'select_coupon' => __('Please select a coupon.', 'truebeep'),
-                'insufficient_points' => __('You don\'t have enough points.', 'truebeep'),
+                'applying' => __('Applying...', 'truebeep-smart-wallet-loyalty'),
+                'removing' => __('Removing...', 'truebeep-smart-wallet-loyalty'),
+                'applied' => __('Points applied successfully!', 'truebeep-smart-wallet-loyalty'),
+                'removed' => __('Points removed successfully!', 'truebeep-smart-wallet-loyalty'),
+                'error' => __('An error occurred. Please try again.', 'truebeep-smart-wallet-loyalty'),
+                'invalid_points' => __('Please enter a valid number of points.', 'truebeep-smart-wallet-loyalty'),
+                'select_coupon' => __('Please select a coupon.', 'truebeep-smart-wallet-loyalty'),
+                'insufficient_points' => __('You don\'t have enough points.', 'truebeep-smart-wallet-loyalty'),
             ]
         ]);
 
@@ -197,15 +197,15 @@ class PointsRedemption
 
     public function ajax_apply_points_discount()
     {
-        check_ajax_referer('truebeep_checkout_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_checkout_nonce', 'nonce');
 
         if (!is_user_logged_in()) {
-            wp_send_json_error(['message' => __('Please log in to redeem points.', 'truebeep')]);
+            wp_send_json_error(['message' => __('Please log in to redeem points.', 'truebeep-smart-wallet-loyalty')]);
         }
         
         // Rate limiting - max 5 attempts per minute
         if (RateLimiter::is_rate_limited('apply_points', RateLimiter::get_identifier(), 5, 60)) {
-            wp_send_json_error(['message' => __('Too many attempts. Please try again later.', 'truebeep')]);
+            wp_send_json_error(['message' => __('Too many attempts. Please try again later.', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $user_id = get_current_user_id();
@@ -214,7 +214,7 @@ class PointsRedemption
             $points = isset($_POST['points']) ? intval($_POST['points']) : 0;
 
             if ($points <= 0 || $points > $this->user_points) {
-                wp_send_json_error(['message' => __('Invalid points amount.', 'truebeep')]);
+                wp_send_json_error(['message' => __('Invalid points amount.', 'truebeep-smart-wallet-loyalty')]);
             }
 
             $discount = $this->calculate_discount_from_points($points);
@@ -233,14 +233,14 @@ class PointsRedemption
             $coupon_index = isset($_POST['coupon_index']) ? intval($_POST['coupon_index']) : -1;
 
             if (!isset($this->coupons[$coupon_index])) {
-                wp_send_json_error(['message' => __('Invalid coupon selected.', 'truebeep')]);
+                wp_send_json_error(['message' => __('Invalid coupon selected.', 'truebeep-smart-wallet-loyalty')]);
             }
 
             $coupon = $this->coupons[$coupon_index];
             $points_required = $this->calculate_points_for_coupon($coupon['value']);
 
             if ($points_required > $this->user_points) {
-                wp_send_json_error(['message' => __('Insufficient points for this coupon.', 'truebeep')]);
+                wp_send_json_error(['message' => __('Insufficient points for this coupon.', 'truebeep-smart-wallet-loyalty')]);
             }
 
             // Store in session
@@ -258,7 +258,7 @@ class PointsRedemption
         truebeep_log('Points applied: ' . $points_used . ' points for $' . number_format($discount_amount, 2) . ' discount', 'PointsRedemption', ['user_id' => $user_id]);
 
         wp_send_json_success([
-            'message' => __('Points applied successfully!', 'truebeep'),
+            'message' => __('Points applied successfully!', 'truebeep-smart-wallet-loyalty'),
             'points_used' => $points_used,
             'discount' => $discount_amount,
             'cart_html' => $this->get_updated_cart_totals()
@@ -267,7 +267,7 @@ class PointsRedemption
 
     public function ajax_remove_points_discount()
     {
-        check_ajax_referer('truebeep_checkout_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_checkout_nonce', 'nonce');
 
         // Clear session data
         WC()->session->set('truebeep_points_redeemed', null);
@@ -278,23 +278,23 @@ class PointsRedemption
         WC()->cart->calculate_totals();
 
         wp_send_json_success([
-            'message' => __('Points removed successfully!', 'truebeep'),
+            'message' => __('Points removed successfully!', 'truebeep-smart-wallet-loyalty'),
             'cart_html' => $this->get_updated_cart_totals()
         ]);
     }
 
     public function ajax_validate_points()
     {
-        check_ajax_referer('truebeep_checkout_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_checkout_nonce', 'nonce');
 
         $points = isset($_POST['points']) ? intval($_POST['points']) : 0;
 
         if ($points <= 0) {
-            wp_send_json_error(['message' => __('Please enter a valid number of points.', 'truebeep')]);
+            wp_send_json_error(['message' => __('Please enter a valid number of points.', 'truebeep-smart-wallet-loyalty')]);
         }
 
         if ($points > $this->user_points) {
-            wp_send_json_error(['message' => __('You don\'t have enough points.', 'truebeep')]);
+            wp_send_json_error(['message' => __('You don\'t have enough points.', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $discount = $this->calculate_discount_from_points($points);
@@ -304,7 +304,7 @@ class PointsRedemption
             $max_points = $this->calculate_points_from_discount($cart_total);
             wp_send_json_error([
                 /* translators: %d: maximum number of points that can be used */
-                'message' => sprintf(__('Maximum points you can use: %d', 'truebeep'), $max_points),
+                'message' => sprintf(__('Maximum points you can use: %d', 'truebeep-smart-wallet-loyalty'), $max_points),
                 'max_points' => $max_points
             ]);
         }
@@ -326,7 +326,7 @@ class PointsRedemption
 
         if ($points_redeemed && $discount_amount > 0) {
             /* translators: %d: number of points redeemed */
-            $label = sprintf(__('Loyalty Points Redemption (-%d points)', 'truebeep'), $points_redeemed);
+            $label = sprintf(__('Loyalty Points Redemption (-%d points)', 'truebeep-smart-wallet-loyalty'), $points_redeemed);
 
             if (WC()->session->get('truebeep_coupon_used')) {
                 $label .= ' - ' . WC()->session->get('truebeep_coupon_used');
@@ -351,7 +351,7 @@ class PointsRedemption
 
             $order->add_order_note(sprintf(
                 /* translators: %1$d: number of points redeemed, %2$s: discount amount */
-                __('Customer redeemed %1$d loyalty points for a discount of %2$s', 'truebeep'),
+                __('Customer redeemed %1$d loyalty points for a discount of %2$s', 'truebeep-smart-wallet-loyalty'),
                 $points_redeemed,
                 wc_price($discount_amount)
             ));

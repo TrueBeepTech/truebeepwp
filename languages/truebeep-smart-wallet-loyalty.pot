@@ -1,0 +1,1518 @@
+# Copyright (C) 2025 Truebeep
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Truebeep: Smart Wallet Loyalty 1.0.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/truebeep-smart-wallet-loyalty\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-12-31T05:23:34+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: truebeep-smart-wallet-loyalty\n"
+
+#. Plugin Name of the plugin
+#: truebeep-smart-wallet-loyalty.php
+msgid "Truebeep: Smart Wallet Loyalty"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: truebeep-smart-wallet-loyalty.php
+msgid "https://wp.truebeep.com"
+msgstr ""
+
+#. Description of the plugin
+#: truebeep-smart-wallet-loyalty.php
+msgid "Reward customers with points they can track and redeem via Wallet. Retain them with smart tools."
+msgstr ""
+
+#. Author of the plugin
+#: truebeep-smart-wallet-loyalty.php
+#: includes/Admin/WooCommerceSettings.php:33
+msgid "Truebeep"
+msgstr ""
+
+#. Author URI of the plugin
+#: truebeep-smart-wallet-loyalty.php
+msgid "https://truebeep.com"
+msgstr ""
+
+#: includes/Admin/ConnectionHelper.php:32
+msgid "API credentials not configured"
+msgstr ""
+
+#. translators: %s: connection status
+#: includes/Admin/ConnectionHelper.php:46
+#, php-format
+msgid "Connection status updated to %s"
+msgstr ""
+
+#: includes/Admin/ConnectionHelper.php:52
+msgid "Failed to update connection status"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:50
+msgid "Running..."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:51
+#: includes/Admin/NetworkDiagnostics.php:171
+msgid "Run Diagnostics"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:52
+msgid "Running diagnostics..."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Admin/NetworkDiagnostics.php:54
+#, php-format
+msgid "Error running diagnostics: %s"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:140
+#: includes/Admin/NetworkDiagnostics.php:154
+msgid "Truebeep Network Diagnostics"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:141
+msgid "Truebeep Diagnostics"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:155
+msgid "Use this tool to diagnose GitHub connectivity issues for plugin updates."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:159
+msgid "GitHub repository not configured!"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:160
+msgid "Please configure your repository URL in"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:165
+msgid "Configured Repository:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:175
+msgid "Manual Fixes"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:177
+msgid "If GitHub API is blocked:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:179
+msgid "Check your firewall:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:179
+msgid "Ensure api.github.com and github.com are allowed"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:180
+msgid "Proxy settings:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:180
+msgid "If behind a corporate proxy, configure WordPress proxy constants"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:181
+msgid "Local environment:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:181
+msgid "Some local environments block external connections"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:182
+msgid "Manual update:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:182
+msgid "Download the latest release ZIP from GitHub and upload manually"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:185
+msgid "WordPress Proxy Configuration:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:186
+msgid "Add these constants to your wp-config.php if you're behind a proxy:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:192
+msgid "Manual Update Process:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:194
+msgid "Go to:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:195
+msgid "Download the latest release ZIP file"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:196
+msgid "In WordPress admin, go to Plugins > Add New > Upload Plugin"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:197
+msgid "Upload the ZIP file and activate"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:211
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:216
+msgid "GitHub repository not configured! Please update github-config.php"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:259
+#: includes/Admin/NetworkDiagnostics.php:273
+msgid "Basic GitHub Connectivity"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Admin/NetworkDiagnostics.php:263
+#: includes/Admin/NetworkDiagnostics.php:309
+#: includes/Admin/NetworkDiagnostics.php:377
+#: includes/Admin/NetworkDiagnostics.php:453
+#, php-format
+msgid "Failed: %s"
+msgstr ""
+
+#. translators: %d: HTTP status code
+#: includes/Admin/NetworkDiagnostics.php:277
+#: includes/Admin/NetworkDiagnostics.php:344
+#: includes/Admin/NetworkDiagnostics.php:391
+#, php-format
+msgid "HTTP Status: %d"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:305
+#: includes/Admin/NetworkDiagnostics.php:322
+#: includes/Admin/NetworkDiagnostics.php:333
+#: includes/Admin/NetworkDiagnostics.php:340
+msgid "GitHub API Access"
+msgstr ""
+
+#. translators: %s: version tag name
+#: includes/Admin/NetworkDiagnostics.php:326
+#, php-format
+msgid "Success! Latest version: %s"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:335
+msgid "Rate limited (403). This is normal for public repos without authentication."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:373
+#: includes/Admin/NetworkDiagnostics.php:387
+msgid "Download Capability"
+msgstr ""
+
+#. translators: %1$s: domain name, %2$s: IP address
+#: includes/Admin/NetworkDiagnostics.php:409
+#, php-format
+msgid "✓ %1$s → %2$s"
+msgstr ""
+
+#. translators: %s: domain name
+#: includes/Admin/NetworkDiagnostics.php:412
+#, php-format
+msgid "✗ %s (failed)"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:417
+msgid "DNS Resolution"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:420
+msgid "N/A"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:442
+#: includes/Admin/NetworkDiagnostics.php:449
+#: includes/Admin/NetworkDiagnostics.php:462
+msgid "SSL/TLS Connection"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:444
+msgid "SSL verification failed. Plugin uses sslverify=false as fallback."
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:464
+msgid "SSL connection successful"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:473
+msgid "Diagnostic Results"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:509
+msgid "System Information"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:511
+msgid "WordPress Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:512
+msgid "PHP Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:515
+#: includes/Admin/NetworkDiagnostics.php:518
+#: includes/Admin/NetworkDiagnostics.php:522
+msgid "Not available"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:516
+msgid "cURL Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:519
+msgid "OpenSSL Version:"
+msgstr ""
+
+#: includes/Admin/NetworkDiagnostics.php:523
+msgid "User Agent:"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:56
+#: includes/Legacy/SyncSettings.php:378
+msgid "Syncing..."
+msgstr ""
+
+#: includes/Admin/UserHandler.php:57
+#: includes/Api/CustomerHandler.php:411
+msgid "Sync failed"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:58
+#: includes/Admin/views/user-profile-fields.php:48
+msgid "Sync with Truebeep"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:59
+msgid "Are you sure you want to remove the Truebeep link?"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:108
+msgid "Truebeep Synced"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:127
+msgid "Synced with Truebeep"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:129
+#: includes/Admin/views/user-profile-fields.php:26
+msgid "Synced"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:133
+msgid "Not synced with Truebeep"
+msgstr ""
+
+#: includes/Admin/UserHandler.php:135
+#: includes/Admin/views/user-profile-fields.php:33
+msgid "Not synced"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:18
+msgid "Tiers"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:19
+msgid "Create membership levels with different earning rates and benefits. Customers automatically upgrade as they earn more points."
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:26
+#: includes/Admin/WooCommerceSettings.php:560
+msgid "Tier Name"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:27
+msgid "Order to Points"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:28
+msgid "Points to Amount"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:29
+msgid "Threshold Points"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:30
+#: includes/Admin/WooCommerceSettings.php:320
+msgid "Actions"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:41
+#: includes/Admin/WooCommerceSettings.php:329
+#: includes/Admin/WooCommerceSettings.php:574
+msgid "Edit"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:42
+#: includes/Admin/WooCommerceSettings.php:330
+#: includes/Admin/WooCommerceSettings.php:561
+msgid "Remove"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:49
+msgid "Add More Tier"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:50
+#: includes/Admin/WooCommerceSettings.php:563
+msgid "Save Changes"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:62
+msgid "Edit Tier"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:69
+msgid "Tier Name (e.g. \"Bronze\", \"Silver\", \"Gold\")"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:73
+msgid "Order Amount to Points Conversion"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:77
+msgid "Points to Amount Conversion"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:81
+msgid "Points to Reach This Tier"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:87
+msgid "Save Tier"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:88
+#: includes/Admin/views/loyalty-settings.php:115
+msgid "Cancel"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:97
+msgid "Edit Coupon"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:104
+#: includes/Admin/WooCommerceSettings.php:318
+msgid "Coupon Name"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:108
+msgid "Value ($)"
+msgstr ""
+
+#: includes/Admin/views/loyalty-settings.php:114
+msgid "Save Coupon"
+msgstr ""
+
+#: includes/Admin/views/user-profile-fields.php:13
+msgid "Truebeep Integration"
+msgstr ""
+
+#: includes/Admin/views/user-profile-fields.php:16
+msgid "Truebeep Customer ID"
+msgstr ""
+
+#: includes/Admin/views/user-profile-fields.php:19
+msgid "The customer ID in Truebeep system."
+msgstr ""
+
+#: includes/Admin/views/user-profile-fields.php:23
+#: includes/Legacy/LegacyIntegration.php:118
+#: includes/Legacy/SyncSettings.php:132
+msgid "Sync Status"
+msgstr ""
+
+#: includes/Admin/views/user-profile-fields.php:28
+msgid "Error"
+msgstr ""
+
+#. translators: %s: last sync date/time
+#: includes/Admin/views/user-profile-fields.php:39
+#, php-format
+msgid "Last sync: %s"
+msgstr ""
+
+#: includes/Admin/views/user-profile-fields.php:52
+msgid "Remove Truebeep Link"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:40
+msgid "Credentials"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:41
+msgid "Loyalty"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:42
+msgid "Wallet"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:96
+#: includes/Admin/WooCommerceSettings.php:568
+msgid "Connected"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:96
+#: includes/Admin/WooCommerceSettings.php:569
+msgid "Disconnected"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:98
+#: includes/Admin/WooCommerceSettings.php:567
+msgid "Disconnect"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:98
+#: includes/Admin/WooCommerceSettings.php:566
+msgid "Connect"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:102
+msgid "Truebeep Credentials"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:104
+msgid "Configure your Truebeep API credentials"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:108
+msgid "API URL"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:109
+msgid "Truebeep API URL (read-only)"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:119
+msgid "API Key"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:120
+msgid "Enter your Truebeep API Key"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:139
+msgid "Loyalty Configuration"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:141
+msgid "Configure loyalty points and tier settings"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:145
+msgid "Redemption Method"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:146
+msgid "Choose how customers will convert their points into discounts."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:151
+msgid "Flexible Redemption (Customers can redeem any amount of points for instant discounts.))"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:152
+msgid "Fixed Rewards (Customers choose from preset point-to-discount combinations.))"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:161
+msgid "Point Earning Rate"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:162
+msgid "How many points customers earn for each $1 spent."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:171
+msgid "Point Value"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:172
+msgid "The $ value of each point when customers redeem them."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:181
+msgid "Points on Discounted Orders"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:182
+msgid "Allow customers to earn new points even when using points for discounts. Great for encouraging repeat purchases!"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:189
+msgid "Award Points on Order Status"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:190
+msgid "Select when customers earn loyalty points. Processing = immediately after payment, Completed = after order fulfillment"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:195
+msgid "Processing (Immediate)"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:196
+msgid "Completed (After Fulfillment)"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:197
+msgid "Both Processing and Completed"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:218
+msgid "Wallet Configuration"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:220
+msgid "Configure your wallet settings"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:224
+msgid "Show Loyalty Panel"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:225
+msgid "Display floating loyalty panel on frontend"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:233
+msgid "Wallet Base URL"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:234
+msgid "Base URL for wallet API (read-only)"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:244
+msgid "Panel Position"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:245
+msgid "Choose where to display the loyalty panel"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:249
+msgid "Bottom Right"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:250
+msgid "Bottom Left"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:276
+msgid "Wallet ID"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:277
+msgid "Enter your wallet ID"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:311
+msgid "Coupons"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:319
+msgid "Value"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:337
+msgid "Add New Coupon"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:338
+#: includes/Admin/WooCommerceSettings.php:564
+msgid "Save Coupons"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:397
+#: includes/Admin/WooCommerceSettings.php:454
+#: includes/Admin/WooCommerceSettings.php:485
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:446
+msgid "Loyalty settings saved successfully!"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:474
+msgid "Coupons saved successfully!"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:502
+msgid "Connected successfully!"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:506
+msgid "Connection failed"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:520
+msgid "Disconnected successfully!"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:527
+msgid "Disconnected locally"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:532
+msgid "Invalid action"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:562
+msgid "Saving..."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:565
+msgid "Processing..."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:570
+msgid "Connection failed. Please try again."
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:571
+msgid "Are you sure you want to remove this tier?"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:572
+msgid "Are you sure you want to remove this coupon?"
+msgstr ""
+
+#: includes/Admin/WooCommerceSettings.php:573
+msgid "New Coupon"
+msgstr ""
+
+#: includes/Api/CustomerHandler.php:385
+msgid "Truebeep API credentials are not configured. Please configure them in WooCommerce > Settings > Truebeep."
+msgstr ""
+
+#: includes/Api/CustomerHandler.php:399
+#: includes/Api/CustomerHandler.php:423
+#: includes/Legacy/SyncManager.php:269
+#: includes/Legacy/SyncManager.php:293
+#: includes/Legacy/SyncManager.php:312
+#: includes/Legacy/SyncManager.php:331
+#: includes/Legacy/SyncSettings.php:400
+msgid "Permission denied"
+msgstr ""
+
+#: includes/Api/CustomerHandler.php:408
+msgid "User synced successfully"
+msgstr ""
+
+#: includes/Api/CustomerHandler.php:433
+msgid "Truebeep link removed"
+msgstr ""
+
+#: includes/Api/InteractionHandler.php:50
+msgid "Order interaction not sent to Truebeep: Customer ID not found"
+msgstr ""
+
+#: includes/Api/InteractionHandler.php:65
+msgid "Order interaction successfully sent to Truebeep"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/InteractionHandler.php:70
+#, php-format
+msgid "Failed to send order interaction to Truebeep: %s"
+msgstr ""
+
+#: includes/Api/InteractionHandler.php:111
+msgid "Refund interaction not sent to Truebeep: Customer ID not found"
+msgstr ""
+
+#: includes/Api/InteractionHandler.php:132
+msgid "Refund interaction successfully sent to Truebeep"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/InteractionHandler.php:137
+#, php-format
+msgid "Failed to send refund interaction to Truebeep: %s"
+msgstr ""
+
+#: includes/Api/InteractionHandler.php:161
+msgid "Partial refund interaction not sent to Truebeep: Customer ID not found"
+msgstr ""
+
+#. translators: %s: refund ID
+#: includes/Api/InteractionHandler.php:187
+#, php-format
+msgid "Partial refund interaction sent to Truebeep (Refund #%s)"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/InteractionHandler.php:194
+#, php-format
+msgid "Failed to send partial refund interaction to Truebeep: %s"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:83
+msgid "Loyalty points not awarded: Points were redeemed on this order and earning on redeemed orders is disabled."
+msgstr ""
+
+#. translators: %s: number of points awarded
+#: includes/Api/LoyaltyHandler.php:113
+#, php-format
+msgid "Awarded %s loyalty points to customer via Truebeep"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/LoyaltyHandler.php:121
+#, php-format
+msgid "Failed to award loyalty points: %s"
+msgstr ""
+
+#. translators: %s: number of points revoked
+#: includes/Api/LoyaltyHandler.php:187
+#, php-format
+msgid "Revoked %s loyalty points from customer via Truebeep"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/LoyaltyHandler.php:195
+#, php-format
+msgid "Failed to revoke loyalty points: %s"
+msgstr ""
+
+#. translators: %s: number of points returned
+#: includes/Api/LoyaltyHandler.php:243
+#, php-format
+msgid "Returned %s redeemed loyalty points to customer via Truebeep"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/LoyaltyHandler.php:250
+#, php-format
+msgid "Failed to return redeemed loyalty points: %s"
+msgstr ""
+
+#. translators: %s: number of points deducted
+#: includes/Api/LoyaltyHandler.php:294
+#, php-format
+msgid "Deducted %s loyalty points due to partial refund"
+msgstr ""
+
+#. translators: %1$s: number of points returned, %2$.1f: refund percentage
+#: includes/Api/LoyaltyHandler.php:321
+#, php-format
+msgid "Returned %1$s redeemed loyalty points due to partial refund (%2$.1f%% of order)"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/LoyaltyHandler.php:329
+#, php-format
+msgid "Failed to return redeemed points for partial refund: %s"
+msgstr ""
+
+#. translators: %s: number of points deducted
+#: includes/Api/LoyaltyHandler.php:368
+#, php-format
+msgid "Deducted %s loyalty points via Truebeep API"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/Api/LoyaltyHandler.php:376
+#, php-format
+msgid "Failed to deduct loyalty points: %s"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:459
+msgid "Loyalty Points"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:464
+#: includes/Api/LoyaltyHandler.php:504
+msgid "Points Earned:"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:467
+#: includes/Api/LoyaltyHandler.php:511
+msgid "Revoked"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:475
+#: includes/Api/LoyaltyHandler.php:527
+msgid "Points Redeemed:"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:500
+msgid "Truebeep Loyalty Points"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:508
+msgid "Awarded"
+msgstr ""
+
+#. translators: %s: number of points deducted
+#: includes/Api/LoyaltyHandler.php:517
+#, php-format
+msgid "%s points deducted for refunds"
+msgstr ""
+
+#: includes/Api/LoyaltyHandler.php:531
+msgid "Fully Returned"
+msgstr ""
+
+#. translators: %s: number of points returned
+#: includes/Api/LoyaltyHandler.php:536
+#, php-format
+msgid "%s points returned"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:72
+msgid "Redeem Loyalty Points"
+msgstr ""
+
+#. translators: %d: number of available points
+#: includes/Checkout/PointsRedemption.php:77
+#, php-format
+msgid "Available Points: <strong>%d</strong>"
+msgstr ""
+
+#. translators: %s: tier name
+#: includes/Checkout/PointsRedemption.php:82
+#, php-format
+msgid "Your Tier: <strong>%s</strong>"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:89
+msgid "Points to Redeem:"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:97
+msgid "Enter points"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:104
+msgid "Apply Points"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:107
+msgid "Remove Points"
+msgstr ""
+
+#. translators: %s: maximum discount amount
+#: includes/Checkout/PointsRedemption.php:114
+#, php-format
+msgid "Maximum discount available: $%s"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:121
+msgid "Select Coupon:"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:123
+msgid "-- Select a coupon --"
+msgstr ""
+
+#. translators: %d: number of points required
+#: includes/Checkout/PointsRedemption.php:135
+#, php-format
+msgid "%d points"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:137
+msgid "(Insufficient points)"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:145
+msgid "Apply Coupon"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:148
+msgid "Remove Coupon"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:179
+msgid "Applying..."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:180
+msgid "Removing..."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:181
+#: includes/Checkout/PointsRedemption.php:261
+msgid "Points applied successfully!"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:182
+#: includes/Checkout/PointsRedemption.php:281
+msgid "Points removed successfully!"
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:183
+#: includes/Legacy/SyncSettings.php:88
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:184
+#: includes/Checkout/PointsRedemption.php:293
+msgid "Please enter a valid number of points."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:185
+msgid "Please select a coupon."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:186
+#: includes/Checkout/PointsRedemption.php:297
+msgid "You don't have enough points."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:203
+msgid "Please log in to redeem points."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:208
+msgid "Too many attempts. Please try again later."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:217
+msgid "Invalid points amount."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:236
+msgid "Invalid coupon selected."
+msgstr ""
+
+#: includes/Checkout/PointsRedemption.php:243
+msgid "Insufficient points for this coupon."
+msgstr ""
+
+#. translators: %d: maximum number of points that can be used
+#: includes/Checkout/PointsRedemption.php:307
+#, php-format
+msgid "Maximum points you can use: %d"
+msgstr ""
+
+#. translators: %d: number of points redeemed
+#: includes/Checkout/PointsRedemption.php:329
+#, php-format
+msgid "Loyalty Points Redemption (-%d points)"
+msgstr ""
+
+#. translators: %1$d: number of points redeemed, %2$s: discount amount
+#: includes/Checkout/PointsRedemption.php:354
+#, php-format
+msgid "Customer redeemed %1$d loyalty points for a discount of %2$s"
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:76
+msgid "Loading..."
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:77
+msgid "Error loading data"
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:78
+#: includes/Frontend/LoyaltyPanel.php:128
+msgid "Bronze"
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:97
+msgid "Security check failed"
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:101
+msgid "Not logged in"
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:106
+msgid "Too many requests. Please try again later."
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:115
+msgid "No customer ID found"
+msgstr ""
+
+#: includes/Frontend/LoyaltyPanel.php:120
+msgid "Failed to fetch customer data"
+msgstr ""
+
+#: includes/Frontend/Shortcode.php:44
+msgid "Please log in to view your loyalty information."
+msgstr ""
+
+#: includes/Frontend/Shortcode.php:51
+msgid "Loyalty account not found."
+msgstr ""
+
+#. translators: %1$s: User name, %2$s: Points count
+#. translators: %1$s: user name, %2$s: number of loyalty points
+#: includes/Frontend/views/dashboard-loyalty.php:25
+#: includes/Frontend/views/loyalty-shortcode.php:42
+#, php-format
+msgid "Hello %1$s, you have %2$s loyalty points"
+msgstr ""
+
+#. translators: %s: Tier name
+#. translators: %s: tier name
+#: includes/Frontend/views/dashboard-loyalty.php:36
+#: includes/Frontend/views/loyalty-shortcode.php:54
+#, php-format
+msgid "Your current tier: %s"
+msgstr ""
+
+#: includes/Frontend/views/dashboard-loyalty.php:47
+#: includes/Frontend/views/loyalty-panel.php:38
+msgid "Download wallet card for easy access to your rewards and points"
+msgstr ""
+
+#: includes/Frontend/views/dashboard-loyalty.php:52
+#: includes/Frontend/views/loyalty-panel.php:44
+#: includes/Frontend/views/loyalty-shortcode.php:78
+msgid "Apple Wallet"
+msgstr ""
+
+#: includes/Frontend/views/dashboard-loyalty.php:58
+#: includes/Frontend/views/loyalty-panel.php:47
+#: includes/Frontend/views/loyalty-shortcode.php:87
+msgid "Google Wallet"
+msgstr ""
+
+#: includes/Frontend/views/loyalty-panel.php:6
+msgid "Rewards"
+msgstr ""
+
+#: includes/Frontend/views/loyalty-panel.php:12
+msgid "Close panel"
+msgstr ""
+
+#: includes/Frontend/views/loyalty-panel.php:22
+msgid "Welcome back, "
+msgstr ""
+
+#: includes/Frontend/views/loyalty-panel.php:22
+msgid "!"
+msgstr ""
+
+#: includes/Frontend/views/loyalty-panel.php:28
+msgid "Point"
+msgstr ""
+
+#: includes/Frontend/views/loyalty-shortcode.php:70
+msgid "Add your loyalty card to your digital wallet"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:29
+msgid "Available Points"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:41
+msgid "Current Tier"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:50
+msgid "Total Earned Points"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:54
+msgid "Total Redeemed Points"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:62
+msgid "Add to Digital Wallet"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:63
+msgid "Keep your loyalty card handy by adding it to your digital wallet."
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:71
+msgid "Add to Apple Wallet"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:80
+msgid "Add to Google Wallet"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:89
+msgid "How Loyalty Points Work"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:93
+msgid "Earn Points"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:94
+msgid "Earn points with every purchase. The more you shop, the more you earn!"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:98
+msgid "Redeem Rewards"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:99
+msgid "Use your points for discounts on future purchases at checkout."
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:103
+msgid "Level Up"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:104
+msgid "Reach higher tiers for better rewards and exclusive benefits."
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:112
+msgid "Recent Transactions"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:116
+msgid "Date"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:117
+msgid "Description"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:118
+msgid "Points"
+msgstr ""
+
+#: includes/Frontend/views/myaccount-loyalty.php:119
+msgid "Balance"
+msgstr ""
+
+#: includes/Legacy/CustomerSyncProcessor.php:327
+msgid "Truebeep Customer Sync Completed"
+msgstr ""
+
+#. translators: %1$d: total processed, %2$d: successful, %3$d: failed, %4$d: skipped
+#: includes/Legacy/CustomerSyncProcessor.php:330
+#, php-format
+msgid ""
+"The Truebeep customer sync has been completed.\n"
+"\n"
+"Results:\n"
+"- Total Processed: %1$d\n"
+"- Successful: %2$d\n"
+"- Failed: %3$d\n"
+"- Skipped: %4$d\n"
+"\n"
+"You can view the full report in your WordPress admin panel."
+msgstr ""
+
+#. translators: %1$d: processed customers, %2$d: total customers
+#: includes/Legacy/LegacyIntegration.php:64
+#, php-format
+msgid "Truebeep customer sync is running in the background. %1$d of %2$d customers processed."
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:68
+msgid "View Progress"
+msgstr ""
+
+#. translators: %d: number of successfully synchronized customers
+#: includes/Legacy/LegacyIntegration.php:82
+#, php-format
+msgid "Truebeep customer sync completed successfully! %d customers were synchronized."
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:85
+msgid "View Details"
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:112
+msgid "Truebeep Customer Sync"
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:123
+#: includes/Legacy/SyncSettings.php:279
+msgid "Total Customers"
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:128
+msgid "Customers Remaining"
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:133
+msgid "Sync Progress"
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:148
+msgid "Successful Syncs"
+msgstr ""
+
+#: includes/Legacy/LegacyIntegration.php:155
+msgid "Failed Syncs"
+msgstr ""
+
+#: includes/Legacy/SyncManager.php:89
+msgid "Sync is already running"
+msgstr ""
+
+#: includes/Legacy/SyncManager.php:107
+msgid "No customers to sync"
+msgstr ""
+
+#. translators: %1$d: number of customers, %2$d: number of batches
+#: includes/Legacy/SyncManager.php:130
+#, php-format
+msgid "Sync started. Processing %1$d customers in %2$d batches."
+msgstr ""
+
+#: includes/Legacy/SyncManager.php:316
+msgid "Sync cancelled"
+msgstr ""
+
+#: includes/Legacy/SyncManager.php:335
+msgid "Sync data reset"
+msgstr ""
+
+#. translators: %1$d: total processed, %2$d: successful, %3$d: failed, %4$d: skipped
+#: includes/Legacy/SyncManager.php:366
+#, php-format
+msgid "%1$d processed (%2$d successful, %3$d failed, %4$d skipped)"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:51
+#: includes/Legacy/SyncSettings.php:52
+msgid "Sync to Truebeep"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:86
+msgid "Starting sync..."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:87
+msgid "Stopping sync..."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:89
+msgid "Are you sure you want to cancel the sync?"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:90
+msgid "Are you sure you want to reset all sync data? This cannot be undone."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:119
+msgid "Sync Customers to Truebeep"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:124
+msgid "Please configure Truebeep API settings first."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:125
+msgid "Configure Settings"
+msgstr ""
+
+#. translators: %1$d: processed customers, %2$d: total customers, %3$s: percentage
+#: includes/Legacy/SyncSettings.php:154
+#, php-format
+msgid "%1$d of %2$d customers synced (%3$s%%)"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:165
+msgid "Successful"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:169
+#: includes/Legacy/SyncSettings.php:382
+msgid "Failed"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:173
+msgid "Skipped"
+msgstr ""
+
+#. translators: %1$d: batch size, %2$d: interval in seconds
+#: includes/Legacy/SyncSettings.php:184
+#, php-format
+msgid "Processing %1$d customers per batch, with %2$d second intervals between batches."
+msgstr ""
+
+#. translators: %s: human-readable time difference
+#: includes/Legacy/SyncSettings.php:195
+#, php-format
+msgid "Estimated time remaining: %s"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:211
+msgid "Sync Controls"
+msgstr ""
+
+#. translators: %1$s: number of customers, %2$s: estimated time in minutes
+#: includes/Legacy/SyncSettings.php:221
+#, php-format
+msgid "There are %1$s customers ready to sync. Estimated time: %2$s minutes."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:230
+msgid "All customers are synchronized!"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:237
+msgid "Start Sync"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:244
+#: includes/Legacy/SyncSettings.php:255
+msgid "Cancel Sync"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:251
+msgid "Resume Sync"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:264
+msgid "Reset Sync Data"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:274
+msgid "Sync Statistics"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:283
+msgid "Already Synced"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:287
+msgid "Remaining to Sync"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:292
+msgid "Started At"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:298
+msgid "Completed At"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:312
+msgid "Sync Activity Log"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:325
+msgid "Errors:"
+msgstr ""
+
+#. translators: %s: user ID
+#: includes/Legacy/SyncSettings.php:331
+#, php-format
+msgid "User ID %s:"
+msgstr ""
+
+#. translators: %d: number of successfully synced customers
+#: includes/Legacy/SyncSettings.php:345
+#, php-format
+msgid "%d customers synced successfully"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:355
+msgid "Showing latest 20 log entries. Logs are automatically cleaned after 100 entries."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:376
+msgid "Not Started"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:377
+msgid "Preparing..."
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:379
+msgid "Completed"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:380
+msgid "Cancelled"
+msgstr ""
+
+#: includes/Legacy/SyncSettings.php:381
+msgid "Paused"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:53
+#: includes/Traits/ApiHelper.php:244
+msgid "API URL or API Key is not configured"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:95
+msgid "API request failed"
+msgstr ""
+
+#. translators: %s: field name
+#: includes/Traits/ApiHelper.php:116
+#, php-format
+msgid "Required field %s is missing"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:174
+msgid "Invalid customer data array"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:237
+msgid "No valid customers to sync"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:277
+msgid "Bulk API request failed"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:290
+#: includes/Traits/ApiHelper.php:302
+#: includes/Traits/ApiHelper.php:357
+#: includes/Traits/ApiHelper.php:378
+msgid "Customer ID is required"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:382
+msgid "Type must be either increment or decrement"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:539
+msgid "API connection successful"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:544
+msgid "API connection failed"
+msgstr ""
+
+#: includes/Traits/ApiHelper.php:556
+msgid "API URL is not configured"
+msgstr ""
+
+#: truebeep-smart-wallet-loyalty.php:110
+#: truebeep-smart-wallet-loyalty.php:237
+msgid "Truebeep requires WooCommerce to be installed and activated."
+msgstr ""
+
+#: truebeep-smart-wallet-loyalty.php:265
+msgid "Settings"
+msgstr ""
+
+#: truebeep-smart-wallet-loyalty.php:270
+msgid "Docs"
+msgstr ""
+
+#: truebeep-smart-wallet-loyalty.php:275
+msgid "Support"
+msgstr ""

@@ -1,0 +1,30 @@
+.column-truebeep_synced {
+    width: 120px;
+    text-align: center;
+}
+
+.truebeep-sync-status {
+    display: inline-block;
+    cursor: help;
+}
+
+.truebeep-sync-status .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.truebeep-sync-status.synced .dashicons {
+    color: #46b450;
+}
+
+.truebeep-sync-status.not-synced .dashicons {
+    color: #dc3232;
+}
+
+@media screen and (max-width: 782px) {
+    .column-truebeep_synced {
+        display: none;
+    }
+}
+

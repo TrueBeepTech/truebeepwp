@@ -2,6 +2,8 @@
 
 namespace Truebeep\Legacy;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Customer Sync Manager
  * 
@@ -52,15 +54,15 @@ class SyncManager
      */
     private function init_hooks()
     {
-        add_action('wp_ajax_truebeep_start_sync', [$this, 'ajax_start_sync']);
-        add_action('wp_ajax_truebeep_get_sync_status', [$this, 'ajax_get_sync_status']);
-        add_action('wp_ajax_truebeep_cancel_sync', [$this, 'ajax_cancel_sync']);
-        add_action('wp_ajax_truebeep_reset_sync', [$this, 'ajax_reset_sync']);
+        add_action('wp_ajax_truebeep_smwl_start_sync', [$this, 'ajax_start_sync']);
+        add_action('wp_ajax_truebeep_smwl_get_sync_status', [$this, 'ajax_get_sync_status']);
+        add_action('wp_ajax_truebeep_smwl_cancel_sync', [$this, 'ajax_cancel_sync']);
+        add_action('wp_ajax_truebeep_smwl_reset_sync', [$this, 'ajax_reset_sync']);
         
-        add_action('truebeep_sync_healthcheck', [$this->processor, 'handle_cron_healthcheck']);
+        add_action('truebeep_smwl_sync_healthcheck', [$this->processor, 'handle_cron_healthcheck']);
         
-        if (!wp_next_scheduled('truebeep_sync_healthcheck')) {
-            wp_schedule_event(time(), 'hourly', 'truebeep_sync_healthcheck');
+        if (!wp_next_scheduled('truebeep_smwl_sync_healthcheck')) {
+            wp_schedule_event(time(), 'hourly', 'truebeep_smwl_sync_healthcheck');
         }
     }
 
@@ -84,7 +86,7 @@ class SyncManager
         if ($this->is_sync_running()) {
             return [
                 'success' => false,
-                'message' => __('Sync is already running', 'truebeep')
+                'message' => __('Sync is already running', 'truebeep-smart-wallet-loyalty')
             ];
         }
 
@@ -102,7 +104,7 @@ class SyncManager
             
             return [
                 'success' => false,
-                'message' => __('No customers to sync', 'truebeep')
+                'message' => __('No customers to sync', 'truebeep-smart-wallet-loyalty')
             ];
         }
 
@@ -125,7 +127,7 @@ class SyncManager
             'success' => true,
             'message' => sprintf(
                 /* translators: %1$d: number of customers, %2$d: number of batches */
-                __('Sync started. Processing %1$d customers in %2$d batches.', 'truebeep'),
+                __('Sync started. Processing %1$d customers in %2$d batches.', 'truebeep-smart-wallet-loyalty'),
                 count($customer_ids),
                 count($batches)
             ),
@@ -261,10 +263,10 @@ class SyncManager
      */
     public function ajax_start_sync()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(__('Permission denied', 'truebeep'));
+            wp_send_json_error(__('Permission denied', 'truebeep-smart-wallet-loyalty'));
         }
 
         $result = $this->start_sync();
@@ -285,10 +287,10 @@ class SyncManager
      */
     public function ajax_get_sync_status()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(__('Permission denied', 'truebeep'));
+            wp_send_json_error(__('Permission denied', 'truebeep-smart-wallet-loyalty'));
         }
 
         $status = $this->get_sync_status();
@@ -304,14 +306,14 @@ class SyncManager
      */
     public function ajax_cancel_sync()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(__('Permission denied', 'truebeep'));
+            wp_send_json_error(__('Permission denied', 'truebeep-smart-wallet-loyalty'));
         }
 
         $this->cancel_sync();
-        wp_send_json_success(__('Sync cancelled', 'truebeep'));
+        wp_send_json_success(__('Sync cancelled', 'truebeep-smart-wallet-loyalty'));
     }
 
     /**
@@ -323,14 +325,14 @@ class SyncManager
      */
     public function ajax_reset_sync()
     {
-        check_ajax_referer('truebeep_sync_nonce', 'nonce');
+        check_ajax_referer('truebeep_smwl_sync_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(__('Permission denied', 'truebeep'));
+            wp_send_json_error(__('Permission denied', 'truebeep-smart-wallet-loyalty'));
         }
 
         $this->reset_sync();
-        wp_send_json_success(__('Sync data reset', 'truebeep'));
+        wp_send_json_success(__('Sync data reset', 'truebeep-smart-wallet-loyalty'));
     }
 
     /**
@@ -361,7 +363,7 @@ class SyncManager
             // Add summary
             $log['summary'] = sprintf(
                 /* translators: %1$d: total processed, %2$d: successful, %3$d: failed, %4$d: skipped */
-                __('%1$d processed (%2$d successful, %3$d failed, %4$d skipped)', 'truebeep'),
+                __('%1$d processed (%2$d successful, %3$d failed, %4$d skipped)', 'truebeep-smart-wallet-loyalty'),
                 count($log['processed'] ?? []),
                 $log['successful'] ?? 0,
                 $log['failed'] ?? 0,

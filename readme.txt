@@ -2,9 +2,9 @@
 Contributors: truebeep
 Tags: loyalty, points, rewards, woocommerce, wallet
 Requires at least: 5.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,7 +187,7 @@ For support, please visit our documentation at truebeep.com/docs or contact our 
 
 = Contributing =
 
-We welcome contributions and suggestions. Please visit our GitHub repository or contact us through our website.
+We welcome contributions and suggestions. Please contact us through our website.
 
 = Credits =
 

@@ -11,7 +11,7 @@
             var self = this;
 
             // Dynamic coupon events
-            if (truebeep_checkout.redemption_method === 'dynamic_coupon') {
+            if (truebeep_smwl_checkout.redemption_method === 'dynamic_coupon') {
                 $('#points-to-redeem').on('input', function() {
                     self.updateDiscountPreview($(this).val());
                 });
@@ -63,8 +63,8 @@
             points = parseInt(points) || 0;
             // Rate represents points per dollar (e.g., 100 points = $1)
             // So discount = points / rate
-            var discount = truebeep_checkout.redemption_rate > 0 ? 
-                (points / truebeep_checkout.redemption_rate).toFixed(2) : 
+            var discount = truebeep_smwl_checkout.redemption_rate > 0 ? 
+                (points / truebeep_smwl_checkout.redemption_rate).toFixed(2) : 
                 '0.00';
             $('#discount-preview').text(discount);
         },
@@ -89,19 +89,19 @@
                 return false;
             }
 
-            if (points > truebeep_checkout.user_points) {
-                this.showMessage('error', truebeep_checkout.strings.insufficient_points, 'points');
+            if (points > truebeep_smwl_checkout.user_points) {
+                this.showMessage('error', truebeep_smwl_checkout.strings.insufficient_points, 'points');
                 return false;
             }
 
             var self = this;
             $.ajax({
-                url: truebeep_checkout.ajax_url,
+                url: truebeep_smwl_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'validate_points',
+                    action: 'truebeep_smwl_validate_points',
                     points: points,
-                    nonce: truebeep_checkout.nonce
+                    nonce: truebeep_smwl_checkout.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -123,22 +123,22 @@
             var points = parseInt($('#points-to-redeem').val());
             
             if (!this.validatePoints(points)) {
-                this.showMessage('error', truebeep_checkout.strings.invalid_points, 'points');
+                this.showMessage('error', truebeep_smwl_checkout.strings.invalid_points, 'points');
                 return;
             }
 
             var self = this;
             var $button = $('#apply-points');
             
-            $button.prop('disabled', true).text(truebeep_checkout.strings.applying);
+            $button.prop('disabled', true).text(truebeep_smwl_checkout.strings.applying);
 
             $.ajax({
-                url: truebeep_checkout.ajax_url,
+                url: truebeep_smwl_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'apply_points_discount',
+                    action: 'truebeep_smwl_apply_points_discount',
                     points: points,
-                    nonce: truebeep_checkout.nonce
+                    nonce: truebeep_smwl_checkout.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -156,7 +156,7 @@
                     }
                 },
                 error: function() {
-                    self.showMessage('error', truebeep_checkout.strings.error, 'points');
+                    self.showMessage('error', truebeep_smwl_checkout.strings.error, 'points');
                 },
                 complete: function() {
                     $button.prop('disabled', false).text('Apply Points');
@@ -168,14 +168,14 @@
             var self = this;
             var $button = $('#remove-points');
             
-            $button.prop('disabled', true).text(truebeep_checkout.strings.removing);
+            $button.prop('disabled', true).text(truebeep_smwl_checkout.strings.removing);
 
             $.ajax({
-                url: truebeep_checkout.ajax_url,
+                url: truebeep_smwl_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'remove_points_discount',
-                    nonce: truebeep_checkout.nonce
+                    action: 'truebeep_smwl_remove_points_discount',
+                    nonce: truebeep_smwl_checkout.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -194,7 +194,7 @@
                     }
                 },
                 error: function() {
-                    self.showMessage('error', truebeep_checkout.strings.error, 'points');
+                    self.showMessage('error', truebeep_smwl_checkout.strings.error, 'points');
                 },
                 complete: function() {
                     $button.prop('disabled', false).text('Remove Points');
@@ -206,22 +206,22 @@
             var couponIndex = $('#coupon-select').val();
             
             if (!couponIndex) {
-                this.showMessage('error', truebeep_checkout.strings.select_coupon, 'coupon');
+                this.showMessage('error', truebeep_smwl_checkout.strings.select_coupon, 'coupon');
                 return;
             }
 
             var self = this;
             var $button = $('#apply-coupon');
             
-            $button.prop('disabled', true).text(truebeep_checkout.strings.applying);
+            $button.prop('disabled', true).text(truebeep_smwl_checkout.strings.applying);
 
             $.ajax({
-                url: truebeep_checkout.ajax_url,
+                url: truebeep_smwl_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'apply_points_discount',
+                    action: 'truebeep_smwl_apply_points_discount',
                     coupon_index: couponIndex,
-                    nonce: truebeep_checkout.nonce
+                    nonce: truebeep_smwl_checkout.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -239,7 +239,7 @@
                     }
                 },
                 error: function() {
-                    self.showMessage('error', truebeep_checkout.strings.error, 'coupon');
+                    self.showMessage('error', truebeep_smwl_checkout.strings.error, 'coupon');
                 },
                 complete: function() {
                     $button.prop('disabled', false).text('Apply Coupon');
@@ -251,14 +251,14 @@
             var self = this;
             var $button = $('#remove-coupon');
             
-            $button.prop('disabled', true).text(truebeep_checkout.strings.removing);
+            $button.prop('disabled', true).text(truebeep_smwl_checkout.strings.removing);
 
             $.ajax({
-                url: truebeep_checkout.ajax_url,
+                url: truebeep_smwl_checkout.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'remove_points_discount',
-                    nonce: truebeep_checkout.nonce
+                    action: 'truebeep_smwl_remove_points_discount',
+                    nonce: truebeep_smwl_checkout.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -277,7 +277,7 @@
                     }
                 },
                 error: function() {
-                    self.showMessage('error', truebeep_checkout.strings.error, 'coupon');
+                    self.showMessage('error', truebeep_smwl_checkout.strings.error, 'coupon');
                 },
                 complete: function() {
                     $button.prop('disabled', false).text('Remove Coupon');
@@ -298,7 +298,7 @@
             });
 
             if (hasDiscount) {
-                if (truebeep_checkout.redemption_method === 'dynamic_coupon') {
+                if (truebeep_smwl_checkout.redemption_method === 'dynamic_coupon') {
                     $('#points-to-redeem').prop('readonly', true);
                     $('#apply-points').hide();
                     $('#remove-points').show();

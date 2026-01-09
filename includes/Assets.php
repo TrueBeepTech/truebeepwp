@@ -2,6 +2,8 @@
 
 namespace Truebeep;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Assets class handler
  */
@@ -24,12 +26,12 @@ class Assets
     public function get_scripts()
     {
         return [
-            'truebeep' => [
+            'truebeep-smart-wallet-loyalty' => [
                 'src'     => TRUEBEEP_ASSETS . '/js/truebeep.js',
                 'version' => filemtime(TRUEBEEP_PATH . '/assets/js/truebeep.js'),
                 'deps'    => ['jquery']
             ],
-            'truebeep-loyalty-panel' => [
+            'truebeep-smwl-loyalty-panel' => [
                 'src'     => TRUEBEEP_ASSETS . '/js/frontend/loyalty-panel.js',
                 'version' => filemtime(TRUEBEEP_PATH . '/assets/js/frontend/loyalty-panel.js'),
                 'deps'    => ['jquery']
@@ -45,11 +47,11 @@ class Assets
     public function get_styles()
     {
         return [
-            'truebeep' => [
+            'truebeep-smart-wallet-loyalty' => [
                 'src'     => TRUEBEEP_ASSETS . '/css/truebeep.css',
                 'version' => filemtime(TRUEBEEP_PATH . '/assets/css/truebeep.css'),
             ],
-            'truebeep-loyalty-panel' => [
+            'truebeep-smwl-loyalty-panel' => [
                 'src'     => TRUEBEEP_ASSETS . '/css/frontend/loyalty-panel.css',
                 'version' => filemtime(TRUEBEEP_PATH . '/assets/css/frontend/loyalty-panel.css'),
             ]

@@ -2,14 +2,14 @@
 
 /**
  * Plugin Name:       Truebeep: Smart Wallet Loyalty
- * Plugin URI:        https://truebeep.com
+ * Plugin URI:        https://wp.truebeep.com
  * Description:       Reward customers with points they can track and redeem via Wallet. Retain them with smart tools.
- * Version:           1.0.0
+ * Version:           1.0.2
  * Author:            Truebeep
  * Author URI:        https://truebeep.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       truebeep
+ * Text Domain:       truebeep-smart-wallet-loyalty
  */
 
 if (!defined('ABSPATH')) {
@@ -28,7 +28,7 @@ final class Truebeep
      * 
      * @var string
      */
-    const version = '1.0.0';
+    const version = '1.0.2';
 
     /**
      * contractor
@@ -107,7 +107,7 @@ final class Truebeep
             // WordPress.org handles translations automatically
 
             deactivate_plugins(plugin_basename(__FILE__));
-            wp_die('Truebeep requires WooCommerce to be installed and activated.');
+            wp_die(esc_html__('Truebeep requires WooCommerce to be installed and activated.', 'truebeep-smart-wallet-loyalty'));
         }
 
         $installer = new Truebeep\Installer();
@@ -216,6 +216,7 @@ final class Truebeep
      */
     private function is_woocommerce_active()
     {
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
         return in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) ||
             (is_multisite() && array_key_exists('woocommerce/woocommerce.php', get_site_option('active_sitewide_plugins', [])));
     }
@@ -233,7 +234,7 @@ final class Truebeep
         }
 ?>
         <div class="error">
-            <p><?php esc_html_e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep'); ?></p>
+            <p><?php esc_html_e('Truebeep requires WooCommerce to be installed and activated.', 'truebeep-smart-wallet-loyalty'); ?></p>
         </div>
 <?php
     }
@@ -261,17 +262,17 @@ final class Truebeep
             'settings' => sprintf(
                 '<a href="%s">%s</a>',
                 esc_url($settings_url),
-                __('Settings', 'truebeep')
+                __('Settings', 'truebeep-smart-wallet-loyalty')
             ),
             'docs' => sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 esc_url($docs_url),
-                __('Docs', 'truebeep')
+                __('Docs', 'truebeep-smart-wallet-loyalty')
             ),
             'support' => sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 esc_url($support_url),
-                __('Support', 'truebeep')
+                __('Support', 'truebeep-smart-wallet-loyalty')
             )
         ];
 
@@ -340,7 +341,7 @@ function truebeep_log($message, $class_name, $data = [])
     }
     
     // Use a single source identifier for all Truebeep logs
-    $context = ['source' => 'truebeep'];
+    $context = ['source' => 'truebeep-smart-wallet-loyalty'];
     
     $logger->info($formatted_message, $context);
 }

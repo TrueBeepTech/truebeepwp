@@ -1,7 +1,7 @@
 (function($) {
     'use strict';
 
-    console.log('loyalty-panel.js loaded', truebeep_panel);
+    console.log('loyalty-panel.js loaded', truebeep_smwl_panel);
 
     var TruebeepLoyaltyPanel = {
         
@@ -87,16 +87,16 @@
             this.panel.addClass('loading');
 
             console.log('loadLoyaltyData');
-            console.log(truebeep_panel);
-            console.log(truebeep_panel.ajax_url);
+            console.log(truebeep_smwl_panel);
+            console.log(truebeep_smwl_panel.ajax_url);
            
             
             $.ajax({
-                url: truebeep_panel.ajax_url,
+                url: truebeep_smwl_panel.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'get_loyalty_data',
-                    nonce: truebeep_panel.nonce
+                    action: 'truebeep_smwl_get_loyalty_data',
+                    nonce: truebeep_smwl_panel.nonce
                 },
                 success: function(response) {
                     console.log('success');
@@ -106,11 +106,11 @@
                         self.dataLoaded = true;
                         self.lastLoadTime = Date.now();
                     } else {
-                        self.showError(response.data.message || truebeep_panel.strings.error);
+                        self.showError(response.data.message || truebeep_smwl_panel.strings.error);
                     }
                 },
                 error: function() {
-                    self.showError(truebeep_panel.strings.error);
+                    self.showError(truebeep_smwl_panel.strings.error);
                 },
                 complete: function() {
                     self.panel.removeClass('loading');
@@ -131,7 +131,7 @@
             this.panel.find('.points-label').text(pointsLabel);
             
             // Update tier
-            var tierName = data.tier || truebeep_panel.strings.no_tier;
+            var tierName = data.tier || truebeep_smwl_panel.strings.no_tier;
             this.panel.find('.tier-label').text(tierName.toUpperCase());
             
             // Store data for wallet URLs
@@ -147,9 +147,9 @@
             }
             
             // Build Apple Wallet URL
-            if (truebeep_panel.apple_template_id) {
-                var appleUrl = truebeep_panel.apple_wallet_url + 
-                    '?templateId=' + encodeURIComponent(truebeep_panel.apple_template_id) +
+            if (truebeep_smwl_panel.apple_template_id) {
+                var appleUrl = truebeep_smwl_panel.apple_wallet_url + 
+                    '?templateId=' + encodeURIComponent(truebeep_smwl_panel.apple_template_id) +
                     '&customerId=' + encodeURIComponent(this.customerId);
                 this.panel.find('.apple-wallet').attr('href', appleUrl);
             } else {
@@ -157,9 +157,9 @@
             }
             
             // Build Google Wallet URL
-            if (truebeep_panel.google_template_id) {
-                var googleUrl = truebeep_panel.google_wallet_url + 
-                    '?templateId=' + encodeURIComponent(truebeep_panel.google_template_id) +
+            if (truebeep_smwl_panel.google_template_id) {
+                var googleUrl = truebeep_smwl_panel.google_wallet_url + 
+                    '?templateId=' + encodeURIComponent(truebeep_smwl_panel.google_template_id) +
                     '&customerId=' + encodeURIComponent(this.customerId);
                 this.panel.find('.google-wallet').attr('href', googleUrl);
             } else {

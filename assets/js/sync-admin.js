@@ -32,26 +32,26 @@
             
             var $button = $(e.currentTarget);
             $button.prop('disabled', true)
-                   .html('<span class="spinner is-active" style="margin: 0;"></span> ' + truebeep_sync.strings.starting);
+                   .html('<span class="spinner is-active" style="margin: 0;"></span> ' + truebeep_smwl_sync.strings.starting);
 
             $.ajax({
-                url: truebeep_sync.ajax_url,
+                url: truebeep_smwl_sync.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'truebeep_start_sync',
-                    nonce: truebeep_sync.nonce
+                    action: 'truebeep_smwl_start_sync',
+                    nonce: truebeep_smwl_sync.nonce
                 },
                 success: function(response) {
                     if (response.success) {
                         location.reload();
                     } else {
-                        alert(response.data || truebeep_sync.strings.error);
+                        alert(response.data || truebeep_smwl_sync.strings.error);
                         $button.prop('disabled', false)
                                .html('<span class="dashicons dashicons-update"></span> Start Sync');
                     }
                 },
                 error: function() {
-                    alert(truebeep_sync.strings.error);
+                    alert(truebeep_smwl_sync.strings.error);
                     $button.prop('disabled', false)
                            .html('<span class="dashicons dashicons-update"></span> Start Sync');
                 }
@@ -64,26 +64,26 @@
         cancelSync: function(e) {
             e.preventDefault();
             
-            if (!confirm(truebeep_sync.strings.confirm_cancel)) {
+            if (!confirm(truebeep_smwl_sync.strings.confirm_cancel)) {
                 return;
             }
             
             var $button = $(e.currentTarget);
             $button.prop('disabled', true)
-                   .html('<span class="spinner is-active" style="margin: 0;"></span> ' + truebeep_sync.strings.stopping);
+                   .html('<span class="spinner is-active" style="margin: 0;"></span> ' + truebeep_smwl_sync.strings.stopping);
 
             $.ajax({
-                url: truebeep_sync.ajax_url,
+                url: truebeep_smwl_sync.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'truebeep_cancel_sync',
-                    nonce: truebeep_sync.nonce
+                    action: 'truebeep_smwl_cancel_sync',
+                    nonce: truebeep_smwl_sync.nonce
                 },
                 success: function(response) {
                     location.reload();
                 },
                 error: function() {
-                    alert(truebeep_sync.strings.error);
+                    alert(truebeep_smwl_sync.strings.error);
                     location.reload();
                 }
             });
@@ -103,22 +103,22 @@
         resetSync: function(e) {
             e.preventDefault();
             
-            if (!confirm(truebeep_sync.strings.confirm_reset)) {
+            if (!confirm(truebeep_smwl_sync.strings.confirm_reset)) {
                 return;
             }
 
             $.ajax({
-                url: truebeep_sync.ajax_url,
+                url: truebeep_smwl_sync.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'truebeep_reset_sync',
-                    nonce: truebeep_sync.nonce
+                    action: 'truebeep_smwl_reset_sync',
+                    nonce: truebeep_smwl_sync.nonce
                 },
                 success: function(response) {
                     location.reload();
                 },
                 error: function() {
-                    alert(truebeep_sync.strings.error);
+                    alert(truebeep_smwl_sync.strings.error);
                 }
             });
         },
@@ -141,11 +141,11 @@
          */
         pollStatus: function() {
             $.ajax({
-                url: truebeep_sync.ajax_url,
+                url: truebeep_smwl_sync.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'truebeep_get_sync_status',
-                    nonce: truebeep_sync.nonce
+                    action: 'truebeep_smwl_get_sync_status',
+                    nonce: truebeep_smwl_sync.nonce
                 },
                 success: function(response) {
                     if (response.success) {

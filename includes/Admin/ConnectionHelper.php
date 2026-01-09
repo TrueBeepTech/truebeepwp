@@ -29,7 +29,7 @@ class ConnectionHelper
         if (empty($api_url) || empty($api_key)) {
             return [
                 'success' => false,
-                'message' => __('API credentials not configured', 'truebeep')
+                'message' => __('API credentials not configured', 'truebeep-smart-wallet-loyalty')
             ];
         }
         
@@ -43,13 +43,13 @@ class ConnectionHelper
             return [
                 'success' => true,
                 /* translators: %s: connection status */
-                'message' => sprintf(__('Connection status updated to %s', 'truebeep'), $status)
+                'message' => sprintf(__('Connection status updated to %s', 'truebeep-smart-wallet-loyalty'), $status)
             ];
         }
         
         return [
             'success' => false,
-            'message' => is_wp_error($response) ? $response->get_error_message() : ($response['error'] ?? __('Failed to update connection status', 'truebeep'))
+            'message' => is_wp_error($response) ? $response->get_error_message() : ($response['error'] ?? __('Failed to update connection status', 'truebeep-smart-wallet-loyalty'))
         ];
     }
 }

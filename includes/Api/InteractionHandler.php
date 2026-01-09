@@ -2,6 +2,8 @@
 
 namespace Truebeep\Api;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Truebeep\Traits\ApiHelper;
 
 /**
@@ -45,7 +47,7 @@ class InteractionHandler
         // Get customer Truebeep ID
         $customer_id = $this->get_customer_truebeep_id($order);
         if (!$customer_id) {
-            $order->add_order_note(__('Order interaction not sent to Truebeep: Customer ID not found', 'truebeep'));
+            $order->add_order_note(__('Order interaction not sent to Truebeep: Customer ID not found', 'truebeep-smart-wallet-loyalty'));
             return;
         }
 
@@ -60,12 +62,12 @@ class InteractionHandler
             $order->update_meta_data('_truebeep_interaction_date', current_time('mysql'));
             $order->save();
             
-            $order->add_order_note(__('Order interaction successfully sent to Truebeep', 'truebeep'));
+            $order->add_order_note(__('Order interaction successfully sent to Truebeep', 'truebeep-smart-wallet-loyalty'));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
                 /* translators: %s: error message */
-                __('Failed to send order interaction to Truebeep: %s', 'truebeep'), 
+                __('Failed to send order interaction to Truebeep: %s', 'truebeep-smart-wallet-loyalty'), 
                 $error_message
             ));
         }
@@ -106,7 +108,7 @@ class InteractionHandler
         // Get customer Truebeep ID
         $customer_id = $this->get_customer_truebeep_id($order);
         if (!$customer_id) {
-            $order->add_order_note(__('Refund interaction not sent to Truebeep: Customer ID not found', 'truebeep'));
+            $order->add_order_note(__('Refund interaction not sent to Truebeep: Customer ID not found', 'truebeep-smart-wallet-loyalty'));
             return;
         }
 
@@ -127,12 +129,12 @@ class InteractionHandler
             $order->update_meta_data('_truebeep_refund_interaction_date', current_time('mysql'));
             $order->save();
             
-            $order->add_order_note(__('Refund interaction successfully sent to Truebeep', 'truebeep'));
+            $order->add_order_note(__('Refund interaction successfully sent to Truebeep', 'truebeep-smart-wallet-loyalty'));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
                 /* translators: %s: error message */
-                __('Failed to send refund interaction to Truebeep: %s', 'truebeep'), 
+                __('Failed to send refund interaction to Truebeep: %s', 'truebeep-smart-wallet-loyalty'), 
                 $error_message
             ));
         }
@@ -156,7 +158,7 @@ class InteractionHandler
         // Get customer Truebeep ID
         $customer_id = $this->get_customer_truebeep_id($order);
         if (!$customer_id) {
-            $order->add_order_note(__('Partial refund interaction not sent to Truebeep: Customer ID not found', 'truebeep'));
+            $order->add_order_note(__('Partial refund interaction not sent to Truebeep: Customer ID not found', 'truebeep-smart-wallet-loyalty'));
             return;
         }
 
@@ -182,14 +184,14 @@ class InteractionHandler
             
             $order->add_order_note(sprintf(
                 /* translators: %s: refund ID */
-                __('Partial refund interaction sent to Truebeep (Refund #%s)', 'truebeep'),
+                __('Partial refund interaction sent to Truebeep (Refund #%s)', 'truebeep-smart-wallet-loyalty'),
                 $refund_id
             ));
         } else {
             $error_message = is_wp_error($response) ? $response->get_error_message() : $response['error'];
             $order->add_order_note(sprintf(
                 /* translators: %s: error message */
-                __('Failed to send partial refund interaction to Truebeep: %s', 'truebeep'), 
+                __('Failed to send partial refund interaction to Truebeep: %s', 'truebeep-smart-wallet-loyalty'), 
                 $error_message
             ));
         }

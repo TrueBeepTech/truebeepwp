@@ -2,6 +2,8 @@
 
 namespace Truebeep\Legacy;
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Customer Sync Processor
  * 
@@ -322,10 +324,10 @@ class CustomerSyncProcessor
         
         $admin_email = get_option('admin_email');
         
-        $subject = __('Truebeep Customer Sync Completed', 'truebeep');
+        $subject = __('Truebeep Customer Sync Completed', 'truebeep-smart-wallet-loyalty');
         $message = sprintf(
             /* translators: %1$d: total processed, %2$d: successful, %3$d: failed, %4$d: skipped */
-            __("The Truebeep customer sync has been completed.\n\nResults:\n- Total Processed: %1\$d\n- Successful: %2\$d\n- Failed: %3\$d\n- Skipped: %4\$d\n\nYou can view the full report in your WordPress admin panel.", 'truebeep'),
+            __("The Truebeep customer sync has been completed.\n\nResults:\n- Total Processed: %1\$d\n- Successful: %2\$d\n- Failed: %3\$d\n- Skipped: %4\$d\n\nYou can view the full report in your WordPress admin panel.", 'truebeep-smart-wallet-loyalty'),
             $progress['processed'] ?? 0,
             $progress['successful'] ?? 0,
             $progress['failed'] ?? 0,

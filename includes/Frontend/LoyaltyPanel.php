@@ -55,8 +55,8 @@ class LoyaltyPanel
 
         $panel_position = get_option('truebeep_panel_position', 'bottom-right');
 
-        wp_enqueue_script('truebeep-loyalty-panel');
-        wp_enqueue_style('truebeep-loyalty-panel');
+        wp_enqueue_script('truebeep-smwl-loyalty-panel');
+        wp_enqueue_style('truebeep-smwl-loyalty-panel');
 
         // Get wallet template IDs
         $wallet_base_url = $this->get_wallet_base_url();
@@ -64,18 +64,18 @@ class LoyaltyPanel
         $user_id = get_current_user_id();
 
         // Localize script with necessary data
-        wp_localize_script('truebeep-loyalty-panel', 'truebeep_panel', [
+        wp_localize_script('truebeep-smwl-loyalty-panel', 'truebeep_smwl_panel', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('truebeep_panel_nonce'),
+            'nonce' => wp_create_nonce('truebeep_smwl_panel_nonce'),
             'apple_wallet_url' => $wallet_base_url . '/api/apple/v1/generate-pass',
             'google_wallet_url' => $wallet_base_url . '/api/google/v1/generate-pass',
             'apple_template_id' => $wallet_id,
             'google_template_id' => $wallet_id,
             'user_id' => $user_id,
             'strings' => [
-                'loading' => __('Loading...', 'truebeep'),
-                'error' => __('Error loading data', 'truebeep'),
-                'no_tier' => __('Bronze', 'truebeep'),
+                'loading' => __('Loading...', 'truebeep-smart-wallet-loyalty'),
+                'error' => __('Error loading data', 'truebeep-smart-wallet-loyalty'),
+                'no_tier' => __('Bronze', 'truebeep-smart-wallet-loyalty'),
             ]
         ]);
 
@@ -93,17 +93,17 @@ class LoyaltyPanel
     public function ajax_get_loyalty_data()
     {
         // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'truebeep_panel_nonce')) {
-            wp_send_json_error(['message' => __('Security check failed', 'truebeep')]);
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'truebeep_smwl_panel_nonce')) {
+            wp_send_json_error(['message' => __('Security check failed', 'truebeep-smart-wallet-loyalty')]);
         }
 
         if (!is_user_logged_in()) {
-            wp_send_json_error(['message' => __('Not logged in', 'truebeep')]);
+            wp_send_json_error(['message' => __('Not logged in', 'truebeep-smart-wallet-loyalty')]);
         }
         
         // Rate limiting - max 10 requests per minute
         if (RateLimiter::is_rate_limited('loyalty_data', RateLimiter::get_identifier(), 10, 60)) {
-            wp_send_json_error(['message' => __('Too many requests. Please try again later.', 'truebeep')]);
+            wp_send_json_error(['message' => __('Too many requests. Please try again later.', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $user_id = get_current_user_id();
@@ -112,12 +112,12 @@ class LoyaltyPanel
 
         $truebeep_customer_id = get_user_meta($user_id, '_truebeep_customer_id', true);
         if (!$truebeep_customer_id) {
-            wp_send_json_error(['message' => __('No customer ID found', 'truebeep')]);
+            wp_send_json_error(['message' => __('No customer ID found', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $customer_data = $this->get_customer_points($truebeep_customer_id);
         if (empty($customer_data)) {
-            wp_send_json_error(['message' => __('Failed to fetch customer data', 'truebeep')]);
+            wp_send_json_error(['message' => __('Failed to fetch customer data', 'truebeep-smart-wallet-loyalty')]);
         }
 
         $tier_info = $this->get_customer_tier($truebeep_customer_id);
@@ -125,7 +125,7 @@ class LoyaltyPanel
             'points' => isset($customer_data['points']) ? intval($customer_data['points']) : 0,
             'total_earned' => isset($customer_data['totalEarnedPoints']) ? intval($customer_data['totalEarnedPoints']) : 0,
             'total_spent' => isset($customer_data['totalSpentPoints']) ? intval($customer_data['totalSpentPoints']) : 0,
-            'tier' => $tier_info['tier_name'] ?: __('Bronze', 'truebeep'),
+            'tier' => $tier_info['tier_name'] ?: __('Bronze', 'truebeep-smart-wallet-loyalty'),
             'tier_data' => $tier_info['full_tier'],
             'user_name' => $user_name
         ];
