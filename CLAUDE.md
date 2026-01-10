@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Truebeep is a WordPress plugin that provides a comprehensive loyalty and marketing platform for WooCommerce stores. It enables customers to earn and redeem points, integrates with digital wallets (Apple/Google), and offers tier-based rewards.
+Truebeep: Smart Wallet Loyalty is a WordPress plugin that provides a comprehensive loyalty and marketing platform for WooCommerce stores. It enables customers to earn and redeem points, integrates with digital wallets (Apple/Google), and offers tier-based rewards.
 
 ## Commands
 
@@ -17,12 +17,12 @@ composer install
 composer update
 
 # Check PHP syntax errors
-php -l truebeep.php
+php -l truebeep-smart-wallet-loyalty.php
 php -l includes/**/*.php
 
 # WordPress CLI commands (if wp-cli available)
-wp plugin activate truebeep
-wp plugin deactivate truebeep
+wp plugin activate truebeep-smart-wallet-loyalty
+wp plugin deactivate truebeep-smart-wallet-loyalty
 ```
 
 ### Code Quality
@@ -34,8 +34,10 @@ find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
 ## Architecture
 
 ### Plugin Structure
-- **Main Entry**: `truebeep.php` - Plugin initialization using singleton pattern
+- **Main Entry**: `truebeep-smart-wallet-loyalty.php` - Plugin initialization using singleton pattern
 - **Namespace**: `Truebeep\` with sub-namespaces for different modules
+- **Text Domain**: `truebeep-smart-wallet-loyalty`
+- **Version**: 1.0.2
 - **Autoloading**: Composer PSR-4 autoloading via `vendor/autoload.php`
 
 ### Core Components
@@ -99,10 +101,6 @@ find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
 - Version control via file modification timestamps
 - Conditional loading based on context
 
-### Update System
-- Custom GitHub-based update mechanism in `includes/Update/`
-- Checks GitHub releases for new versions
-- Configuration in `update-config.php`
 
 ## Development Guidelines
 
@@ -155,7 +153,7 @@ add_action('truebeep_customer_sync_complete', 'callback', 10); // Completion han
 
 ## Important Files and Locations
 
-- Main plugin file: `truebeep.php`
+- Main plugin file: `truebeep-smart-wallet-loyalty.php`
 - Configuration: WooCommerce → Settings → Truebeep
 - API integration: `includes/Api/LoyaltyHandler.php`
 - Points logic: `includes/Loyalty/PointsManager.php`
@@ -167,7 +165,6 @@ add_action('truebeep_customer_sync_complete', 'callback', 10); // Completion han
 - Bulk API operations: `includes/Legacy/CustomerSyncer.php`
 - Sync styles: `assets/css/sync-admin.css`
 - Sync JavaScript: `assets/js/sync-admin.js`
-- Update configuration: `update-config.php`
 
 ## Customer Sync Technical Details
 

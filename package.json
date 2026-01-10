@@ -2,7 +2,6 @@
   "name": "truebeep",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/TrueBeepTech/truebeepwp.git",
   "author": "Md Nayeem Farid <39758380+nayeem07007@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
