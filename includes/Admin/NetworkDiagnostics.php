@@ -168,7 +168,9 @@ define('WP_PROXY_PASSWORD', 'password'); // Optional</code></pre>
         $openssl_display = defined('OPENSSL_VERSION_TEXT') ? esc_html(OPENSSL_VERSION_TEXT) : esc_html__('Not available', 'truebeep-smart-wallet-loyalty');
         $html .= '<strong>' . esc_html__('OpenSSL Version:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . $openssl_display . '<br>';
         
-        $html .= '<strong>' . esc_html__('User Agent:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . esc_html($_SERVER['HTTP_USER_AGENT'] ?? esc_html__('Not available', 'truebeep-smart-wallet-loyalty')) . '<br>';
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
+        $user_agent_display = !empty($user_agent) ? esc_html($user_agent) : esc_html__('Not available', 'truebeep-smart-wallet-loyalty');
+        $html .= '<strong>' . esc_html__('User Agent:', 'truebeep-smart-wallet-loyalty') . '</strong> ' . $user_agent_display . '<br>';
         $html .= '</p></div>';
         
         return $html;
