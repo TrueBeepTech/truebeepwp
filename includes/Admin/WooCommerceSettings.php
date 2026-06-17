@@ -106,13 +106,11 @@ class WooCommerceSettings
             ],
             [
                 'title' => __('API URL', 'truebeep-smart-wallet-loyalty'),
-                'desc' => __('Truebeep API URL (read-only)', 'truebeep-smart-wallet-loyalty'),
+                'desc' => __('Truebeep API endpoint URL. Default: https://api.truebeep.com/v1/', 'truebeep-smart-wallet-loyalty'),
                 'id' => 'truebeep_api_url',
-                'type' => 'text',
+                'type' => 'url',
                 'default' => Constants::API_URL,
-                'value' => Constants::API_URL,
-                'css' => 'min-width:400px; background-color: #f0f0f0; cursor: not-allowed; opacity: 0.6;',
-                'custom_attributes' => array('readonly' => 'readonly', 'disabled' => 'disabled'),
+                'css' => 'min-width:400px;',
                 'desc_tip' => true,
             ],
             [
@@ -380,10 +378,9 @@ class WooCommerceSettings
         // Get all settings
         $settings = $this->get_settings($current_section);
         
-        // Filter out the read-only fields (API URL and Wallet Base URL)
+        // Filter out the read-only field (Wallet Base URL)
         $filtered_settings = array_filter($settings, function($setting) {
-            return !isset($setting['id']) || 
-                   ($setting['id'] !== 'truebeep_api_url' && $setting['id'] !== 'truebeep_wallet_base_url');
+            return !isset($setting['id']) || $setting['id'] !== 'truebeep_wallet_base_url';
         });
         
         woocommerce_update_options($filtered_settings);
@@ -504,6 +501,11 @@ class WooCommerceSettings
                 ]);
             } else {
                 $error_message = is_wp_error($response) ? $response->get_error_message() : ($response['error'] ?? __('Connection failed', 'truebeep-smart-wallet-loyalty'));
+                truebeep_log('API Connection failed', 'WooCommerceSettings', [
+                    'error' => $error_message,
+                    'is_wp_error' => is_wp_error($response),
+                    'response' => is_wp_error($response) ? $response->get_error_messages() : $response,
+                ]);
                 wp_send_json_error(['message' => $error_message]);
             }
         } elseif ($action === 'disconnect') {

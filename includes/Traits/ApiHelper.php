@@ -13,6 +13,10 @@ trait ApiHelper
      */
     protected function get_api_url()
     {
+        $custom_url = get_option('truebeep_api_url', '');
+        if (!empty($custom_url)) {
+            return trailingslashit($custom_url);
+        }
         return Constants::API_URL;
     }
 
@@ -93,7 +97,14 @@ trait ApiHelper
             ];
         } else {
             $error_message = $response_data['message'] ?? __('API request failed', 'truebeep-smart-wallet-loyalty');
-            truebeep_log('API Response Error: ' . $response_code . ' ' . $endpoint, 'ApiHelper', ['error' => $error_message]);
+            if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+                truebeep_log('API Response Error: ' . $response_code . ' ' . $endpoint, 'ApiHelper', [
+                    'error' => $error_message,
+                    'response_body' => $response_body,
+                    'response_data' => $response_data,
+                    'url' => $url,
+                ]);
+            }
             return [
                 'success' => false,
                 'error' => $error_message,
